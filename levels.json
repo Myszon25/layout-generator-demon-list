@@ -1,0 +1,54 @@
+[
+  {
+    "place": 1,
+    "name": "level name1",
+    "author": "no",
+    "verifier": "me",
+    "id": "12345678",
+    "youtube": "65RJQig1tZc",
+    "gif": "https://media0.giphy.com/media/.../giphy.gif",
+    "wrName": "Verification video",
+    "wrLink": "",
+    "points": 1,
+    "victors": ["myszon=https://www.youtube.com/watch?v=MHcoMqO1du0"]
+  },
+  {
+    "place": 2,
+    "name": "level name2",
+    "author": "no",
+    "verifier": "me",
+    "id": "12345678",
+    "youtube": "65RJQig1tZc",
+    "gif": "https://media0.giphy.com/media/.../giphy.gif",
+    "wrName": "Verification video",
+    "wrLink": "https://youtube.com/watch?v=example2",
+    "points": 1,
+    "victors": []
+  },
+  {
+    "place": 3,
+    "name": "level name3",
+    "author": "no",
+    "verifier": "me",
+    "id": "12345678",
+    "youtube": "65RJQig1tZc",
+    "gif": "https://media0.giphy.com/media/.../giphy.gif",
+    "wrName": "Verification video",
+    "wrLink": "https://youtube.com/watch?v=example2",
+    "points": 1,
+    "victors": []
+  },
+  {
+    "place": 4,
+    "name": "level name4",
+    "author": "no",
+    "verifier": "me",
+    "id": "12345678",
+    "youtube": "65RJQig1tZc",
+    "gif": "(this is uselless  it was in older version now it dont matter but deleting this might cause website problem)",
+    "wrName": "Verification video",
+    "wrLink": "",
+    "points": 1,
+    "victors": []
+  }
+]
