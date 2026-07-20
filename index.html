@@ -158,7 +158,7 @@ body {
 .left {
     width: 35%; height: 100%; background: linear-gradient(135deg, var(--card-grad-1) 0%, var(--card-grad-2) 100%);
     display: flex; flex-direction: column;
-    justify-content: space-between; padding: 20px; box-sizing: border-box;
+    justify-content: center; padding: 20px; box-sizing: border-box;
     z-index: 2; border-right: 2px solid var(--border-color); cursor: pointer; transition: background 0.3s ease;
 }
 .left:hover { background: linear-gradient(135deg, var(--card-grad-2) 0%, var(--card-bg) 100%); }
@@ -180,19 +180,30 @@ body {
 .place { font-size: 24px; font-weight: 800; color: var(--text-main); margin-bottom: 4px; }
 .sub { font-size: 12px; color: var(--text-sub); line-height: 1.4; }
 
-.level-wr { 
+/* The Large WR tag for the modal */
+.level-wr-modal { 
     font-size: 15px; font-weight: 800; color: var(--accent);
     padding: 6px 14px; border-radius: 8px; display: inline-block; width: max-content; 
     text-transform: uppercase; letter-spacing: 1px; background: rgba(255, 207, 64, 0.1);
     border: 1px solid rgba(255, 207, 64, 0.2); 
 }
 
-.video-fps {
-    position: absolute; top: 10px; right: 10px;
-    background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
-    color: var(--text-main); padding: 4px 10px; border-radius: 8px; font-size: 13px; font-weight: 700;
-    z-index: 5; pointer-events: none; border: 1px solid var(--border-color);
+/* Minimalistic video overlays for FPS and WR */
+.video-overlay {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+    color: #ffffff;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    z-index: 10;
+    pointer-events: none;
+    letter-spacing: 0.5px;
 }
+.video-overlay.fps { top: 10px; right: 10px; }
+.video-overlay.wr { bottom: 10px; right: 10px; }
 
 .list-card {
     width: min(900px, 95vw);
@@ -388,7 +399,6 @@ function parseYoutube(youtubeInput) {
 }
 
 function openLevelModal(l) {
-    // Read from standard "wr" or your fallback names in case older versions are used
     const levelWR = l.wr || l.wrName || 'N/A';
 
     modalBody.innerHTML = `
@@ -398,7 +408,7 @@ function openLevelModal(l) {
                 by ${l.author} <br> 
                 <span class="copy-id" onclick="navigator.clipboard.writeText('${l.id}'); const orig=this.innerHTML; this.innerHTML='Copied! ✓'; setTimeout(()=>this.innerHTML=orig, 1500);">ID: ${l.id} 📋</span>
             </div>
-            <div class="level-wr" style="margin-top: 12px;">${levelWR} WR</div>
+            <div class="level-wr-modal" style="margin-top: 12px;">${levelWR} WR</div>
         </div>
     `;
     levelModal.classList.add("active");
@@ -420,8 +430,12 @@ levelModal.addEventListener("click", (e) => { if (e.target === levelModal) level
 
 function createLevelCardElement(l) {
     const levelWR = l.wr || l.wrName || 'N/A';
-    const fpsHTML = l.fps ? '<div class="video-fps">' + l.fps + ' FPS</div>' : '';
     const yt = parseYoutube(l.youtube);
+
+    // Creating the minimal overlay HTML tags
+    const fpsHTML = l.fps ? '<div class="video-overlay fps">' + l.fps + ' FPS</div>' : '';
+    const wrHTML = levelWR !== 'N/A' ? '<div class="video-overlay wr">' + levelWR + ' WR</div>' : '';
+    const overlays = fpsHTML + wrHTML;
 
     const card = document.createElement("div");
     card.className = "card";
@@ -434,17 +448,20 @@ function createLevelCardElement(l) {
             <div class="place">#${l.place} ${l.name}</div>
             <div class="sub">by ${l.author}<br>id: ${l.id}</div>
         </div>
-        <div class="level-wr">${levelWR} WR</div>
     `;
     left.addEventListener("click", () => openLevelModal(l));
 
     const right = document.createElement("div");
     right.className = "right";
-    right.innerHTML = `${fpsHTML}<img src="https://img.youtube.com/vi/${yt.id}/hqdefault.jpg" loading="lazy" alt="Thumbnail"><div class="play-button"></div>`;
+    
+    // We place overlays AFTER the image/play-button so they stack on top properly via CSS z-index
+    right.innerHTML = `<img src="https://img.youtube.com/vi/${yt.id}/hqdefault.jpg" loading="lazy" alt="Thumbnail"><div class="play-button"></div>` + overlays;
+    
     right.addEventListener("click", () => {
         let startQuery = yt.start > 0 ? '&start=' + yt.start : '';
         let embedUrl = 'https://www.youtube.com/embed/' + yt.id + '?autoplay=1' + startQuery;
-        right.innerHTML = `${fpsHTML}<iframe width="100%" height="100%" src="${embedUrl}" title="YouTube video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+        // The overlays are added after the iframe again to ensure they sit on top of the playing video
+        right.innerHTML = `<iframe width="100%" height="100%" src="${embedUrl}" title="YouTube video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>` + overlays;
     });
     
     card.appendChild(left); card.appendChild(right);
@@ -492,7 +509,7 @@ Promise.all([
     } else {
         rulesContent.innerHTML = '<h2 class="list-title">List Rules</h2><p class="list-items">No rules added yet.</p>';
     }
-}).catch(err => console.error("Error loading JSON files:", err)); // Added error handling
+}).catch(err => console.error("Error loading JSON files:", err)); 
 
 document.getElementById("btn-random").addEventListener("click", () => {
     if (!fullLevelsData || fullLevelsData.length === 0) return;
