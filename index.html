@@ -388,7 +388,8 @@ function parseYoutube(youtubeInput) {
 }
 
 function openLevelModal(l) {
-    const levelWR = l.wr ? l.wr : 'N/A';
+    // Read from standard "wr" or your fallback names in case older versions are used
+    const levelWR = l.wr || l.wrName || 'N/A';
 
     modalBody.innerHTML = `
         <div class="modal-header">
@@ -418,8 +419,8 @@ document.getElementById("modal-close-btn").addEventListener("click", () => level
 levelModal.addEventListener("click", (e) => { if (e.target === levelModal) levelModal.classList.remove("active"); });
 
 function createLevelCardElement(l) {
-    const levelWR = l.wr ? l.wr : 'N/A';
-    const fpsHTML = l.fps ? `<div class="video-fps">${l.fps} FPS</div>` : '';
+    const levelWR = l.wr || l.wrName || 'N/A';
+    const fpsHTML = l.fps ? '<div class="video-fps">' + l.fps + ' FPS</div>' : '';
     const yt = parseYoutube(l.youtube);
 
     const card = document.createElement("div");
@@ -441,7 +442,8 @@ function createLevelCardElement(l) {
     right.className = "right";
     right.innerHTML = `${fpsHTML}<img src="https://img.youtube.com/vi/${yt.id}/hqdefault.jpg" loading="lazy" alt="Thumbnail"><div class="play-button"></div>`;
     right.addEventListener("click", () => {
-        let embedUrl = `https://www.youtube.com/embed/${yt.id}?autoplay=1${yt.start > 0 ? \`&start=\${yt.start}\` : ''}`;
+        let startQuery = yt.start > 0 ? '&start=' + yt.start : '';
+        let embedUrl = 'https://www.youtube.com/embed/' + yt.id + '?autoplay=1' + startQuery;
         right.innerHTML = `${fpsHTML}<iframe width="100%" height="100%" src="${embedUrl}" title="YouTube video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
     });
     
@@ -490,7 +492,7 @@ Promise.all([
     } else {
         rulesContent.innerHTML = '<h2 class="list-title">List Rules</h2><p class="list-items">No rules added yet.</p>';
     }
-});
+}).catch(err => console.error("Error loading JSON files:", err)); // Added error handling
 
 document.getElementById("btn-random").addEventListener("click", () => {
     if (!fullLevelsData || fullLevelsData.length === 0) return;
