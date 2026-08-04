@@ -17,11 +17,10 @@
     background:linear-gradient(180deg,var(--bg1),var(--bg2) 70%,#062f67);background-attachment:fixed}
   button{font:inherit;cursor:pointer}
   ::selection{background:rgba(255,217,59,.4)}
-
   .mut{color:var(--mut)} .small{font-size:.8rem}
 
   /* ---------- GD-style button ---------- */
-  .gd-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  .gd-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;
     font-family:'Titan One';font-size:.9rem;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.3);
     background:linear-gradient(180deg,var(--green),var(--green2));
     border:3px solid #1d5c10;border-radius:12px;padding:11px 20px;
@@ -54,6 +53,9 @@
   .s28{width:28px;height:28px} .s30{width:30px;height:30px} .s44{width:44px;height:44px}
   .s64{width:64px;height:64px} .s72{width:72px;height:72px} .s96{width:96px;height:96px}
 
+  .admintag{display:inline-block;background:linear-gradient(180deg,#ffe45e,#e0a013);color:#3d2c00;
+    font-size:.58rem;font-weight:700;letter-spacing:.14em;padding:3px 8px;border-radius:6px;margin-left:7px;vertical-align:middle}
+
   /* ---------- AUTH ---------- */
   .auth-wrap{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;padding:30px 18px}
   .logo-big{text-align:center}
@@ -70,7 +72,7 @@
     padding:10px clamp(14px,3vw,28px);background:#0a2c55;border-bottom:3px solid var(--deep);box-shadow:0 4px 0 rgba(0,0,0,.22)}
   .logo{font-family:'Titan One';font-size:1.1rem;text-shadow:0 2px 0 rgba(0,0,0,.35);white-space:nowrap}
   .logo span{color:var(--green)}
-  .nav{display:flex;gap:8px}
+  .nav{display:flex;gap:8px;flex-wrap:wrap}
   .nav button{font-family:'Titan One';font-size:.78rem;padding:9px 16px;border-radius:10px;border:2px solid transparent;background:transparent;color:#bcd6f2;transition:.15s}
   .nav button:hover{background:rgba(255,255,255,.08)}
   .nav button.active{background:#1c4f92;border-color:#0d3568;color:#fff}
@@ -79,7 +81,7 @@
   .chip:hover{background:rgba(255,255,255,.08)}
 
   .wrap{max-width:1000px;margin:0 auto;padding:22px clamp(14px,3vw,28px) 70px}
-  .page-head{display:flex;align-items:baseline;gap:12px;margin-bottom:16px}
+  .page-head{display:flex;align-items:baseline;gap:12px;margin-bottom:16px;flex-wrap:wrap}
   .page-head h2{font-family:'Titan One';font-size:1.4rem;text-shadow:0 2px 0 rgba(0,0,0,.3)}
 
   /* ---------- FEED ---------- */
@@ -104,14 +106,17 @@
   .gtag{margin-left:auto;font-size:.72rem;background:#1c4f92;border:1px solid #0d3568;color:#cfe3fa;border-radius:99px;padding:4px 11px;white-space:nowrap}
   .gtag:hover{background:#2663b3}
   .post-text{margin-top:11px;line-height:1.55;white-space:pre-wrap;word-break:break-word;font-size:.96rem}
-  .post-actions{display:flex;gap:6px;margin-top:11px;border-top:1px solid rgba(255,255,255,.07);padding-top:9px}
+  .post-actions{display:flex;gap:6px;align-items:center;margin-top:11px;border-top:1px solid rgba(255,255,255,.07);padding-top:9px}
   .act{display:inline-flex;align-items:center;gap:6px;background:none;border:none;color:var(--mut);font-size:.9rem;padding:6px 11px;border-radius:8px;transition:.15s}
   .act:hover{background:rgba(255,255,255,.08);color:#fff}
   .act.liked{color:var(--yellow)}
+  .del{background:none;border:none;color:#6c88ab;font-size:.78rem;padding:5px 9px;border-radius:8px;transition:.15s}
+  .del:hover{color:#ff8a8a;background:rgba(255,90,90,.12)}
   .comments{margin-top:10px}
-  .cmt{display:flex;gap:9px;padding:9px 0;border-top:1px solid rgba(255,255,255,.07);font-size:.9rem}
+  .cmt{display:flex;gap:9px;padding:9px 0;border-top:1px solid rgba(255,255,255,.07);font-size:.9rem;align-items:flex-start}
   .cmt .mut{font-size:.74rem}
   .cmt-body{min-width:0;word-break:break-word}
+  .cmt .del{margin-left:auto}
   .cmt-form{display:flex;gap:8px;margin-top:10px}
   .empty{padding:30px;text-align:center;color:var(--mut)}
 
@@ -132,10 +137,31 @@
   .g-head h2{font-family:'Titan One';font-size:1.3rem}
   .g-head p{color:var(--mut);font-size:.9rem;margin-top:3px}
 
+  /* ---------- LIST ---------- */
+  .lvl-form{padding:16px;display:grid;gap:10px;margin-bottom:6px}
+  .lvl-form .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .lf-title{font-family:'Titan One';font-size:.85rem;color:var(--yellow)}
+  .lf-row{display:flex;gap:10px;justify-content:flex-end}
+  .list-wrap{margin-top:16px;display:flex;flex-direction:column;gap:12px}
+  .lvl{display:flex;gap:14px;padding:14px 16px;align-items:center;flex-wrap:wrap}
+  .rank{font-family:'Titan One';width:52px;height:52px;border-radius:12px;display:grid;place-items:center;
+    font-size:1.25rem;background:#1c4f92;border:2px solid #0d3568;flex:none;text-shadow:0 2px 0 rgba(0,0,0,.3)}
+  .rank.r1{background:linear-gradient(180deg,#ffe45e,#e0a013);border-color:#8a6206;color:#3d2c00;text-shadow:none}
+  .rank.r2{background:linear-gradient(180deg,#e8eef4,#9fb2c4);border-color:#5d6f80;color:#22303d;text-shadow:none}
+  .rank.r3{background:linear-gradient(180deg,#e8a06a,#b0642e);border-color:#6e3d17;color:#3a2008;text-shadow:none}
+  .lvl-main{flex:1;min-width:200px}
+  .lvl-main h4{font-family:'Titan One';font-size:1.02rem}
+  .lvl-main p{font-size:.88rem;color:var(--mut);margin:4px 0 9px;word-break:break-word}
+  .lvl-links{display:flex;gap:8px;flex-wrap:wrap}
+  .lvl-admin{display:flex;gap:6px}
+  .tool{min-width:34px;height:30px;padding:0 8px;border-radius:8px;border:2px solid var(--edge);background:var(--panel2);color:var(--mut);font-size:.8rem;transition:.15s}
+  .tool:hover{color:#fff;border-color:#1c4f92;background:#1c4f92}
+  .tool.danger:hover{background:#b23b3b;border-color:#7c2222}
+
   /* ---------- DMS ---------- */
   .dms{display:grid;grid-template-columns:230px 1fr;gap:14px;height:calc(100vh - 160px);min-height:430px}
   .dm-list{padding:10px;overflow-y:auto;display:flex;flex-direction:column;gap:4px}
-  .dm-user{display:flex;align-items:center;gap:10px;width:100%;padding:9px 10px;border-radius:10px;background:none;border:none;color:#fff;text-align:left;font-weight:500;transition:.15s}
+  .dm-user{display:flex;align-items:center;gap:10px;width:100%;padding:9px 10px;border-radius:10px;cursor:pointer;color:#fff;font-weight:500;transition:.15s}
   .dm-user:hover{background:rgba(255,255,255,.08)}
   .dm-user.sel{background:#1c4f92}
   .dm-thread{display:flex;flex-direction:column;overflow:hidden}
@@ -167,6 +193,7 @@
     .dm-list{flex-direction:row;overflow-x:auto;overflow-y:hidden}
     .dm-user{flex:none}
     .dm-thread{height:62vh}
+    .lvl-form .two{grid-template-columns:1fr}
   }
 </style>
 </head>
@@ -178,18 +205,19 @@
 'use strict';
 const $ = s => document.querySelector(s);
 
-/* ---------- storage (kept simple & quiet) ---------- */
 const DB = {
   get(k,d){ try{ const v=localStorage.getItem(k); return v?JSON.parse(v):d; }catch{ return d; } },
   set(k,v){ localStorage.setItem(k,JSON.stringify(v)); }
 };
-const K = { users:'gd.users', posts:'gd.posts', groups:'gd.groups', dms:'gd.dms', session:'gd.session' };
+const K = { users:'gd.users', posts:'gd.posts', groups:'gd.groups', dms:'gd.dms', lists:'gd.lists', session:'gd.session' };
 
 const users  = () => DB.get(K.users,[]);
 const posts  = () => DB.get(K.posts,[]);
 const groups = () => DB.get(K.groups,[]);
 const dms    = () => DB.get(K.dms,[]);
+const lists  = () => DB.get(K.lists,[]);
 const findUser = n => users().find(u=>u.username.toLowerCase()===String(n).toLowerCase());
+const isAdmin  = () => !!(me && me.role==='admin');
 
 const uid = () => Math.random().toString(36).slice(2,9)+Date.now().toString(36);
 const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -197,6 +225,7 @@ const hashPw = (u,p) => { let h=5381; const s=u.toLowerCase()+'::'+p; for(let i=
 const hashNum = s => [...String(s)].reduce((a,c)=>a+c.charCodeAt(0),0);
 function ago(t){ const s=Math.floor((Date.now()-t)/1000); if(s<60)return'now'; if(s<3600)return Math.floor(s/60)+'m'; if(s<86400)return Math.floor(s/3600)+'h'; return Math.floor(s/86400)+'d'; }
 function fmtDate(t){ return new Date(t).toLocaleDateString('en-GB',{month:'short',year:'numeric'}); }
+function normUrl(v){ v=(v||'').trim(); if(!v) return ''; if(!/^https?:\/\//i.test(v)) v='https://'+v; return /^https?:\/\//i.test(v)?v:''; }
 
 const CUBES = [['#8ee85d','#4db32a'],['#ffd93b','#e0a013'],['#ff9f2e','#d3711a'],['#6ad7ff','#2e9ad0'],['#ff6b81','#d33d55'],['#c98bff','#8a3fd0']];
 function avatarHTML(u,cls){
@@ -206,7 +235,7 @@ function avatarHTML(u,cls){
   return '<span class="cube '+cls+'" style="--c1:'+p[0]+';--c2:'+p[1]+'"><i></i><i></i><em></em></span>';
 }
 
-/* ---------- seed a few community members so it feels alive ---------- */
+/* ---------- seed ---------- */
 function seed(){
   if(DB.get(K.users,null)) return;
   const rnd = Math.random().toString(36);
@@ -217,17 +246,21 @@ function seed(){
   ]);
   DB.set(K.posts,[
     {id:uid(),author:'WaveMaster',text:'just beat deadlocked... my hands are GONE 😤',ts:Date.now()-3600000*2,likes:['CubeLord','NovaDash'],group:null,
-      comments:[{author:'CubeLord',text:'insane. the ship part got me 200 times',ts:Date.now()-3600000}]},
+      comments:[{id:uid(),author:'CubeLord',text:'insane. the ship part got me 200 times',ts:Date.now()-3600000}]},
     {id:uid(),author:'NovaDash',text:'looking for 3 people for a mega collab — demon difficulty. comment or dm me 🌀',ts:Date.now()-3600000*7,likes:['WaveMaster'],group:null,comments:[]},
     {id:uid(),author:'CubeLord',text:'stereo madness but every jump is frame perfect. no big deal.',ts:Date.now()-86400000,likes:[],group:null,
-      comments:[{author:'NovaDash',text:'post the video!!',ts:Date.now()-82000000}]}
+      comments:[{id:uid(),author:'NovaDash',text:'post the video!!',ts:Date.now()-82000000}]}
   ]);
   DB.set(K.groups,[{id:uid(),name:'Demon Players',desc:'only the brave. share your demon clears and fails.',emoji:'😈',members:['CubeLord','WaveMaster'],owner:'CubeLord',ts:Date.now()-86400000*30}]);
   DB.set(K.dms,[]);
+  DB.set(K.lists,[
+    {id:uid(),name:'Bloodbath',desc:'The classic extreme demon. verify your skills before touching this.',video:'https://www.youtube.com/results?search_query=bloodbath+geometry+dash',discord:'',ts:Date.now()},
+    {id:uid(),name:'Slaughterhouse',desc:'Insane wave spam. good luck.',video:'https://www.youtube.com/results?search_query=slaughterhouse+geometry+dash',discord:'',ts:Date.now()}
+  ]);
 }
 
-/* ---------- app state ---------- */
-let me=null, view={name:'feed'}, authTab='login', modalOpen=false, dmWith=null;
+/* ---------- state ---------- */
+let me=null, view={name:'feed'}, authTab='login', modalOpen=false, dmWith=null, levelEdit=null;
 const openComments=new Set(); let focusDM=false;
 
 function toast(msg,type){ const t=document.createElement('div'); t.className='toast '+(type||''); t.textContent=msg;
@@ -248,7 +281,7 @@ function renderAuth(){
     <div class="logo-big">
       <span class="cube s72" style="--c1:#8ee85d;--c2:#4db32a"><i></i><i></i><em></em></span>
       <h1>GD <span>COMMUNITY</span></h1>
-      <p class="mut">posts · groups · DMs — for Geometry Dash players</p>
+      <p class="mut">posts · groups · lists · DMs — for Geometry Dash players</p>
     </div>
     <div class="panel auth-card">
       <div class="auth-tabs">
@@ -284,9 +317,9 @@ function topbarHTML(){
   const tab=v=>`<button data-act="nav" data-view="${v}" class="${view.name===v||(v==='groups'&&view.name==='group')?'active':''}">${v.toUpperCase()}</button>`;
   return `<header class="topbar">
     <div class="logo">GD <span>COMMUNITY</span></div>
-    <nav class="nav">${tab('feed')}${tab('groups')}${tab('dms')}</nav>
+    <nav class="nav">${tab('feed')}${tab('groups')}${tab('list')}${tab('dms')}</nav>
     <div class="top-right">
-      <button class="chip" data-act="profile">${avatarHTML(me,'s30')}<span>${esc(me.username)}</span></button>
+      <button class="chip" data-act="profile">${avatarHTML(me,'s30')}<span>${esc(me.username)}${isAdmin()?' 👑':''}</span></button>
       <button class="gd-btn ghost small" data-act="logout">LOGOUT</button>
     </div>
   </header>`;
@@ -296,6 +329,7 @@ function viewHTML(){
   if(view.name==='feed')   return feedHTML();
   if(view.name==='groups') return groupsHTML();
   if(view.name==='group')  return groupPageHTML(view.id);
+  if(view.name==='list')   return listHTML();
   if(view.name==='dms')    return dmsHTML();
   return '';
 }
@@ -311,14 +345,15 @@ function composerHTML(groupId){
   </form>`;
 }
 function postHTML(p){
-  const a=findUser(p.author)||{username:p.avatar?null:0,username:p.author,avatar:null};
+  const a=findUser(p.author)||{username:p.author,avatar:null};
   const liked=p.likes.includes(me.username);
   const g=p.group?groups().find(x=>x.id===p.group):null;
   const open=openComments.has(p.id);
+  const canDelPost = isAdmin() || p.author===me.username;
   return `<article class="panel post">
     <div class="post-head">
       ${avatarHTML(a,'s44')}
-      <div class="who"><b>${esc(a.username)}</b><span>@${esc(a.username)} · ${ago(p.ts)}</span></div>
+      <div class="who"><b>${a.role==='admin'?'👑 ':''}${esc(a.username)}</b><span>@${esc(a.username)} · ${ago(p.ts)}</span></div>
       ${g?`<button class="gtag" data-act="open-group" data-id="${g.id}">${g.emoji} ${esc(g.name)}</button>`:''}
     </div>
     <p class="post-text">${esc(p.text)}</p>
@@ -326,10 +361,13 @@ function postHTML(p){
       <button class="act ${liked?'liked':''}" data-act="like" data-id="${p.id}">★ ${p.likes.length}</button>
       <button class="act" data-act="comments" data-id="${p.id}">💬 ${p.comments.length}</button>
       ${p.author!==me.username?`<button class="act" data-act="dm" data-user="${esc(p.author)}">✉ dm</button>`:''}
+      ${canDelPost?`<button class="del" style="margin-left:auto" data-act="del-post" data-id="${p.id}">✕ delete</button>`:''}
     </div>
     ${open?`<div class="comments">
       ${p.comments.map(c=>{ const ca=findUser(c.author)||{username:c.author,avatar:null};
-        return `<div class="cmt">${avatarHTML(ca,'s28')}<div class="cmt-body"><b>${esc(ca.username)}</b> <span class="mut">${ago(c.ts)}</span><br>${esc(c.text)}</div></div>`; }).join('')}
+        const canDelC = isAdmin() || c.author===me.username;
+        return `<div class="cmt">${avatarHTML(ca,'s28')}<div class="cmt-body"><b>${ca.role==='admin'?'👑 ':''}${esc(ca.username)}</b> <span class="mut">${ago(c.ts)}</span><br>${esc(c.text)}</div>
+        ${canDelC?`<button class="del" data-act="del-comment" data-post="${p.id}" data-cid="${c.id}">✕</button>`:''}</div>`; }).join('')}
       <form class="cmt-form" data-comment="${p.id}">
         <input class="inp" name="c" maxlength="200" placeholder="write a comment…" autocomplete="off">
         <button class="gd-btn blue small" type="submit">SEND</button>
@@ -339,14 +377,13 @@ function postHTML(p){
 }
 function feedHTML(){
   const list=posts().filter(p=>!p.group).sort((a,b)=>b.ts-a.ts);
-  const likesGot=posts().reduce((n,p)=>n+p.likes.filter(l=>l===me.username).length? n:n,0);
   const stars=posts().reduce((n,p)=>n+(p.author===me.username?p.likes.length:0),0);
   const myPosts=posts().filter(p=>p.author===me.username).length;
   const myGroups=groups().filter(g=>g.members.includes(me.username)).length;
   return `<div class="cols">
     <aside class="panel side-card">
       ${avatarHTML(me,'s72')}
-      <h3>${esc(me.username)}</h3>
+      <h3>${esc(me.username)}${isAdmin()?'<span class="admintag">ADMIN</span>':''}</h3>
       <p class="mut small">joined ${fmtDate(me.joined)}</p>
       <p class="bio">${esc(me.bio||'no bio yet — edit your profile!')}</p>
       <div class="stats">
@@ -397,6 +434,48 @@ function groupPageHTML(id){
   <div class="feed-list">${list.length?list.map(postHTML).join(''):'<div class="panel empty">nothing posted here yet</div>'}</div>`;
 }
 
+/* ----- LIST ----- */
+function listHTML(){
+  const ls=lists();
+  return `<div class="page-head"><h2>GEOMETRY DASH LIST</h2>
+    <span class="mut small">${isAdmin()?'👑 you manage this list':'🔒 managed by myszon (admin)'}</span></div>
+  ${isAdmin()?`
+  <form id="f-level" class="panel lvl-form">
+    <div class="lf-title">${levelEdit?'✎ EDIT LEVEL':'➕ ADD LEVEL TO THE LIST'}</div>
+    <input class="inp" name="name" maxlength="40" placeholder="level name *">
+    <textarea class="inp" name="desc" rows="2" maxlength="160" placeholder="description of the level"></textarea>
+    <div class="two">
+      <input class="inp" name="video" placeholder="video link (youtube…)">
+      <input class="inp" name="discord" placeholder="discord link">
+    </div>
+    <div class="lf-row">
+      ${levelEdit?'<button type="button" class="gd-btn ghost small" data-act="level-cancel">CANCEL</button>':''}
+      <button class="gd-btn small" type="submit">${levelEdit?'SAVE CHANGES':'ADD LEVEL'}</button>
+    </div>
+  </form>`:''}
+  <div class="list-wrap">
+    ${ls.map((lv,i)=>{
+      const rc=i===0?'r1':i===1?'r2':i===2?'r3':'';
+      return `<div class="panel lvl">
+        <div class="rank ${rc}">${i+1}</div>
+        <div class="lvl-main">
+          <h4>${esc(lv.name)}</h4>
+          ${lv.desc?`<p>${esc(lv.desc)}</p>`:''}
+          <div class="lvl-links">
+            ${lv.video?`<a class="gd-btn blue small" href="${esc(lv.video)}" target="_blank" rel="noopener">▶ VIDEO</a>`:''}
+            ${lv.discord?`<a class="gd-btn ghost small" href="${esc(lv.discord)}" target="_blank" rel="noopener">💬 DISCORD</a>`:''}
+          </div>
+        </div>
+        ${isAdmin()?`<div class="lvl-admin">
+          <button class="tool" data-act="level-up" data-id="${lv.id}" ${i===0?'disabled':''}>↑</button>
+          <button class="tool" data-act="level-down" data-id="${lv.id}" ${i===ls.length-1?'disabled':''}>↓</button>
+          <button class="tool" data-act="level-edit" data-id="${lv.id}">✎</button>
+          <button class="tool danger" data-act="level-del" data-id="${lv.id}">✕</button>
+        </div>`:''}
+      </div>`; }).join('') || '<div class="panel empty">the list is empty'+(isAdmin()?' — add the first level above!':'')+'</div>'}
+  </div>`;
+}
+
 /* ----- dms ----- */
 function dmsHTML(){
   const others=users().filter(u=>u.username!==me.username).sort((a,b)=>a.username.localeCompare(b.username));
@@ -411,7 +490,10 @@ function dmsHTML(){
   } else thread='<div class="dm-empty">pick someone on the left to start chatting 💬</div>';
   return `<div class="page-head"><h2>DIRECT MESSAGES</h2></div>
   <div class="dms">
-    <div class="panel dm-list">${others.map(u=>`<button class="dm-user ${dmWith===u.username?'sel':''}" data-act="dm" data-user="${esc(u.username)}">${avatarHTML(u,'s30')}<span>${esc(u.username)}</span></button>`).join('') || '<div class="empty small">no other members yet</div>'}</div>
+    <div class="panel dm-list">${others.map(u=>`<div class="dm-user ${dmWith===u.username?'sel':''}" data-act="dm" data-user="${esc(u.username)}">
+        ${avatarHTML(u,'s30')}<span>${u.role==='admin'?'👑 ':''}${esc(u.username)}</span>
+        ${isAdmin()&&u.username!==me.username?`<button class="del" style="margin-left:auto" data-act="del-user" data-user="${esc(u.username)}" title="remove member">✕</button>`:''}
+      </div>`).join('') || '<div class="empty small">no other members yet</div>'}</div>
     <div class="panel dm-thread">${thread}</div>
   </div>`;
 }
@@ -426,7 +508,7 @@ function modalHTML(){
         <label class="gd-btn blue small">📷 UPLOAD PHOTO<input type="file" id="av-file" accept="image/*" hidden></label>
         ${me.avatar?'<button class="gd-btn ghost small" data-act="remove-photo">REMOVE</button>':''}
       </div>
-      <p class="mut small" style="text-align:center;margin-bottom:12px">@${esc(me.username)}</p>
+      <p class="mut small" style="text-align:center;margin-bottom:12px">@${esc(me.username)}${isAdmin()?'<span class="admintag">ADMIN</span>':''}</p>
       <form id="f-bio">
         <textarea class="inp" name="bio" rows="3" maxlength="120" placeholder="your bio…">${esc(me.bio||'')}</textarea>
         <div class="m-row" style="justify-content:flex-end;margin-top:12px"><button class="gd-btn small" type="submit">SAVE</button></div>
@@ -442,8 +524,8 @@ document.addEventListener('click',e=>{
   if(act==='close-modal' && e.target.closest('.modal')) return;
   switch(act){
     case 'auth-tab': authTab=b.dataset.tab; render(); break;
-    case 'nav': view={name:b.dataset.view}; render(); break;
-    case 'logout': DB.set(K.session,null); modalOpen=false; dmWith=null; openComments.clear(); render(); break;
+    case 'nav': view={name:b.dataset.view}; levelEdit=null; render(); break;
+    case 'logout': DB.set(K.session,null); modalOpen=false; dmWith=null; levelEdit=null; openComments.clear(); render(); break;
     case 'profile': modalOpen=true; render(); break;
     case 'close-modal': modalOpen=false; render(); break;
     case 'like': { const l=posts(); const p=l.find(x=>x.id===b.dataset.id);
@@ -455,16 +537,47 @@ document.addEventListener('click',e=>{
       if(g){ const i=g.members.indexOf(me.username); i<0?g.members.push(me.username):g.members.splice(i,1); DB.set(K.groups,l); render(); } break; }
     case 'dm': dmWith=b.dataset.user; view={name:'dms'}; render(); break;
     case 'remove-photo': saveUser({avatar:null}); toast('photo removed'); render(); break;
+    /* --- posts / comments moderation --- */
+    case 'del-post': { const l=posts(); const p=l.find(x=>x.id===b.dataset.id);
+      if(p && (isAdmin()||p.author===me.username)){ DB.set(K.posts,l.filter(x=>x.id!==p.id)); toast('post deleted'); render(); } break; }
+    case 'del-comment': { const l=posts(); const p=l.find(x=>x.id===b.dataset.post);
+      if(p){ const c=p.comments.find(x=>x.id===b.dataset.cid);
+        if(c && (isAdmin()||c.author===me.username)){ p.comments=p.comments.filter(x=>x.id!==c.id); DB.set(K.posts,l); render(); } } break; }
+    case 'del-user': { if(isAdmin()){ deleteUser(b.dataset.user); } break; }
+    /* --- list management (admin) --- */
+    case 'level-del': { if(!isAdmin())break; DB.set(K.lists,lists().filter(x=>x.id!==b.dataset.id));
+      if(levelEdit===b.dataset.id) levelEdit=null; toast('level removed from list'); render(); break; }
+    case 'level-up': case 'level-down': { if(!isAdmin())break;
+      const l=lists(); const i=l.findIndex(x=>x.id===b.dataset.id); const j=act==='level-up'?i-1:i+1;
+      if(i<0||j<0||j>=l.length)break; [l[i],l[j]]=[l[j],l[i]]; DB.set(K.lists,l); render(); break; }
+    case 'level-edit': if(isAdmin()){ levelEdit=b.dataset.id; render(); } break;
+    case 'level-cancel': levelEdit=null; render(); break;
   }
 });
+
+function deleteUser(name){
+  DB.set(K.users, users().filter(u=>u.username!==name));
+  DB.set(K.posts, posts().filter(p=>p.author!==name)
+    .map(p=>({...p, likes:p.likes.filter(l=>l!==name), comments:p.comments.filter(c=>c.author!==name)})));
+  DB.set(K.groups, groups().map(g=>({...g, members:g.members.filter(m=>m!==name)})));
+  DB.set(K.dms, dms().filter(t=>!t.members.includes(name)));
+  if(dmWith===name) dmWith=null;
+  toast('@'+name+' removed from the community'); render();
+}
 
 function bindForms(){
   const on=(sel,fn)=>{ const el=$(sel); if(el) el.addEventListener('submit',e=>{ e.preventDefault(); fn(el); }); };
   on('#f-login',doLogin); on('#f-signup',doSignup); on('#f-post',doPost);
-  on('#f-group-create',doCreateGroup); on('#f-dm',doSendDM); on('#f-bio',doSaveBio);
+  on('#f-group-create',doCreateGroup); on('#f-dm',doSendDM); on('#f-bio',doSaveBio); on('#f-level',doLevel);
   document.querySelectorAll('form[data-comment]').forEach(f=>
     f.addEventListener('submit',e=>{ e.preventDefault(); doComment(f.dataset.comment,f); }));
   const file=$('#av-file'); if(file) file.addEventListener('change',onAvatarFile);
+  /* fill edit form when editing a list level */
+  const fl=$('#f-level');
+  if(fl && levelEdit){ const lv=lists().find(x=>x.id===levelEdit);
+    if(lv){ fl.elements.name.value=lv.name; fl.elements.desc.value=lv.desc||'';
+      fl.elements.video.value=lv.video||''; fl.elements.discord.value=lv.discord||''; }
+    else levelEdit=null; }
 }
 
 function doLogin(f){
@@ -480,8 +593,12 @@ function doSignup(f){
   if(findUser(u)){ err.textContent='that username is taken'; return; }
   if(p.length<6){ err.textContent='password needs at least 6 characters'; return; }
   if(p!==p2){ err.textContent="passwords don't match"; return; }
-  DB.set(K.users,[...users(),{username:u,pass:hashPw(u,p),avatar:null,bio:'',joined:Date.now()}]);
-  DB.set(K.session,u); view={name:'feed'}; render(); toast('welcome to the community! set your avatar 🎨');
+  /* only one admin ever: the account named myszon */
+  const newUser={username:u,pass:hashPw(u,p),avatar:null,bio:'',joined:Date.now()};
+  if(u.toLowerCase()==='myszon') newUser.role='admin';
+  DB.set(K.users,[...users(),newUser]);
+  DB.set(K.session,u); view={name:'feed'}; render();
+  toast(newUser.role?'welcome, admin 👑':'welcome to the community! set your avatar 🎨');
 }
 function doPost(f){
   const t=f.elements.t.value.trim(); if(!t) return;
@@ -491,7 +608,7 @@ function doPost(f){
 function doComment(id,f){
   const t=f.elements.c.value.trim(); if(!t) return;
   const l=posts(); const p=l.find(x=>x.id===id); if(!p) return;
-  p.comments.push({author:me.username,text:t,ts:Date.now()});
+  p.comments.push({id:uid(),author:me.username,text:t,ts:Date.now()});
   DB.set(K.posts,l); render();
   const inp=document.querySelector('form[data-comment="'+id+'"] input'); if(inp) inp.focus();
 }
@@ -514,6 +631,19 @@ function doSaveBio(f){
   saveUser({bio:f.elements.bio.value.trim()});
   toast('profile saved ✓'); modalOpen=false; render();
 }
+function doLevel(f){
+  if(!isAdmin()) return;
+  const name=f.elements.name.value.trim();
+  if(name.length<2){ toast('the level needs a name','error'); return; }
+  const data={ name, desc:f.elements.desc.value.trim(),
+    video:normUrl(f.elements.video.value), discord:normUrl(f.elements.discord.value) };
+  const l=lists();
+  if(levelEdit){ const i=l.findIndex(x=>x.id===levelEdit);
+    if(i>-1) l[i]={...l[i],...data};
+    levelEdit=null; toast('level updated ✓'); }
+  else { l.push({id:uid(),...data,ts:Date.now()}); toast('level added to the list ✓'); }
+  DB.set(K.lists,l); render();
+}
 async function onAvatarFile(e){
   const file=e.target.files[0]; if(!file) return;
   if(!file.type.startsWith('image/')){ toast('that is not an image','error'); return; }
@@ -531,7 +661,6 @@ async function onAvatarFile(e){
   }catch{ toast('could not read that image','error'); }
 }
 
-/* two tabs open = both stay in sync */
 window.addEventListener('storage',()=>render());
 
 seed(); render();
