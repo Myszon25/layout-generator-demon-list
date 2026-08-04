@@ -29,6 +29,7 @@
   .gd-btn.blue{background:linear-gradient(180deg,#5db9ff,#2a7fd4);border-color:#0f3d73;box-shadow:inset 0 2px 0 rgba(255,255,255,.35),0 4px 0 #0c315c}
   .gd-btn.ghost{background:var(--panel);border-color:var(--edge);box-shadow:inset 0 2px 0 rgba(255,255,255,.06),0 4px 0 var(--deep)}
   .gd-btn.small{font-size:.72rem;padding:8px 14px;border-width:2px;border-radius:10px}
+  .gd-btn:disabled{opacity:.4;pointer-events:none}
 
   .panel{background:var(--panel);border:2px solid var(--edge);border-radius:14px;
     box-shadow:inset 0 2px 0 rgba(255,255,255,.06),0 4px 0 rgba(0,0,0,.22)}
@@ -188,30 +189,35 @@
   .ltab{font-family:'Titan One';font-size:.78rem;padding:9px 18px;border-radius:10px;border:2px solid var(--edge);background:var(--panel);color:var(--mut);transition:.15s}
   .ltab:hover{color:#fff}
   .ltab.active{background:#1c4f92;color:#fff;border-color:#0d3568}
-  .i-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(248px,1fr));gap:14px;margin-top:6px}
-  .i-card{padding:12px;cursor:pointer;transition:transform .15s}
-  .i-card:hover{transform:translateY(-3px)}
-  .i-thumb{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:10px;border:2px solid var(--edge);display:block}
-  .i-ph{width:100%;aspect-ratio:16/9;border-radius:10px;border:2px solid var(--edge);display:grid;place-items:center;font-size:2rem;background:var(--panel2)}
-  .i-card h4{margin-top:10px;font-size:.98rem;word-break:break-word}
+
+  /* DEMONLIST-STYLE LEVEL ROWS */
+  .dlist{display:flex;flex-direction:column;gap:12px}
+  .drow{display:flex;align-items:center;gap:14px;padding:12px 16px;cursor:pointer;transition:transform .15s}
+  .drow:hover{transform:translateX(4px)}
+  .drow.open{border-radius:14px 14px 0 0;transform:none}
+  .drank{font-family:'Titan One';font-size:1.45rem;min-width:62px;color:#7d9cc4;text-shadow:0 2px 0 rgba(0,0,0,.3);text-align:center}
+  .drank.r1{color:#ffd93b} .drank.r2{color:#d5dee8} .drank.r3{color:#e8a06a}
+  .dthumb{width:96px;height:54px;object-fit:cover;border-radius:8px;border:2px solid var(--edge);flex:none}
+  .dthumb-ph{width:96px;height:54px;border-radius:8px;border:2px solid var(--edge);display:grid;place-items:center;background:var(--panel2);font-size:1.3rem;flex:none}
+  .dmain{flex:1;min-width:0}
+  .dmain h4{font-family:'Titan One';font-size:1.02rem;word-break:break-word}
+  .dmeta{display:flex;gap:10px;flex-wrap:wrap;font-size:.78rem;color:var(--mut);margin-top:4px}
+  .dside{display:flex;gap:10px;align-items:center;flex:none}
+  .chev{color:var(--mut);font-size:.7rem}
+  .dexp{padding:16px;margin-top:-8px;border-radius:0 0 14px 14px;position:relative}
+  .ddesc{line-height:1.6;white-space:pre-wrap;word-break:break-word;margin-bottom:10px}
   .i-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-  .i-foot{display:flex;gap:10px;margin-top:10px;font-size:.78rem;color:var(--mut);flex-wrap:wrap;align-items:center}
-  .item-grid{display:grid;grid-template-columns:340px 1fr;gap:18px;align-items:start;margin-top:14px}
-  .main-img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;border:2px solid var(--edge);display:block}
-  .main-ph{width:100%;aspect-ratio:4/3;border-radius:12px;border:2px solid var(--edge);display:grid;place-items:center;font-size:3.4rem;background:var(--panel2)}
-  .ph-strip{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
-  .ph-strip img{width:56px;height:56px;object-fit:cover;border-radius:8px;border:2px solid var(--edge);cursor:pointer}
-  .ph-strip img.sel{border-color:var(--yellow)}
+  .dphotos{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .dphotos img{height:80px;border-radius:8px;border:2px solid var(--edge);cursor:pointer;transition:transform .15s}
+  .dphotos img:hover{transform:scale(1.05)}
+  .dtools{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+  .vrow{display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--panel2);border:2px solid var(--edge);border-radius:10px;margin-top:8px;flex-wrap:wrap}
   .rate-star{background:none;border:none;font-size:1.35rem;color:#3f5f8d;padding:2px;transition:transform .1s}
   .rate-star:hover{transform:scale(1.15)}
   .rate-star.on{color:var(--yellow)}
   .react-btn{display:inline-flex;align-items:center;gap:6px;background:var(--panel2);border:2px solid var(--edge);border-radius:99px;padding:6px 12px;font-size:.9rem;color:#fff;transition:.15s}
   .react-btn:hover{border-color:#1c4f92;background:#1c4f92}
   .react-btn.sel{border-color:var(--green);background:rgba(142,232,93,.14)}
-  .item-panel{padding:20px}
-  .item-panel h2{font-family:'Titan One';font-size:1.35rem;word-break:break-word}
-  .pts-badge{font-family:'Titan One';color:var(--yellow);font-size:1rem}
-  .vrow{display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--panel2);border:2px solid var(--edge);border-radius:10px;margin-top:8px;flex-wrap:wrap}
   .f-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   .ph-x{position:absolute;top:-6px;right:-6px;width:18px;height:18px;border-radius:50%;background:#b23b3b;color:#fff;border:none;font-size:.6rem;display:grid;place-items:center}
   .lf-row{display:flex;gap:10px;justify-content:flex-end}
@@ -264,7 +270,9 @@
     .dm-list{flex-direction:row;overflow-x:auto;overflow-y:hidden}
     .dm-user{flex:none}
     .dm-thread{height:62vh}
-    .item-grid,.f-grid{grid-template-columns:1fr}
+    .f-grid{grid-template-columns:1fr}
+    .dthumb,.dthumb-ph{width:64px;height:40px}
+    .drank{min-width:48px;font-size:1.15rem}
   }
 </style>
 </head>
@@ -312,11 +320,11 @@ function avatarHTML(u,cls){
 }
 const avatarByName = (n,cls) => avatarHTML(findUser(n)||{username:n}, cls);
 
-const LIST_ICONS=['⭐','🔥','🎮','👾','🌀','💠','🟩','','🎯','','😈','','🎨','','💎','🕹️'];
+const LIST_ICONS=['⭐','🔥','🎮','👾','🌀','💠','🟩','🏆','🎯','🚀','😈','🧊','🎨','🎵','💎','🕹️'];
 const LIST_COLORS=['linear-gradient(135deg,#0e4ea8,#2fb6ff)','linear-gradient(135deg,#7a2fb0,#ff6bd6)','linear-gradient(135deg,#0c8a4e,#8ee85d)',
  'linear-gradient(135deg,#c9641a,#ffd93b)','linear-gradient(135deg,#b02438,#ff8a6b)','linear-gradient(135deg,#153e58,#58d5e8)',
  'linear-gradient(135deg,#5c1a8a,#8a5cff)','linear-gradient(135deg,#3a3f4a,#9aa7b8)'];
-const REACTS=['👍','❤️','🔥','','⭐'];
+const REACTS=['👍','❤️','🔥','😂','⭐'];
 const TAG_PRESETS=['need help','showcase','question','collab','meme','news','recruit'];
 
 function slugify(s){ const map={'ą':'a','ć':'c','ę':'e','ł':'l','ń':'n','ó':'o','ś':'s','ź':'z','ż':'z'};
@@ -389,11 +397,11 @@ function seed(){
 }
 
 /* ---------- state + router ---------- */
-let me=null, view={name:'feed'}, authTab='login', settingsOpen=false, dmWith=null, itemPhoto=0, listTab='levels', ytModal=null, imgModal=null, feedQ='';
+let me=null, view={name:'feed'}, authTab='login', settingsOpen=false, dmWith=null, listTab='levels', openLevel=null, ytModal=null, imgModal=null, feedQ='';
 let listModal=null, listDraft=null;
 let itemModal=null, itemDraft=null;
 let postTags=[];
-const attach={};           // pending attachments per form key
+const attach={};
 const openComments=new Set(); let focusDM=false;
 
 function toHash(v){
@@ -402,7 +410,6 @@ function toHash(v){
     case 'group': return '#/group/'+v.id;
     case 'lists': return '#/lists';
     case 'listview': return '#/lista/'+v.slug;
-    case 'item': return '#/lista/'+v.slug+'/'+v.is;
     case 'sites': return '#/websites';
     case 'olists': return '#/other-lists';
     case 'dms': return '#/dms';
@@ -411,14 +418,14 @@ function toHash(v){
 }
 function parseHash(){
   const parts=location.hash.replace(/^#\/?/,'').split('/').filter(Boolean);
-  if(parts[0]==='lista'&&parts[1]) return parts[2]?{name:'item',slug:parts[1],is:parts[2]}:{name:'listview',slug:parts[1]};
+  if(parts[0]==='lista'&&parts[1]) return {name:'listview',slug:parts[1],expand:parts[2]||null};
   if(['feed','groups','lists','dms','websites'].includes(parts[0])) return {name:parts[0]==='websites'?'sites':parts[0]};
   if(parts[0]==='other-lists') return {name:'olists'};
   if(parts[0]==='group'&&parts[1]) return {name:'group',id:parts[1]};
   return {name:'feed'};
 }
-function go(v){ view=v; itemPhoto=0; listTab='levels'; const h=toHash(v); if(location.hash!==h) location.hash=h; else render(); }
-window.addEventListener('hashchange',()=>{ view=parseHash(); itemPhoto=0; listTab='levels'; render(); });
+function go(v){ view=v; listTab='levels'; openLevel=null; const h=toHash(v); if(location.hash!==h) location.hash=h; else render(); }
+window.addEventListener('hashchange',()=>{ view=parseHash(); listTab='levels'; openLevel=null; render(); });
 
 function toast(msg,type){ const t=document.createElement('div'); t.className='toast '+(type||''); t.textContent=msg;
   $('#toasts').appendChild(t); setTimeout(()=>{ t.classList.add('out'); setTimeout(()=>t.remove(),320); },2600); }
@@ -426,8 +433,11 @@ function copyText(t){ if(navigator.clipboard){ navigator.clipboard.writeText(t).
   else prompt('copy this link:',t); }
 function saveUser(patch){ const l=users(); const i=l.findIndex(u=>u.username===me.username);
   if(i<0)return; l[i]={...l[i],...patch}; DB.set(K.users,l); me=l[i]; }
-function itemCtx(){ if(view.name!=='item')return null; const l=lists().find(x=>x.slug===view.slug); if(!l)return null;
-  const it=l.items.find(x=>x.slug===view.is); return it?{list:l,item:it}:null; }
+function levelCtx(){
+  if(view.name!=='listview') return null;
+  const l=lists().find(x=>x.slug===view.slug); if(!l) return null;
+  const it=l.items.find(x=>x.slug===openLevel); return it?{list:l,item:it}:null;
+}
 const membersOptions = () => users().map(u=>`<option>${esc(u.username)}</option>`).join('');
 
 /* ---------- attachments ---------- */
@@ -539,7 +549,7 @@ function renderApp(){
 }
 
 function topbarHTML(){
-  const at=view.name==='group'?'groups':(view.name==='listview'||view.name==='item')?'lists':view.name;
+  const at=view.name==='group'?'groups':(view.name==='listview')?'lists':view.name;
   const tab=(v,label)=>`<button data-act="nav" data-view="${v}" class="${at===v?'active':''}">${label}</button>`;
   return `<header class="topbar">
     <div class="logo">GD <span>COMMUNITY</span></div>
@@ -557,7 +567,6 @@ function viewHTML(){
     case 'group': return groupPageHTML(view.id);
     case 'lists': return listsBrowserHTML();
     case 'listview': return listViewHTML();
-    case 'item': return itemHTML();
     case 'sites': return sitesHTML();
     case 'olists': return olistsHTML();
     case 'dms': return dmsHTML();
@@ -702,14 +711,16 @@ function listsBrowserHTML(){
 function listViewHTML(){
   const l=lists().find(x=>x.slug===view.slug);
   if(!l) return '<div class="panel empty">list not found 🤔</div>';
+  if(view.expand){ openLevel=view.expand; view.expand=null; }
   const can=canList(l);
   const link=location.href.split('#')[0]+'#/lista/'+l.slug;
   let body='';
   if(listTab==='levels'){
-    body=`<div class="page-head" style="margin-top:4px"><span class="mut small">${l.items.length} level${l.items.length===1?'':'s'}</span>
+    body=`${can?'<datalist id="members">'+membersOptions()+'</datalist>':''}
+    <div class="page-head" style="margin-top:4px"><span class="mut small">${l.items.length} level${l.items.length===1?'':'s'} · placement = order on the list${can?' · use ↑↓ to move levels':''}</span>
       ${can?`<button class="gd-btn small" style="margin-left:auto" data-act="new-item" data-list="${l.id}">➕ ADD LEVEL</button>`:''}
     </div>
-    <div class="i-grid">${l.items.map(itemCardHTML).join('') || `<div class="panel empty" style="grid-column:1/-1">no levels yet${can?' — add the first one!':''}</div>`}</div>`;
+    <div class="dlist">${l.items.map((it,i)=>drowHTML(l,it,i,can)).join('') || `<div class="panel empty">no levels yet${can?' — add the first one!':''}</div>`}</div>`;
   } else if(listTab==='rules'){
     body= can ? `
     <form id="f-rules" class="panel" style="padding:18px">
@@ -769,93 +780,77 @@ function listViewHTML(){
   ${body}
   ${engagement}`;
 }
-function itemCardHTML(it){
+
+/* one ranked level row (demonlist style) */
+function drowHTML(l,it,i,can){
   const pts=+it.points||0;
   const rates=Object.values(it.ratings||{});
   const avg=rates.length?(rates.reduce((a,b)=>a+b,0)/rates.length).toFixed(1):null;
-  const victors=(it.victors||[]).length;
-  return `<div class="panel i-card" data-act="go-item" data-slug="${esc(it.slug)}">
-    ${it.thumb?`<img class="i-thumb" src="${it.thumb}">`:`<div class="i-ph">🎮</div>`}
-    <h4>${esc(it.title)}</h4>
-    <div class="i-meta">
-      <span class="tagchip" style="color:var(--yellow)">💠 ${pts} pts</span>
-      ${(it.tags||[]).slice(0,3).map(t=>`<span class="tagchip">#${esc(t)}</span>`).join('')}
-    </div>
-    <div class="i-foot">
-      ${it.verifier&&it.verifier.name?`<span>🛠 ${esc(it.verifier.name)}</span>`:''}
-      <span>🏆 ${victors}</span>
-      ${avg?`<span style="color:var(--yellow)">★ ${avg}</span>`:''}
-    </div>
-  </div>`;
-}
-function itemHTML(){
-  const ctx=itemCtx(); if(!ctx) return '<div class="panel empty">level not found 🤔</div>';
-  const l=ctx.list, it=ctx.item, can=canList(l);
-  const pts=+it.points||0;
-  const imgs=[it.thumb,...(it.photos||[])].filter(Boolean);
-  if(itemPhoto>=imgs.length) itemPhoto=0;
-  const rates=Object.values(it.ratings||{});
-  const avg=rates.length?(rates.reduce((a,b)=>a+b,0)/rates.length).toFixed(1):null;
-  const mine=(it.ratings||{})[me.username]||0;
-  const link=location.href.split('#')[0]+'#/lista/'+l.slug+'/'+it.slug;
   const victors=it.victors||[];
-  return `
-  <datalist id="members">${membersOptions()}</datalist>
-  <div class="page-head">
-    <button class="gd-btn ghost small" data-act="item-back">← ${l.icon} ${esc(l.name)}</button>
-    <button class="gd-btn ghost small" data-act="copy-link" data-href="${esc(link)}">🔗 COPY LEVEL LINK</button>
-    ${can?`<span style="margin-left:auto;display:flex;gap:8px">
-      <button class="gd-btn blue small" data-act="edit-item" data-id="${it.id}">✎ EDIT LEVEL</button>
-      <button class="gd-btn ghost small" data-act="del-item" data-id="${it.id}">🗑 DELETE</button></span>`:''}
-  </div>
-  <div class="item-grid">
-    <div>
-      ${imgs.length?`<img class="main-img" src="${imgs[itemPhoto]}">`:'<div class="main-ph">🎮</div>'}
-      ${imgs.length>1?`<div class="ph-strip">${imgs.map((p,i)=>`<img src="${p}" class="${i===itemPhoto?'sel':''}" data-act="photo-view" data-i="${i}">`).join('')}</div>`:''}
-    </div>
-    <div class="panel item-panel">
-      <h2>${esc(it.title)}</h2>
-      <div class="lv-meta" style="margin-top:8px">
-        <span>by <b style="color:#fff">@${esc(it.author)}</b></span>
-        <span>added ${fmtDate(it.created)}</span>
-        <span>edited ${ago(it.edited)} ago</span>
+  const open=openLevel===it.slug;
+  const rc=i===0?'r1':i===1?'r2':i===2?'r3':'';
+  const link=location.href.split('#')[0]+'#/lista/'+l.slug+'/'+it.slug;
+  const mine=(it.ratings||{})[me.username]||0;
+  return `<div>
+    <div class="panel drow ${open?'open':''}" data-act="lvl-toggle" data-slug="${esc(it.slug)}">
+      <div class="drank ${rc}">#${i+1}</div>
+      ${it.thumb?`<img class="dthumb" src="${it.thumb}">`:`<div class="dthumb-ph">🎮</div>`}
+      <div class="dmain">
+        <h4>${esc(it.title)}</h4>
+        <div class="dmeta">
+          <span style="color:var(--yellow)">💠 ${pts} pts</span>
+          ${it.verifier&&it.verifier.name?`<span>🛠 ${esc(it.verifier.name)}</span>`:''}
+          <span>🏆 ${victors.length} victor${victors.length===1?'':'s'}</span>
+          ${avg?`<span style="color:var(--yellow)">★ ${avg}</span>`:''}
+        </div>
       </div>
-      <div style="margin-top:10px"><span class="pts-badge">💠 ${pts} POINTS</span> <span class="mut small">for beating this level</span></div>
-      <div class="i-meta" style="margin-top:10px">${(it.tags||[]).map(t=>`<span class="tagchip">#${esc(t)}</span>`).join('')}</div>
-      ${it.desc?`<p style="margin-top:14px;line-height:1.6;white-space:pre-wrap;word-break:break-word">${esc(it.desc)}</p>`:''}
-      <div style="margin-top:16px;border-top:1px solid rgba(255,255,255,.08);padding-top:12px">
-        <span class="mut small">🛠 VERIFIER</span>
+      <div class="dside">
+        ${it.verifier&&it.verifier.video?`<button class="gd-btn blue small" data-act="watch" data-url="${esc(it.verifier.video)}" data-title="${esc(it.verifier.name)} verifies ${esc(it.title)}">▶ VIDEO</button>`:''}
+        <span class="chev">${open?'▲':'▼'}</span>
+      </div>
+    </div>
+    ${open?`<div class="panel dexp">
+      ${it.desc?`<p class="ddesc">${esc(it.desc)}</p>`:''}
+      ${(it.tags&&it.tags.length)?`<div class="i-meta" style="margin-top:0">${it.tags.map(t=>`<span class="tagchip">#${esc(t)}</span>`).join('')}</div>`:''}
+      ${it.photos&&it.photos.length?`<div class="dphotos">${it.photos.map(p=>`<img src="${p}" data-act="view-img" data-src="${p}">`).join('')}</div>`:''}
+      <div style="margin-top:12px">
+        <span class="mut small">🛠 VERIFIER · +${pts} pts</span>
         <div class="vrow">
           ${it.verifier&&it.verifier.name?`${avatarByName(it.verifier.name,'s30')}<b>${esc(it.verifier.name)}</b>
-            <span class="mut small">+${pts} pts</span>
             ${it.verifier.video?`<button class="gd-btn blue small" style="margin-left:auto" data-act="watch" data-url="${esc(it.verifier.video)}" data-title="${esc(it.verifier.name)} verifies ${esc(it.title)}">▶ VIDEO</button>`:''}`
           :'<span class="mut small">not set yet</span>'}
         </div>
       </div>
-      <div style="margin-top:16px">
-        <span class="mut small">🏆 VICTORS (${victors.length})</span>
-        ${victors.map((v,i)=>`<div class="vrow">
+      <div style="margin-top:14px">
+        <span class="mut small">🏆 VICTORS / RECORDS (${victors.length})</span>
+        ${victors.map((v,vi)=>`<div class="vrow">
           ${avatarByName(v.name,'s30')}<b>${esc(v.name)}</b><span class="mut small">+${pts} pts</span>
           ${v.video?`<button class="gd-btn blue small" data-act="watch" data-url="${esc(v.video)}" data-title="${esc(v.name)} beats ${esc(it.title)}">▶ VIDEO</button>`:''}
-          ${can?`<button class="del" style="margin-left:auto" data-act="del-victor" data-i="${i}">✕</button>`:''}
-        </div>`).join('') || '<div class="mut small" style="margin-top:6px">nobody beat this level yet</div>'}
+          ${can?`<button class="del" style="margin-left:auto" data-act="del-victor" data-i="${vi}">✕</button>`:''}
+        </div>`).join('') || '<div class="mut small" style="margin-top:6px">no records yet — nobody beat this level</div>'}
         ${can?`<form class="cmt-form" id="f-victor" style="margin-top:10px">
           <input class="inp" name="name" list="members" maxlength="20" placeholder="who beat it? (username)">
           <input class="inp" name="video" placeholder="youtube link (proof)">
           <button class="gd-btn small" type="submit">ADD VICTOR</button>
         </form>`:''}
       </div>
-      <div style="margin-top:16px;border-top:1px solid rgba(255,255,255,.08);padding-top:12px">
-        <span class="mut small">rating:</span> <b style="color:var(--yellow)">${avg?'★ '+avg:'★ –'}</b>
-        <span class="mut small">(${rates.length})</span>
+      <div style="margin-top:14px;border-top:1px solid rgba(255,255,255,.08);padding-top:12px">
+        <span class="mut small">rating:</span> <b style="color:var(--yellow)">${avg?'★ '+avg:'★ –'}</b> <span class="mut small">(${rates.length})</span>
         <span class="mut small" style="margin-left:12px">your rating:</span>
         ${[1,2,3,4,5].map(n=>`<button class="rate-star ${mine>=n?'on':''}" data-act="rate" data-val="${n}">★</button>`).join('')}
       </div>
-    </div>
+      <div class="dtools">
+        <button class="gd-btn ghost small" data-act="copy-link" data-href="${esc(link)}">🔗 LEVEL LINK</button>
+        ${can?`<button class="gd-btn blue small" data-act="edit-item" data-id="${it.id}">✎ EDIT</button>
+        <button class="gd-btn ghost small" data-act="lvl-up" data-slug="${esc(it.slug)}" ${i===0?'disabled':''}>↑ UP</button>
+        <button class="gd-btn ghost small" data-act="lvl-down" data-slug="${esc(it.slug)}" ${i===l.items.length-1?'disabled':''}>↓ DOWN</button>
+        <button class="gd-btn ghost small" data-act="del-item" data-id="${it.id}">🗑 DELETE</button>`:''}
+      </div>
+    </div>`:''}
   </div>`;
 }
 
-/* ----- WEBSITES + OTHER LISTS (admin managed) ----- */
+/* ----- WEBSITES + OTHER LISTS ----- */
 function dirHTML(title,sub,arr,formId,delAct,visitLabel){
   return `<div class="page-head"><h2>${title}</h2><span class="mut small">${isAdmin()?'👑 '+sub[0]:sub[1]}</span></div>
   ${isAdmin()?`<form id="${formId}" class="panel g-create">
@@ -1075,25 +1070,27 @@ document.addEventListener('click',e=>{
     case 'del-lcomment': { const L=lists(); const l=L.find(x=>x.slug===view.slug); if(!l)break;
       l.comments=l.comments||[]; const c=l.comments.find(x=>x.id===b.dataset.cid);
       if(c&&(isAdmin()||c.author===me.username)){ l.comments=l.comments.filter(x=>x.id!==c.id); DB.set(K.lists,L); render(); } break; }
+    /* levels (demonlist rows) */
+    case 'lvl-toggle': { const s=b.dataset.slug; openLevel=openLevel===s?null:s; render(); break; }
+    case 'lvl-up': case 'lvl-down': { const L=lists(); const l=L.find(x=>x.slug===view.slug);
+      if(l&&canList(l)){ const i=l.items.findIndex(x=>x.slug===b.dataset.slug); const j=act==='lvl-up'?i-1:i+1;
+        if(i>-1&&j>-1&&j<l.items.length){ [l.items[i],l.items[j]]=[l.items[j],l.items[i]]; l.edited=Date.now(); DB.set(K.lists,L); render(); } } break; }
     case 'new-item': itemModal={list:b.dataset.list,id:null};
       itemDraft={title:'',desc:'',tags:'',points:'',vname:'',vvideo:'',thumb:null,photos:[]}; render(); break;
-    case 'edit-item': { const L=lists();
-      const l=L.find(x=>x.slug===view.slug);
+    case 'edit-item': { const l=lists().find(x=>x.slug===view.slug);
       const it=l&&l.items.find(x=>x.id===b.dataset.id);
       if(l&&it&&canList(l)){ itemModal={list:l.id,id:it.id};
         itemDraft={title:it.title,desc:it.desc||'',tags:(it.tags||[]).join(', '),points:it.points||'',
           vname:(it.verifier||{}).name||'',vvideo:(it.verifier||{}).video||'',thumb:it.thumb,photos:[...(it.photos||[])]};
         render(); } break; }
-    case 'go-item': go({name:'item',slug:view.slug,is:b.dataset.slug}); break;
-    case 'item-back': go({name:'listview',slug:view.slug}); break;
-    case 'del-item': { const ctx=itemCtx(); if(!ctx)break; const L=lists(); const l=L.find(x=>x.id===ctx.list.id);
-      if(l&&canList(l)){ l.items=l.items.filter(x=>x.id!==b.dataset.id); l.edited=Date.now(); DB.set(K.lists,L); toast('level deleted'); go({name:'listview',slug:l.slug}); } break; }
+    case 'del-item': { const l0=lists().find(x=>x.slug===view.slug); if(!l0)break;
+      const L=lists(); const l=L.find(x=>x.id===l0.id);
+      if(l&&canList(l)){ l.items=l.items.filter(x=>x.id!==b.dataset.id); l.edited=Date.now(); openLevel=null; DB.set(K.lists,L); toast('level deleted'); render(); } break; }
     case 'iphoto-del': syncItemDraft(); itemDraft.photos.splice(+b.dataset.i,1); render(); break;
-    case 'photo-view': itemPhoto=+b.dataset.i; render(); break;
-    case 'del-victor': { const ctx=itemCtx(); if(!ctx)break; const L=lists(); const l=L.find(x=>x.id===ctx.list.id);
+    case 'del-victor': { const ctx=levelCtx(); if(!ctx)break; const L=lists(); const l=L.find(x=>x.id===ctx.list.id);
       const it=l.items.find(x=>x.id===ctx.item.id);
       if(it&&canList(l)){ it.victors=(it.victors||[]); it.victors.splice(+b.dataset.i,1); it.edited=l.edited=Date.now(); DB.set(K.lists,L); render(); } break; }
-    case 'rate': { const ctx=itemCtx(); if(!ctx)break; const L=lists(); const l=L.find(x=>x.id===ctx.list.id);
+    case 'rate': { const ctx=levelCtx(); if(!ctx)break; const L=lists(); const l=L.find(x=>x.id===ctx.list.id);
       const it=l.items.find(x=>x.id===ctx.item.id); it.ratings=it.ratings||{};
       const v=+b.dataset.val; if(it.ratings[me.username]===v) delete it.ratings[me.username]; else it.ratings[me.username]=v;
       DB.set(K.lists,L); render(); break; }
@@ -1128,8 +1125,8 @@ function bindForms(){
   on('#f-login',doLogin); on('#f-signup',doSignup); on('#f-post',doPost);
   on('#f-group-create',doCreateGroup); on('#f-dm',doSendDM); on('#f-bio',doSaveBio); on('#f-pass',doChangePass);
   on('#f-list',doSaveList); on('#f-item',doSaveItem); on('#f-victor',doAddVictor); on('#f-rules',doSaveRules);
-  on('#f-site',f=>doAddDir(f,K.sites,'website added 🌐',['🌐','','⭐','🎮','📺','🗺️','🧰','']));
-  on('#f-osite',f=>doAddDir(f,K.olists,'list added 📋',['','🏆','','⭐','','🗂️']));
+  on('#f-site',f=>doAddDir(f,K.sites,'website added 🌐',['🌐','🔗','⭐','🎮','📺','🗺️','🧰','📰']));
+  on('#f-osite',f=>doAddDir(f,K.olists,'list added 📋',['📋','🏆','📊','⭐','😈','🗂️']));
   document.querySelectorAll('form[data-comment]').forEach(f=>
     f.addEventListener('submit',e=>{ e.preventDefault(); doComment(f.dataset.comment,f); }));
   const lc=document.querySelector('form[data-listcomment]');
@@ -1206,7 +1203,7 @@ function doListComment(f){
 function doCreateGroup(f){
   const name=f.elements.name.value.trim(), desc=f.elements.desc.value.trim();
   if(name.length<3){ toast('group name too short','error'); return; }
-  const emojis=['🟩','','🔺','⭐','💠','🌀','👾','🎮','🕹️','','😈',''];
+  const emojis=['🟩','🟨','🔺','⭐','💠','🌀','👾','🎮','🕹️','🧊','😈','🚀'];
   const g={id:uid(),name,desc,emoji:emojis[Math.floor(Math.random()*emojis.length)],members:[me.username],owner:me.username,ts:Date.now()};
   DB.set(K.groups,[...groups(),g]); go({name:'group',id:g.id}); toast('group created ✓');
 }
@@ -1238,7 +1235,7 @@ function doSaveRules(f){
   DB.set(K.lists,L); toast('rules saved 📋'); render();
 }
 function doAddVictor(f){
-  const ctx=itemCtx(); if(!ctx||!canList(ctx.list)) return;
+  const ctx=levelCtx(); if(!ctx||!canList(ctx.list)) return;
   const name=f.elements.name.value.trim();
   if(!name){ toast('write who beat it','error'); return; }
   const L=lists(); const l=L.find(x=>x.id===ctx.list.id); const it=l.items.find(x=>x.id===ctx.item.id);
@@ -1278,10 +1275,11 @@ function doSaveItem(f){
     if(it){ Object.assign(it,{title,desc:d.desc.trim(),tags,points,verifier,thumb:d.thumb,photos:d.photos,edited:Date.now()});
       l.edited=Date.now(); toast('level updated ✓'); }
   } else {
-    l.items.push({id:uid(),slug:uniqueItemSlug(l,title),title,desc:d.desc.trim(),tags,points,verifier,
+    const slug=uniqueItemSlug(l,title);
+    l.items.push({id:uid(),slug,title,desc:d.desc.trim(),tags,points,verifier,
       victors:[],thumb:d.thumb,photos:d.photos,ratings:{},
       author:me.username,created:Date.now(),edited:Date.now()});
-    l.edited=Date.now(); toast('level added ✓');
+    l.edited=Date.now(); openLevel=slug; toast('level added ✓ (at the bottom — use ↑↓ to move it)');
   }
   DB.set(K.lists,L); itemModal=null; render();
 }
