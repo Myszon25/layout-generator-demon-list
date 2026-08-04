@@ -68,7 +68,7 @@
   .logo{font-family:'Titan One';font-size:1.1rem;text-shadow:0 2px 0 rgba(0,0,0,.35);white-space:nowrap}
   .logo span{color:var(--green)}
   .nav{display:flex;gap:8px;flex-wrap:wrap}
-  .nav button{font-family:'Titan One';font-size:.78rem;padding:9px 16px;border-radius:10px;border:2px solid transparent;background:transparent;color:#bcd6f2;transition:.15s}
+  .nav button{font-family:'Titan One';font-size:.74rem;padding:9px 14px;border-radius:10px;border:2px solid transparent;background:transparent;color:#bcd6f2;transition:.15s}
   .nav button:hover{background:rgba(255,255,255,.08)}
   .nav button.active{background:#1c4f92;border-color:#0d3568;color:#fff}
   .top-right{margin-left:auto;display:flex;align-items:center;gap:10px}
@@ -90,7 +90,13 @@
   .stats span{font-size:.6rem;letter-spacing:.14em;color:var(--mut);text-transform:uppercase}
   .composer{display:grid;grid-template-columns:44px 1fr;gap:12px;padding:16px}
   .composer .stack{display:flex;flex-direction:column;gap:10px}
-  .composer .row{display:flex;justify-content:flex-end}
+  .composer .row{display:flex;justify-content:flex-end;align-items:center;gap:10px}
+  .tagrow{display:flex;gap:6px;flex-wrap:wrap}
+  .ttag{cursor:pointer;border:none;transition:.15s}
+  .ttag:hover{background:#2663b3}
+  .ttag.sel{background:linear-gradient(180deg,#ffe45e,#e0a013);color:#3d2c00}
+  .clicktag{cursor:pointer;border:none}
+  .clicktag:hover{background:#2663b3}
   .searchbar{display:flex;align-items:center;gap:10px;padding:6px 14px;margin-bottom:14px}
   .searchbar input{flex:1;background:transparent;border:none;color:#fff;font:inherit;font-size:.95rem;outline:none}
   .searchbar input::placeholder{color:#5f7ea6}
@@ -102,6 +108,7 @@
   .gtag{margin-left:auto;font-size:.72rem;background:#1c4f92;border:1px solid #0d3568;color:#cfe3fa;border-radius:99px;padding:4px 11px;white-space:nowrap}
   .gtag:hover{background:#2663b3}
   .post-text{margin-top:11px;line-height:1.55;white-space:pre-wrap;word-break:break-word;font-size:.96rem}
+  .post-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
   .post-actions{display:flex;gap:6px;align-items:center;margin-top:11px;border-top:1px solid rgba(255,255,255,.07);padding-top:9px}
   .act{display:inline-flex;align-items:center;gap:6px;background:none;border:none;color:var(--mut);font-size:.9rem;padding:6px 11px;border-radius:8px;transition:.15s}
   .act:hover{background:rgba(255,255,255,.08);color:#fff}
@@ -113,9 +120,26 @@
   .cmt .mut{font-size:.74rem}
   .cmt-body{min-width:0;word-break:break-word}
   .cmt .del{margin-left:auto}
-  .cmt-form{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+  .cmt-form{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center}
   .cmt-form .inp{flex:1;min-width:120px}
   .empty{padding:30px;text-align:center;color:var(--mut)}
+
+  /* ATTACHMENTS */
+  .clip{display:inline-grid;place-items:center;width:40px;height:40px;border:2px solid var(--edge);border-radius:10px;background:var(--panel2);cursor:pointer;font-size:1rem;flex:none;transition:.15s}
+  .clip:hover{border-color:var(--blue)}
+  .attach-strip{display:flex;gap:8px;flex-wrap:wrap}
+  .attach-strip:empty{display:none}
+  .att-chip{position:relative;display:inline-block}
+  .att-chip img{width:46px;height:46px;object-fit:cover;border-radius:8px;border:2px solid var(--edge)}
+  .att-chip.file{display:inline-flex;align-items:center;gap:6px;background:var(--panel2);border:2px solid var(--edge);border-radius:10px;padding:8px 28px 8px 10px;font-size:.74rem;color:var(--blue);max-width:210px}
+  .att-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .atts{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .att-img{width:110px;height:110px;object-fit:cover;border-radius:10px;border:2px solid var(--edge);cursor:pointer;transition:transform .15s}
+  .att-img:hover{transform:scale(1.04)}
+  .att-file{display:inline-flex;align-items:center;gap:6px;background:var(--panel2);border:2px solid var(--edge);border-radius:10px;padding:7px 11px;font-size:.76rem;color:var(--blue);text-decoration:none;max-width:230px}
+  .att-file span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .bub .atts{margin-top:8px}
+  .bub .att-img{width:140px;height:140px}
 
   /* GROUPS */
   .g-create{display:flex;gap:10px;padding:14px;flex-wrap:wrap;margin-bottom:16px}
@@ -216,7 +240,7 @@
   .bub{max-width:72%;padding:9px 13px;border-radius:14px;font-size:.93rem;line-height:1.45;word-break:break-word}
   .bub.mine{align-self:flex-end;background:linear-gradient(180deg,var(--green),var(--green2));color:#0c2b06;border-bottom-right-radius:4px}
   .bub.theirs{align-self:flex-start;background:#1c4f92;border-bottom-left-radius:4px}
-  .dm-form{display:flex;gap:8px;padding:12px;border-top:2px solid var(--edge)}
+  .dm-form{display:flex;gap:8px;padding:12px;border-top:2px solid var(--edge);align-items:center}
   .dm-empty{height:100%;display:grid;place-items:center;color:var(--mut);text-align:center;padding:20px}
 
   /* MODAL / TOAST */
@@ -256,7 +280,7 @@ const DB = {
   get(k,d){ try{ const v=localStorage.getItem(k); return v?JSON.parse(v):d; }catch{ return d; } },
   set(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); return true; }catch{ toast('storage full — use smaller images','error'); return false; } }
 };
-const K = { users:'gd.users', posts:'gd.posts', groups:'gd.groups', dms:'gd.dms', lists:'gd.lists', sites:'gd.sites', session:'gd.session' };
+const K = { users:'gd.users', posts:'gd.posts', groups:'gd.groups', dms:'gd.dms', lists:'gd.lists', sites:'gd.sites', olists:'gd.olists', session:'gd.session' };
 
 const users  = () => DB.get(K.users,[]);
 const posts  = () => DB.get(K.posts,[]);
@@ -264,6 +288,7 @@ const groups = () => DB.get(K.groups,[]);
 const dms    = () => DB.get(K.dms,[]);
 const lists  = () => DB.get(K.lists,[]);
 const sites  = () => DB.get(K.sites,[]);
+const olists = () => DB.get(K.olists,[]);
 const findUser = n => users().find(u=>u.username.toLowerCase()===String(n).toLowerCase());
 const isAdmin  = () => !!(me && me.role==='admin');
 const canList  = l => isAdmin() || (l && l.author===me.username);
@@ -287,18 +312,19 @@ function avatarHTML(u,cls){
 }
 const avatarByName = (n,cls) => avatarHTML(findUser(n)||{username:n}, cls);
 
-const LIST_ICONS=['⭐','🔥','🎮','👾','🌀','💠','🟩','🏆','🎯','🚀','😈','🧊','🎨','🎵','💎','🕹️'];
+const LIST_ICONS=['⭐','🔥','🎮','👾','🌀','💠','🟩','','🎯','','😈','','🎨','','💎','🕹️'];
 const LIST_COLORS=['linear-gradient(135deg,#0e4ea8,#2fb6ff)','linear-gradient(135deg,#7a2fb0,#ff6bd6)','linear-gradient(135deg,#0c8a4e,#8ee85d)',
  'linear-gradient(135deg,#c9641a,#ffd93b)','linear-gradient(135deg,#b02438,#ff8a6b)','linear-gradient(135deg,#153e58,#58d5e8)',
  'linear-gradient(135deg,#5c1a8a,#8a5cff)','linear-gradient(135deg,#3a3f4a,#9aa7b8)'];
-const REACTS=['👍','❤️','🔥','😂','⭐'];
+const REACTS=['👍','❤️','🔥','','⭐'];
+const TAG_PRESETS=['need help','showcase','question','collab','meme','news','recruit'];
 
 function slugify(s){ const map={'ą':'a','ć':'c','ę':'e','ł':'l','ń':'n','ó':'o','ś':'s','ź':'z','ż':'z'};
   return (String(s).toLowerCase().replace(/[ąćęłńóśźż]/g,c=>map[c]).replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,''))||'lista'; }
 function uniqueListSlug(name){ const base=slugify(name); let s=base,i=2; while(lists().some(l=>l.slug===s)) s=base+'-'+(i++); return s; }
 function uniqueItemSlug(list,title){ const base=slugify(title)||'level'; let s=base,i=2; while(list.items.some(x=>x.slug===s)) s=base+'-'+(i++); return s; }
 
-/* ---- image helpers ---- */
+/* ---- image / file helpers ---- */
 function loadImage(file){ return new Promise((res,rej)=>{ const img=new Image(),u=URL.createObjectURL(file);
   img.onload=()=>{URL.revokeObjectURL(u);res(img)}; img.onerror=rej; img.src=u; }); }
 async function cropImage(file,W,H){ const img=await loadImage(file); const c=document.createElement('canvas'); c.width=W;c.height=H;
@@ -307,6 +333,7 @@ async function cropImage(file,W,H){ const img=await loadImage(file); const c=doc
 async function fitImage(file,max){ const img=await loadImage(file); const r=Math.min(1,max/Math.max(img.width,img.height));
   const c=document.createElement('canvas'); c.width=Math.round(img.width*r); c.height=Math.round(img.height*r);
   c.getContext('2d').drawImage(img,0,0,c.width,c.height); return c.toDataURL('image/jpeg',.75); }
+function fileToData(file){ return new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=rej; r.readAsDataURL(file); }); }
 
 /* ---------- seed ---------- */
 function sampleLists(){ return [{
@@ -337,10 +364,10 @@ function seed(){
       {username:'NovaDash',  pass:'x'+rnd, avatar:null, bio:'collab manager — dm me',   joined:Date.now()-86400000*9}
     ]);
     DB.set(K.posts,[
-      {id:uid(),author:'WaveMaster',text:'just beat deadlocked... my hands are GONE 😤',ts:Date.now()-3600000*2,likes:['CubeLord','NovaDash'],group:null,
+      {id:uid(),author:'WaveMaster',text:'just beat deadlocked... my hands are GONE 😤',tags:['showcase'],ts:Date.now()-3600000*2,likes:['CubeLord','NovaDash'],group:null,
         comments:[{id:uid(),author:'CubeLord',text:'insane. the ship part got me 200 times',ts:Date.now()-3600000}]},
-      {id:uid(),author:'NovaDash',text:'looking for 3 people for a mega collab — demon difficulty. comment or dm me 🌀',ts:Date.now()-3600000*7,likes:['WaveMaster'],group:null,comments:[]},
-      {id:uid(),author:'CubeLord',text:'stereo madness but every jump is frame perfect. no big deal.',ts:Date.now()-86400000,likes:[],group:null,
+      {id:uid(),author:'NovaDash',text:'looking for 3 people for a mega collab — demon difficulty. comment or dm me 🌀',tags:['collab','recruit'],ts:Date.now()-3600000*7,likes:['WaveMaster'],group:null,comments:[]},
+      {id:uid(),author:'CubeLord',text:'stereo madness but every jump is frame perfect. no big deal.',tags:['meme'],ts:Date.now()-86400000,likes:[],group:null,
         comments:[{id:uid(),author:'NovaDash',text:'post the video!!',ts:Date.now()-82000000}]}
     ]);
     DB.set(K.groups,[{id:uid(),name:'Demon Players',desc:'only the brave. share your demon clears and fails.',emoji:'😈',members:['CubeLord','WaveMaster'],owner:'CubeLord',ts:Date.now()-86400000*30}]);
@@ -350,16 +377,23 @@ function seed(){
       {id:uid(),name:'GD Forum',url:'https://gdforum.net',desc:'The biggest Geometry Dash forum.',emoji:'💬',ts:Date.now()},
       {id:uid(),name:'Geometry Dash',url:'https://geometrydash.com',desc:'The official game website.',emoji:'🎮',ts:Date.now()}
     ]);
+    DB.set(K.olists,[
+      {id:uid(),name:'Demon List',url:'https://pointercrate.com/demonlist/',desc:'The official top extreme demons ranking.',emoji:'🏆',ts:Date.now()},
+      {id:uid(),name:'Impossible Levels',url:'https://www.youtube.com/results?search_query=impossible+levels+geometry+dash',desc:'The craziest impossible levels, ranked by the community.',emoji:'😈',ts:Date.now()}
+    ]);
   }
   const old=DB.get(K.lists,null);
   if(!old || (old.length && !('items' in old[0]))) DB.set(K.lists,sampleLists());
   if(DB.get(K.sites,null)===null) DB.set(K.sites,[]);
+  if(DB.get(K.olists,null)===null) DB.set(K.olists,[]);
 }
 
 /* ---------- state + router ---------- */
-let me=null, view={name:'feed'}, authTab='login', settingsOpen=false, dmWith=null, itemPhoto=0, listTab='levels', ytModal=null, feedQ='';
+let me=null, view={name:'feed'}, authTab='login', settingsOpen=false, dmWith=null, itemPhoto=0, listTab='levels', ytModal=null, imgModal=null, feedQ='';
 let listModal=null, listDraft=null;
 let itemModal=null, itemDraft=null;
+let postTags=[];
+const attach={};           // pending attachments per form key
 const openComments=new Set(); let focusDM=false;
 
 function toHash(v){
@@ -370,6 +404,7 @@ function toHash(v){
     case 'listview': return '#/lista/'+v.slug;
     case 'item': return '#/lista/'+v.slug+'/'+v.is;
     case 'sites': return '#/websites';
+    case 'olists': return '#/other-lists';
     case 'dms': return '#/dms';
     default: return '#/feed';
   }
@@ -378,6 +413,7 @@ function parseHash(){
   const parts=location.hash.replace(/^#\/?/,'').split('/').filter(Boolean);
   if(parts[0]==='lista'&&parts[1]) return parts[2]?{name:'item',slug:parts[1],is:parts[2]}:{name:'listview',slug:parts[1]};
   if(['feed','groups','lists','dms','websites'].includes(parts[0])) return {name:parts[0]==='websites'?'sites':parts[0]};
+  if(parts[0]==='other-lists') return {name:'olists'};
   if(parts[0]==='group'&&parts[1]) return {name:'group',id:parts[1]};
   return {name:'feed'};
 }
@@ -392,8 +428,39 @@ function saveUser(patch){ const l=users(); const i=l.findIndex(u=>u.username===m
   if(i<0)return; l[i]={...l[i],...patch}; DB.set(K.users,l); me=l[i]; }
 function itemCtx(){ if(view.name!=='item')return null; const l=lists().find(x=>x.slug===view.slug); if(!l)return null;
   const it=l.items.find(x=>x.slug===view.is); return it?{list:l,item:it}:null; }
-function listByView(){ return lists().find(x=>x.slug===view.slug); }
 const membersOptions = () => users().map(u=>`<option>${esc(u.username)}</option>`).join('');
+
+/* ---------- attachments ---------- */
+function attsHTML(atts){
+  if(!atts||!atts.length) return '';
+  return `<div class="atts">${atts.map(a=> a.kind==='img'
+    ? `<img class="att-img" src="${a.data}" data-act="view-img" data-src="${a.data}">`
+    : `<a class="att-file" href="${a.data}" download="${esc(a.name)}">📄 <span>${esc(a.name)}</span></a>`).join('')}</div>`;
+}
+function stripHTML(key){
+  const arr=attach[key]||[];
+  return arr.map((a,i)=> a.kind==='img'
+    ? `<span class="att-chip"><img src="${a.data}"><button type="button" class="ph-x" data-act="attach-del" data-key="${key}" data-i="${i}">✕</button></span>`
+    : `<span class="att-chip file">📄<span class="att-name">${esc(a.name)}</span><button type="button" class="ph-x" data-act="attach-del" data-key="${key}" data-i="${i}">✕</button></span>`).join('');
+}
+function updateStrip(key){ const el=document.querySelector('.attach-strip[data-key="'+key+'"]'); if(el) el.innerHTML=stripHTML(key); }
+async function onAttach(key,fileList){
+  const files=[...fileList]; if(!files.length) return;
+  attach[key]=attach[key]||[];
+  for(const f of files){
+    if(attach[key].length>=6){ toast('max 6 attachments','error'); break; }
+    if(f.type.startsWith('image/')){
+      try{ attach[key].push({kind:'img',name:f.name,data:await fitImage(f,800)}); }catch{ toast('could not read image','error'); }
+    } else if(f.size<=1000000){
+      attach[key].push({kind:'file',name:f.name,data:await fileToData(f)});
+    } else toast('file too big (max 1MB) — images get compressed','error');
+  }
+  updateStrip(key);
+}
+document.addEventListener('change',e=>{
+  const inp=e.target.closest?e.target.closest('input[data-attach]'):null;
+  if(inp){ onAttach(inp.dataset.attach,inp.files); inp.value=''; }
+});
 
 /* ---------- per-list leaderboard ---------- */
 function listLeaderboard(l){
@@ -463,8 +530,10 @@ function renderApp(){
   if(listModal!==null) html+=listModalHTML();
   if(itemModal) html+=itemModalHTML();
   if(ytModal) html+=ytModalHTML();
+  if(imgModal) html+=imgModalHTML();
   $('#root').innerHTML=html;
   bindForms();
+  Object.keys(attach).forEach(updateStrip);
   const msgs=$('#dm-msgs'); if(msgs) msgs.scrollTop=msgs.scrollHeight;
   if(focusDM){ const i=$('#dm-input'); if(i) i.focus(); focusDM=false; }
 }
@@ -474,7 +543,7 @@ function topbarHTML(){
   const tab=(v,label)=>`<button data-act="nav" data-view="${v}" class="${at===v?'active':''}">${label}</button>`;
   return `<header class="topbar">
     <div class="logo">GD <span>COMMUNITY</span></div>
-    <nav class="nav">${tab('feed','FEED')}${tab('groups','GROUPS')}${tab('lists','LISTS')}${tab('sites','WEBSITES')}${tab('dms','DMS')}</nav>
+    <nav class="nav">${tab('feed','FEED')}${tab('groups','GROUPS')}${tab('lists','LISTS')}${tab('sites','WEBSITES')}${tab('olists','OTHER LISTS')}${tab('dms','DMS')}</nav>
     <div class="top-right">
       <button class="chip" data-act="settings">${avatarHTML(me,'s30')}<span>${esc(me.username)}${isAdmin()?' 👑':''}</span></button>
       <button class="gd-btn ghost small" data-act="logout">LOGOUT</button>
@@ -490,18 +559,24 @@ function viewHTML(){
     case 'listview': return listViewHTML();
     case 'item': return itemHTML();
     case 'sites': return sitesHTML();
+    case 'olists': return olistsHTML();
     case 'dms': return dmsHTML();
     default: return feedHTML();
   }
 }
 
-/* ----- feed (with search) ----- */
+/* ----- feed ----- */
 function composerHTML(groupId){
   return `<form id="f-post" class="panel composer" data-group="${groupId||''}">
     ${avatarHTML(me,'s44')}
     <div class="stack">
       <textarea class="inp" name="t" rows="2" maxlength="280" placeholder="what's happening in GD?"></textarea>
-      <div class="row"><button class="gd-btn small" type="submit">POST ⭐</button></div>
+      <div class="tagrow">${TAG_PRESETS.map(t=>`<button type="button" class="tagchip ttag ${postTags.includes(t)?'sel':''}" data-act="ptag" data-t="${t}">#${t}</button>`).join('')}</div>
+      <div class="attach-strip" data-key="post"></div>
+      <div class="row">
+        <label class="clip" title="add photos / files">📎<input type="file" multiple hidden data-attach="post"></label>
+        <button class="gd-btn small" type="submit" style="margin-left:auto">POST ⭐</button>
+      </div>
     </div>
   </form>`;
 }
@@ -518,6 +593,8 @@ function postHTML(p){
       ${g?`<button class="gtag" data-act="open-group" data-id="${g.id}">${g.emoji} ${esc(g.name)}</button>`:''}
     </div>
     <p class="post-text">${esc(p.text)}</p>
+    ${(p.tags&&p.tags.length)?`<div class="post-tags">${p.tags.map(t=>`<button class="tagchip clicktag" data-act="ftag" data-t="${esc(t)}">#${esc(t)}</button>`).join('')}</div>`:''}
+    ${attsHTML(p.attachments)}
     <div class="post-actions">
       <button class="act ${liked?'liked':''}" data-act="like" data-id="${p.id}">★ ${p.likes.length}</button>
       <button class="act" data-act="comments" data-id="${p.id}">💬 ${p.comments.length}</button>
@@ -527,10 +604,12 @@ function postHTML(p){
     ${open?`<div class="comments">
       ${p.comments.map(c=>{ const ca=findUser(c.author)||{username:c.author,avatar:null};
         const canDelC=isAdmin()||c.author===me.username;
-        return `<div class="cmt">${avatarHTML(ca,'s28')}<div class="cmt-body"><b>${ca.role==='admin'?'👑 ':''}${esc(ca.username)}</b> <span class="mut">${ago(c.ts)}</span><br>${esc(c.text)}</div>
+        return `<div class="cmt">${avatarHTML(ca,'s28')}<div class="cmt-body"><b>${ca.role==='admin'?'👑 ':''}${esc(ca.username)}</b> <span class="mut">${ago(c.ts)}</span><br>${esc(c.text)}${attsHTML(c.attachments)}</div>
         ${canDelC?`<button class="del" data-act="del-comment" data-post="${p.id}" data-cid="${c.id}">✕</button>`:''}</div>`; }).join('')}
+      <div class="attach-strip" data-key="cmt:${p.id}"></div>
       <form class="cmt-form" data-comment="${p.id}">
         <input class="inp" name="c" maxlength="200" placeholder="write a comment…" autocomplete="off">
+        <label class="clip" title="add photos / files">📎<input type="file" multiple hidden data-attach="cmt:${p.id}"></label>
         <button class="gd-btn blue small" type="submit">SEND</button>
       </form>
     </div>`:''}
@@ -539,7 +618,7 @@ function postHTML(p){
 function feedPostsHTML(){
   const q=feedQ.trim().toLowerCase();
   let list=posts().filter(p=>!p.group).sort((a,b)=>b.ts-a.ts);
-  if(q) list=list.filter(p=>p.text.toLowerCase().includes(q)||p.author.toLowerCase().includes(q));
+  if(q) list=list.filter(p=>p.text.toLowerCase().includes(q)||p.author.toLowerCase().includes(q)||(p.tags||[]).some(t=>t.toLowerCase().includes(q)));
   if(!list.length) return `<div class="panel empty">${q?'nothing found for “'+esc(feedQ)+'”':'it\'s quiet in here… be the first to post!'}</div>`;
   return list.map(postHTML).join('');
 }
@@ -562,7 +641,7 @@ function feedHTML(){
     </aside>
     <div>
       ${composerHTML('')}
-      <div class="panel searchbar">🔍<input id="feed-search" placeholder="search posts… (text or @author)" autocomplete="off"></div>
+      <div class="panel searchbar">🔍<input id="feed-search" placeholder="search posts, tags, authors…" autocomplete="off"></div>
       <div class="feed-list" id="feed-list">${feedPostsHTML()}</div>
     </div>
   </div>`;
@@ -602,7 +681,7 @@ function groupPageHTML(id){
   <div class="feed-list">${list.length?list.map(postHTML).join(''):'<div class="panel empty">nothing posted here yet</div>'}</div>`;
 }
 
-/* ----- LISTS browser ----- */
+/* ----- LISTS ----- */
 function listsBrowserHTML(){
   const ls=lists().slice().sort((a,b)=>b.edited-a.edited);
   return `<div class="page-head"><h2>LISTS</h2><span class="mut small">${ls.length} list${ls.length===1?'':'s'} · everyone can make their own — unlimited!</span>
@@ -620,10 +699,8 @@ function listsBrowserHTML(){
     </div>`).join('') || '<div class="panel empty">no lists yet — make the first one!</div>'}
   </div>`;
 }
-
-/* ----- list page: LEVELS / RULES / LEADERBOARD + reactions & comments ----- */
 function listViewHTML(){
-  const l=listByView();
+  const l=lists().find(x=>x.slug===view.slug);
   if(!l) return '<div class="panel empty">list not found 🤔</div>';
   const can=canList(l);
   const link=location.href.split('#')[0]+'#/lista/'+l.slug;
@@ -655,10 +732,12 @@ function listViewHTML(){
       <span class="mut small">COMMENTS (${lComments.length})</span>
       ${lComments.map(c=>{ const ca=findUser(c.author)||{username:c.author,avatar:null};
         const canDelC=isAdmin()||c.author===me.username;
-        return `<div class="cmt">${avatarHTML(ca,'s28')}<div class="cmt-body"><b>${ca.role==='admin'?'👑 ':''}${esc(ca.username)}</b> <span class="mut">${ago(c.ts)}</span><br>${esc(c.text)}</div>
+        return `<div class="cmt">${avatarHTML(ca,'s28')}<div class="cmt-body"><b>${ca.role==='admin'?'👑 ':''}${esc(ca.username)}</b> <span class="mut">${ago(c.ts)}</span><br>${esc(c.text)}${attsHTML(c.attachments)}</div>
         ${canDelC?`<button class="del" data-act="del-lcomment" data-cid="${c.id}">✕</button>`:''}</div>`; }).join('')}
+      <div class="attach-strip" data-key="lcmt"></div>
       <form class="cmt-form" data-listcomment="1">
         <input class="inp" name="c" maxlength="200" placeholder="comment on this list…" autocomplete="off">
+        <label class="clip" title="add photos / files">📎<input type="file" multiple hidden data-attach="lcmt"></label>
         <button class="gd-btn blue small" type="submit">SEND</button>
       </form>
     </div>
@@ -709,8 +788,6 @@ function itemCardHTML(it){
     </div>
   </div>`;
 }
-
-/* ----- level page (no comments/reactions here anymore) ----- */
 function itemHTML(){
   const ctx=itemCtx(); if(!ctx) return '<div class="panel empty">level not found 🤔</div>';
   const l=ctx.list, it=ctx.item, can=canList(l);
@@ -746,7 +823,6 @@ function itemHTML(){
       <div style="margin-top:10px"><span class="pts-badge">💠 ${pts} POINTS</span> <span class="mut small">for beating this level</span></div>
       <div class="i-meta" style="margin-top:10px">${(it.tags||[]).map(t=>`<span class="tagchip">#${esc(t)}</span>`).join('')}</div>
       ${it.desc?`<p style="margin-top:14px;line-height:1.6;white-space:pre-wrap;word-break:break-word">${esc(it.desc)}</p>`:''}
-
       <div style="margin-top:16px;border-top:1px solid rgba(255,255,255,.08);padding-top:12px">
         <span class="mut small">🛠 VERIFIER</span>
         <div class="vrow">
@@ -756,7 +832,6 @@ function itemHTML(){
           :'<span class="mut small">not set yet</span>'}
         </div>
       </div>
-
       <div style="margin-top:16px">
         <span class="mut small">🏆 VICTORS (${victors.length})</span>
         ${victors.map((v,i)=>`<div class="vrow">
@@ -770,7 +845,6 @@ function itemHTML(){
           <button class="gd-btn small" type="submit">ADD VICTOR</button>
         </form>`:''}
       </div>
-
       <div style="margin-top:16px;border-top:1px solid rgba(255,255,255,.08);padding-top:12px">
         <span class="mut small">rating:</span> <b style="color:var(--yellow)">${avg?'★ '+avg:'★ –'}</b>
         <span class="mut small">(${rates.length})</span>
@@ -781,28 +855,28 @@ function itemHTML(){
   </div>`;
 }
 
-/* ----- WEBSITES (admin managed) ----- */
-function sitesHTML(){
-  const ss=sites();
-  return `<div class="page-head"><h2>WEBSITES</h2><span class="mut small">${isAdmin()?'👑 you add & remove sites here':'cool GD sites picked by the admin'}</span></div>
-  ${isAdmin()?`<form id="f-site" class="panel g-create">
-    <input class="inp" name="name" maxlength="30" placeholder="website name">
+/* ----- WEBSITES + OTHER LISTS (admin managed) ----- */
+function dirHTML(title,sub,arr,formId,delAct,visitLabel){
+  return `<div class="page-head"><h2>${title}</h2><span class="mut small">${isAdmin()?'👑 '+sub[0]:sub[1]}</span></div>
+  ${isAdmin()?`<form id="${formId}" class="panel g-create">
+    <input class="inp" name="name" maxlength="30" placeholder="name">
     <input class="inp" name="url" placeholder="link (https://...)">
     <input class="inp" name="desc" maxlength="80" placeholder="short description">
-    <button class="gd-btn small" type="submit">ADD SITE</button>
+    <button class="gd-btn small" type="submit">ADD</button>
   </form>`:''}
-  <div class="g-grid">${ss.map(s=>`
+  <div class="g-grid">${arr.map(s=>`
     <div class="panel g-card" data-act="open-site" data-url="${esc(s.url)}">
       <div class="top"><span class="g-emoji">${s.emoji}</span><h4>${esc(s.name)}</h4>
-        ${isAdmin()?`<button class="del" style="margin-left:auto" data-act="del-site" data-id="${s.id}">✕</button>`:''}
-      </div>
+        ${isAdmin()?`<button class="del" style="margin-left:auto" data-act="${delAct}" data-id="${s.id}">✕</button>`:''}</div>
       <p>${esc(s.desc||'')}</p>
-      <div class="g-foot"><span class="mut small">${esc(shortUrl(s.url))}</span><span class="gd-btn blue small">VISIT ↗</span></div>
-    </div>`).join('') || '<div class="panel empty">no websites yet'+(isAdmin()?' — add the first one above!':'')+'</div>'}
+      <div class="g-foot"><span class="mut small">${esc(shortUrl(s.url))}</span><span class="gd-btn blue small">${visitLabel}</span></div>
+    </div>`).join('') || '<div class="panel empty">nothing here yet'+(isAdmin()?' — add the first one above!':'')+'</div>'}
   </div>`;
 }
+const sitesHTML  = () => dirHTML('WEBSITES',['you add & remove sites here','cool GD sites picked by the admin'],sites(),'f-site','del-site','VISIT ↗');
+const olistsHTML = () => dirHTML('OTHER LISTS',['you add & remove lists here','other GD lists from around the internet'],olists(),'f-osite','del-osite','OPEN ↗');
 
-/* ----- settings modal ----- */
+/* ----- modals ----- */
 function settingsModalHTML(){
   return `<div class="overlay" data-act="m-close">
     <div class="modal panel">
@@ -904,6 +978,12 @@ function ytModalHTML(){
     <div class="lf-row" style="margin-top:12px"><button class="gd-btn ghost small" data-act="m-close-btn">CLOSE</button></div>
   </div></div>`;
 }
+function imgModalHTML(){
+  return `<div class="overlay" data-act="m-close"><div class="modal" style="background:transparent;border:none;box-shadow:none;padding:0;width:auto;max-width:94vw">
+    <img src="${imgModal.src}" style="max-width:92vw;max-height:82vh;border-radius:12px;display:block;border:2px solid var(--edge)">
+    <div class="lf-row" style="margin-top:12px;justify-content:center"><button class="gd-btn ghost small" data-act="m-close-btn">CLOSE</button></div>
+  </div></div>`;
+}
 
 /* ----- dms ----- */
 function dmsHTML(){
@@ -914,8 +994,13 @@ function dmsHTML(){
     const tid=[me.username,dmWith].sort().join('|');
     const t=dms().find(x=>x.id===tid);
     thread=`<div class="dm-head">${avatarHTML(u,'s30')} DM with @${esc(dmWith)}</div>
-    <div id="dm-msgs">${(t?t.msgs:[]).map(m=>`<div class="bub ${m.from===me.username?'mine':'theirs'}">${esc(m.text)}</div>`).join('') || '<div class="dm-empty">say hi 👋</div>'}</div>
-    <form id="f-dm" class="dm-form"><input class="inp" id="dm-input" name="t" maxlength="500" placeholder="message…" autocomplete="off"><button class="gd-btn small" type="submit">SEND</button></form>`;
+    <div id="dm-msgs">${(t?t.msgs:[]).map(m=>`<div class="bub ${m.from===me.username?'mine':'theirs'}">${esc(m.text)}${attsHTML(m.attachments)}</div>`).join('') || '<div class="dm-empty">say hi 👋</div>'}</div>
+    <div class="attach-strip" data-key="dm" style="padding:8px 12px 0"></div>
+    <form id="f-dm" class="dm-form">
+      <input class="inp" id="dm-input" name="t" maxlength="500" placeholder="message…" autocomplete="off">
+      <label class="clip" title="add photos / files">📎<input type="file" multiple hidden data-attach="dm"></label>
+      <button class="gd-btn small" type="submit">SEND</button>
+    </form>`;
   } else thread='<div class="dm-empty">pick someone on the left to start chatting 💬</div>';
   return `<div class="page-head"><h2>DIRECT MESSAGES</h2></div>
   <div class="dms">
@@ -930,6 +1015,7 @@ function dmsHTML(){
 /* ---------- actions ---------- */
 function closeModal(){
   if(ytModal){ ytModal=null; render(); return; }
+  if(imgModal){ imgModal=null; render(); return; }
   if(listModal!==null) listModal=null;
   else if(itemModal) itemModal=null;
   else settingsOpen=false;
@@ -948,10 +1034,16 @@ document.addEventListener('click',e=>{
     case 'auth-tab': authTab=b.dataset.tab; render(); break;
     case 'nav': go({name:b.dataset.view}); break;
     case 'nav-go': go({name:b.dataset.to}); break;
-    case 'logout': DB.set(K.session,null); settingsOpen=false; listModal=null; itemModal=null; ytModal=null; dmWith=null; openComments.clear(); location.hash='#/feed'; render(); break;
+    case 'logout': DB.set(K.session,null); settingsOpen=false; listModal=null; itemModal=null; ytModal=null; imgModal=null; dmWith=null; openComments.clear(); location.hash='#/feed'; render(); break;
     case 'settings': settingsOpen=true; render(); break;
     case 'm-close': case 'm-close-btn': closeModal(); break;
     case 'remove-photo': saveUser({avatar:null}); toast('photo removed'); render(); break;
+    case 'view-img': imgModal={src:b.dataset.src}; render(); break;
+    case 'attach-del': { const k=b.dataset.key; if(attach[k]){ attach[k].splice(+b.dataset.i,1); updateStrip(k); } break; }
+    case 'ptag': { const t=b.dataset.t; const i=postTags.indexOf(t); i<0?postTags.push(t):postTags.splice(i,1); b.classList.toggle('sel'); break; }
+    case 'ftag': { feedQ=b.dataset.t;
+      if(view.name!=='feed'){ go({name:'feed'}); }
+      else { const fs=$('#feed-search'); if(fs)fs.value=feedQ; const el=$('#feed-list'); if(el) el.innerHTML=feedPostsHTML(); } break; }
     case 'like': { const l=posts(); const p=l.find(x=>x.id===b.dataset.id);
       if(p){ const i=p.likes.indexOf(me.username); i<0?p.likes.push(me.username):p.likes.splice(i,1); DB.set(K.posts,l); render(); } break; }
     case 'comments': { const id=b.dataset.id; openComments.has(id)?openComments.delete(id):openComments.add(id); render(); break; }
@@ -963,7 +1055,6 @@ document.addEventListener('click',e=>{
     case 'open-group': go({name:'group',id:b.dataset.id}); break;
     case 'join': { const l=groups(); const g=l.find(x=>x.id===b.dataset.id);
       if(g){ const i=g.members.indexOf(me.username); i<0?g.members.push(me.username):g.members.splice(i,1); DB.set(K.groups,l); render(); } break; }
-    /* lists */
     case 'new-list': listModal='new'; listDraft={name:'',desc:'',rules:'',icon:'⭐',color:0,banner:null}; render(); break;
     case 'edit-list': { const l=lists().find(x=>x.id===b.dataset.id);
       if(l&&canList(l)){ listModal=l.id; listDraft={name:l.name,desc:l.desc||'',rules:l.rules||'',icon:l.icon,color:l.color,banner:l.banner}; render(); } break; }
@@ -977,15 +1068,13 @@ document.addEventListener('click',e=>{
     case 'copy-link': copyText(b.dataset.href); break;
     case 'watch': { const id=ytId(b.dataset.url);
       if(id){ ytModal={title:b.dataset.title||'video',id}; render(); } else window.open(b.dataset.url,'_blank'); break; }
-    /* list reactions + comments */
     case 'lreact': { const L=lists(); const l=L.find(x=>x.slug===view.slug); if(!l)break;
-      l.reacts=l.reacts||{}; const e=b.dataset.e; l.reacts[e]=l.reacts[e]||[];
-      const i=l.reacts[e].indexOf(me.username); i<0?l.reacts[e].push(me.username):l.reacts[e].splice(i,1);
+      l.reacts=l.reacts||{}; const e2=b.dataset.e; l.reacts[e2]=l.reacts[e2]||[];
+      const i=l.reacts[e2].indexOf(me.username); i<0?l.reacts[e2].push(me.username):l.reacts[e2].splice(i,1);
       DB.set(K.lists,L); render(); break; }
     case 'del-lcomment': { const L=lists(); const l=L.find(x=>x.slug===view.slug); if(!l)break;
       l.comments=l.comments||[]; const c=l.comments.find(x=>x.id===b.dataset.cid);
       if(c&&(isAdmin()||c.author===me.username)){ l.comments=l.comments.filter(x=>x.id!==c.id); DB.set(K.lists,L); render(); } break; }
-    /* levels */
     case 'new-item': itemModal={list:b.dataset.list,id:null};
       itemDraft={title:'',desc:'',tags:'',points:'',vname:'',vvideo:'',thumb:null,photos:[]}; render(); break;
     case 'edit-item': { const L=lists();
@@ -1008,10 +1097,9 @@ document.addEventListener('click',e=>{
       const it=l.items.find(x=>x.id===ctx.item.id); it.ratings=it.ratings||{};
       const v=+b.dataset.val; if(it.ratings[me.username]===v) delete it.ratings[me.username]; else it.ratings[me.username]=v;
       DB.set(K.lists,L); render(); break; }
-    /* websites */
     case 'open-site': window.open(b.dataset.url,'_blank'); break;
     case 'del-site': if(isAdmin()){ DB.set(K.sites,sites().filter(s=>s.id!==b.dataset.id)); toast('website removed'); render(); } break;
-    /* dms */
+    case 'del-osite': if(isAdmin()){ DB.set(K.olists,olists().filter(s=>s.id!==b.dataset.id)); toast('list removed'); render(); } break;
     case 'dm': dmWith=b.dataset.user; go({name:'dms'}); break;
     case 'del-user': { if(isAdmin()) deleteUser(b.dataset.user); break; }
   }
@@ -1039,7 +1127,9 @@ function bindForms(){
   const on=(sel,fn)=>{ const el=$(sel); if(el) el.addEventListener('submit',e=>{ e.preventDefault(); fn(el); }); };
   on('#f-login',doLogin); on('#f-signup',doSignup); on('#f-post',doPost);
   on('#f-group-create',doCreateGroup); on('#f-dm',doSendDM); on('#f-bio',doSaveBio); on('#f-pass',doChangePass);
-  on('#f-list',doSaveList); on('#f-item',doSaveItem); on('#f-victor',doAddVictor); on('#f-rules',doSaveRules); on('#f-site',doAddSite);
+  on('#f-list',doSaveList); on('#f-item',doSaveItem); on('#f-victor',doAddVictor); on('#f-rules',doSaveRules);
+  on('#f-site',f=>doAddDir(f,K.sites,'website added 🌐',['🌐','','⭐','🎮','📺','🗺️','🧰','']));
+  on('#f-osite',f=>doAddDir(f,K.olists,'list added 📋',['','🏆','','⭐','','🗂️']));
   document.querySelectorAll('form[data-comment]').forEach(f=>
     f.addEventListener('submit',e=>{ e.preventDefault(); doComment(f.dataset.comment,f); }));
   const lc=document.querySelector('form[data-listcomment]');
@@ -1060,6 +1150,13 @@ function bindForms(){
       itemDraft.photos.push(await fitImage(file,800)); } render(); }catch{ toast('could not read image','error'); } });
 }
 
+function doAddDir(f,key,msg,emojis){
+  if(!isAdmin()) return;
+  const name=f.elements.name.value.trim(), url=normUrl(f.elements.url.value), desc=f.elements.desc.value.trim();
+  if(!name||!url){ toast('needs a name and a link','error'); return; }
+  DB.set(key,[...DB.get(key,[]),{id:uid(),name,url,desc,emoji:emojis[Math.floor(Math.random()*emojis.length)],ts:Date.now()}]);
+  toast(msg); render();
+}
 function doLogin(f){
   const u=f.elements.u.value.trim(), p=f.elements.p.value, err=$('#auth-err');
   const usr=findUser(u);
@@ -1080,38 +1177,49 @@ function doSignup(f){
   toast(newUser.role?'welcome, admin 👑':'welcome to the community! 🎨');
 }
 function doPost(f){
-  const t=f.elements.t.value.trim(); if(!t) return;
-  DB.set(K.posts,[{id:uid(),author:me.username,text:t,ts:Date.now(),likes:[],comments:[],group:f.dataset.group||null},...posts()]);
-  feedQ=''; render();
+  const t=f.elements.t.value.trim();
+  const atts=(attach['post']||[]).slice();
+  if(!t && !atts.length) return;
+  DB.set(K.posts,[{id:uid(),author:me.username,text:t,tags:postTags.slice(),attachments:atts,ts:Date.now(),likes:[],comments:[],group:f.dataset.group||null},...posts()]);
+  attach['post']=[]; postTags=[]; feedQ='';
+  render();
 }
 function doComment(id,f){
-  const t=f.elements.c.value.trim(); if(!t) return;
+  const t=f.elements.c.value.trim();
+  const key='cmt:'+id;
+  const atts=(attach[key]||[]).slice();
+  if(!t && !atts.length) return;
   const l=posts(); const p=l.find(x=>x.id===id); if(!p) return;
-  p.comments.push({id:uid(),author:me.username,text:t,ts:Date.now()});
-  DB.set(K.posts,l); render();
+  p.comments.push({id:uid(),author:me.username,text:t,attachments:atts,ts:Date.now()});
+  DB.set(K.posts,l); attach[key]=[]; render();
   const inp=document.querySelector('form[data-comment="'+id+'"] input'); if(inp) inp.focus();
 }
 function doListComment(f){
-  const t=f.elements.c.value.trim(); if(!t) return;
+  const t=f.elements.c.value.trim();
+  const atts=(attach['lcmt']||[]).slice();
+  if(!t && !atts.length) return;
   const L=lists(); const l=L.find(x=>x.slug===view.slug); if(!l) return;
   l.comments=l.comments||[];
-  l.comments.push({id:uid(),author:me.username,text:t,ts:Date.now()});
-  DB.set(K.lists,L); render();
+  l.comments.push({id:uid(),author:me.username,text:t,attachments:atts,ts:Date.now()});
+  DB.set(K.lists,L); attach['lcmt']=[]; render();
 }
 function doCreateGroup(f){
   const name=f.elements.name.value.trim(), desc=f.elements.desc.value.trim();
   if(name.length<3){ toast('group name too short','error'); return; }
-  const emojis=['🟩','🟨','🔺','⭐','💠','🌀','👾','🎮','🕹️','🧊','😈','🚀'];
+  const emojis=['🟩','','🔺','⭐','💠','🌀','👾','🎮','🕹️','','😈',''];
   const g={id:uid(),name,desc,emoji:emojis[Math.floor(Math.random()*emojis.length)],members:[me.username],owner:me.username,ts:Date.now()};
   DB.set(K.groups,[...groups(),g]); go({name:'group',id:g.id}); toast('group created ✓');
 }
 function doSendDM(f){
-  const t=f.elements.t.value.trim(); if(!t||!dmWith) return;
+  const t=f.elements.t.value.trim();
+  const atts=(attach['dm']||[]).slice();
+  if(!t && !atts.length) return;
+  if(!dmWith) return;
   const tid=[me.username,dmWith].sort().join('|');
   const l=dms(); let th=l.find(x=>x.id===tid);
   if(!th){ th={id:tid,members:[me.username,dmWith],msgs:[]}; l.push(th); }
-  th.msgs.push({from:me.username,text:t,ts:Date.now()});
-  DB.set(K.dms,l); focusDM=true; render();
+  th.msgs.push({from:me.username,text:t,attachments:atts,ts:Date.now()});
+  DB.set(K.dms,l); attach['dm']=[]; focusDM=true; render();
 }
 function doSaveBio(f){ saveUser({bio:f.elements.bio.value.trim()}); toast('bio saved ✓'); render(); }
 function doChangePass(f){
@@ -1138,14 +1246,6 @@ function doAddVictor(f){
   it.victors.push({name,video:normUrl(f.elements.video.value)});
   it.edited=l.edited=Date.now();
   DB.set(K.lists,L); toast(name+' added as victor 🏆'); render();
-}
-function doAddSite(f){
-  if(!isAdmin()) return;
-  const name=f.elements.name.value.trim(), url=normUrl(f.elements.url.value), desc=f.elements.desc.value.trim();
-  if(!name||!url){ toast('site needs a name and a link','error'); return; }
-  const emojis=['🌐','🔗','⭐','🎮','📺','🗺️','🧰','📰'];
-  DB.set(K.sites,[...sites(),{id:uid(),name,url,desc,emoji:emojis[Math.floor(Math.random()*emojis.length)],ts:Date.now()}]);
-  toast('website added 🌐'); render();
 }
 function doSaveList(f){
   syncListDraft();
