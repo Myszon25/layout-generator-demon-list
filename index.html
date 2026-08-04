@@ -91,7 +91,10 @@
   .composer{display:grid;grid-template-columns:44px 1fr;gap:12px;padding:16px}
   .composer .stack{display:flex;flex-direction:column;gap:10px}
   .composer .row{display:flex;justify-content:flex-end}
-  .feed-list{display:flex;flex-direction:column;gap:14px;margin-top:14px}
+  .searchbar{display:flex;align-items:center;gap:10px;padding:6px 14px;margin-bottom:14px}
+  .searchbar input{flex:1;background:transparent;border:none;color:#fff;font:inherit;font-size:.95rem;outline:none}
+  .searchbar input::placeholder{color:#5f7ea6}
+  .feed-list{display:flex;flex-direction:column;gap:14px}
   .post{padding:16px}
   .post-head{display:flex;gap:11px;align-items:center}
   .post-head .who b{display:block;font-size:.98rem}
@@ -116,7 +119,7 @@
 
   /* GROUPS */
   .g-create{display:flex;gap:10px;padding:14px;flex-wrap:wrap;margin-bottom:16px}
-  .g-create .inp{flex:1;min-width:160px}
+  .g-create .inp{flex:1;min-width:140px}
   .g-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(235px,1fr));gap:14px}
   .g-card{padding:16px;cursor:pointer;transition:transform .15s}
   .g-card:hover{transform:translateY(-3px)}
@@ -157,7 +160,7 @@
   .lv-head h2{font-family:'Titan One';font-size:1.5rem}
   .lv-head .desc{color:var(--mut);margin-top:6px;word-break:break-word}
   .lv-meta{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:12px;font-size:.78rem;color:var(--mut)}
-  .ltabs{display:flex;gap:8px;margin:18px 0 14px}
+  .ltabs{display:flex;gap:8px;margin:18px 0 14px;flex-wrap:wrap}
   .ltab{font-family:'Titan One';font-size:.78rem;padding:9px 18px;border-radius:10px;border:2px solid var(--edge);background:var(--panel);color:var(--mut);transition:.15s}
   .ltab:hover{color:#fff}
   .ltab.active{background:#1c4f92;color:#fff;border-color:#0d3568}
@@ -188,14 +191,15 @@
   .f-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   .ph-x{position:absolute;top:-6px;right:-6px;width:18px;height:18px;border-radius:50%;background:#b23b3b;color:#fff;border:none;font-size:.6rem;display:grid;place-items:center}
   .lf-row{display:flex;gap:10px;justify-content:flex-end}
+  .sep{border:none;border-top:2px dashed var(--edge);margin:18px 0}
 
-  /* LEADERBOARD */
+  /* LEADERBOARD (per list) */
   .lb-row{display:flex;gap:12px;align-items:center;padding:14px 16px;margin-bottom:12px;flex-wrap:wrap}
   .rank{font-family:'Titan One';width:46px;height:46px;border-radius:12px;display:grid;place-items:center;font-size:1.1rem;background:#1c4f92;border:2px solid #0d3568;flex:none;text-shadow:0 2px 0 rgba(0,0,0,.3)}
   .rank.r1{background:linear-gradient(180deg,#ffe45e,#e0a013);border-color:#8a6206;color:#3d2c00;text-shadow:none}
   .rank.r2{background:linear-gradient(180deg,#e8eef4,#9fb2c4);border-color:#5d6f80;color:#22303d;text-shadow:none}
   .rank.r3{background:linear-gradient(180deg,#e8a06a,#b0642e);border-color:#6e3d17;color:#3a2008;text-shadow:none}
-  .lb-name{flex:1;min-width:180px}
+  .lb-name{flex:1;min-width:170px}
   .lb-name b{font-size:1rem}
   .lb-clears{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
   .lb-pts{font-family:'Titan One';color:var(--yellow);font-size:1.15rem;margin-left:auto}
@@ -252,13 +256,14 @@ const DB = {
   get(k,d){ try{ const v=localStorage.getItem(k); return v?JSON.parse(v):d; }catch{ return d; } },
   set(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); return true; }catch{ toast('storage full — use smaller images','error'); return false; } }
 };
-const K = { users:'gd.users', posts:'gd.posts', groups:'gd.groups', dms:'gd.dms', lists:'gd.lists', session:'gd.session' };
+const K = { users:'gd.users', posts:'gd.posts', groups:'gd.groups', dms:'gd.dms', lists:'gd.lists', sites:'gd.sites', session:'gd.session' };
 
 const users  = () => DB.get(K.users,[]);
 const posts  = () => DB.get(K.posts,[]);
 const groups = () => DB.get(K.groups,[]);
 const dms    = () => DB.get(K.dms,[]);
 const lists  = () => DB.get(K.lists,[]);
+const sites  = () => DB.get(K.sites,[]);
 const findUser = n => users().find(u=>u.username.toLowerCase()===String(n).toLowerCase());
 const isAdmin  = () => !!(me && me.role==='admin');
 const canList  = l => isAdmin() || (l && l.author===me.username);
@@ -270,6 +275,7 @@ const hashNum = s => [...String(s)].reduce((a,c)=>a+c.charCodeAt(0),0);
 function ago(t){ const s=Math.floor((Date.now()-t)/1000); if(s<60)return'now'; if(s<3600)return Math.floor(s/60)+'m'; if(s<86400)return Math.floor(s/3600)+'h'; return Math.floor(s/86400)+'d'; }
 function fmtDate(t){ return new Date(t).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}); }
 function normUrl(v){ v=(v||'').trim(); if(!v) return ''; if(!/^https?:\/\//i.test(v)) v='https://'+v; return /^https?:\/\//i.test(v)?v:''; }
+function shortUrl(u){ return String(u||'').replace(/^https?:\/\//,'').replace(/^www\./,'').slice(0,30); }
 function ytId(url){ const m=String(url||'').match(/(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)([\w-]{6,})/); return m?m[1]:null; }
 
 const CUBES = [['#8ee85d','#4db32a'],['#ffd93b','#e0a013'],['#ff9f2e','#d3711a'],['#6ad7ff','#2e9ad0'],['#ff6b81','#d33d55'],['#c98bff','#8a3fd0']];
@@ -281,7 +287,6 @@ function avatarHTML(u,cls){
 }
 const avatarByName = (n,cls) => avatarHTML(findUser(n)||{username:n}, cls);
 
-/* ---- list constants ---- */
 const LIST_ICONS=['⭐','🔥','🎮','👾','🌀','💠','🟩','🏆','🎯','🚀','😈','🧊','🎨','🎵','💎','🕹️'];
 const LIST_COLORS=['linear-gradient(135deg,#0e4ea8,#2fb6ff)','linear-gradient(135deg,#7a2fb0,#ff6bd6)','linear-gradient(135deg,#0c8a4e,#8ee85d)',
  'linear-gradient(135deg,#c9641a,#ffd93b)','linear-gradient(135deg,#b02438,#ff8a6b)','linear-gradient(135deg,#153e58,#58d5e8)',
@@ -308,18 +313,19 @@ function sampleLists(){ return [{
   id:uid(), slug:'my-gd-goals', name:'My GD Goals', desc:'Everything I want to beat this year. Rate my pain.',
   icon:'🎯', color:3, banner:null, author:'NovaDash', created:Date.now()-86400000*12, edited:Date.now()-86400000*2,
   rules:'1. Only legit completions — no hacks.\n2. Every victor MUST add a youtube video as proof.\n3. Points are set by the list owner.\n4. Be nice. have fun!',
+  reacts:{'🔥':['CubeLord'],'⭐':['WaveMaster']},
+  comments:[{id:uid(),author:'CubeLord',text:'this list is brutal lol',ts:Date.now()-86400000}],
   items:[
     {id:uid(),slug:'silent-clubstep',title:'Silent Clubstep',desc:'The legendary "impossible" level. beat this = glory forever.',thumb:null,photos:[],
      tags:['demon','impossible'],points:500,
      verifier:{name:'CubeLord',video:'https://www.youtube.com/watch?v=dQw4w9WgXcQ'},
      victors:[{name:'Victor',video:'https://www.youtube.com/watch?v=dQw4w9WgXcQ'}],
-     ratings:{CubeLord:5,WaveMaster:4},reacts:{'🔥':['CubeLord'],'👍':['WaveMaster']},
-     comments:[{id:uid(),author:'CubeLord',text:'my hands still hurt',ts:Date.now()-86400000}],
+     ratings:{CubeLord:5,WaveMaster:4},
      author:'NovaDash',created:Date.now()-86400000*10,edited:Date.now()-86400000*2},
     {id:uid(),slug:'bloodbath',title:'Bloodbath',desc:'The classic extreme demon. 1000 attempts max.',thumb:null,photos:[],
      tags:['demon','extreme'],points:250,
      verifier:{name:'WaveMaster',video:''},victors:[],
-     ratings:{},reacts:{'⭐':['CubeLord','WaveMaster']},comments:[],
+     ratings:{},
      author:'NovaDash',created:Date.now()-86400000*5,edited:Date.now()-86400000*5}
   ]}];}
 function seed(){
@@ -339,13 +345,19 @@ function seed(){
     ]);
     DB.set(K.groups,[{id:uid(),name:'Demon Players',desc:'only the brave. share your demon clears and fails.',emoji:'😈',members:['CubeLord','WaveMaster'],owner:'CubeLord',ts:Date.now()-86400000*30}]);
     DB.set(K.dms,[]);
+    DB.set(K.sites,[
+      {id:uid(),name:'Pointercrate',url:'https://pointercrate.com',desc:'The famous demon list of Geometry Dash.',emoji:'😈',ts:Date.now()},
+      {id:uid(),name:'GD Forum',url:'https://gdforum.net',desc:'The biggest Geometry Dash forum.',emoji:'💬',ts:Date.now()},
+      {id:uid(),name:'Geometry Dash',url:'https://geometrydash.com',desc:'The official game website.',emoji:'🎮',ts:Date.now()}
+    ]);
   }
   const old=DB.get(K.lists,null);
   if(!old || (old.length && !('items' in old[0]))) DB.set(K.lists,sampleLists());
+  if(DB.get(K.sites,null)===null) DB.set(K.sites,[]);
 }
 
 /* ---------- state + router ---------- */
-let me=null, view={name:'feed'}, authTab='login', profileOpen=false, dmWith=null, itemPhoto=0, listTab='levels', ytModal=null;
+let me=null, view={name:'feed'}, authTab='login', settingsOpen=false, dmWith=null, itemPhoto=0, listTab='levels', ytModal=null, feedQ='';
 let listModal=null, listDraft=null;
 let itemModal=null, itemDraft=null;
 const openComments=new Set(); let focusDM=false;
@@ -357,7 +369,7 @@ function toHash(v){
     case 'lists': return '#/lists';
     case 'listview': return '#/lista/'+v.slug;
     case 'item': return '#/lista/'+v.slug+'/'+v.is;
-    case 'rank': return '#/ranking';
+    case 'sites': return '#/websites';
     case 'dms': return '#/dms';
     default: return '#/feed';
   }
@@ -365,7 +377,7 @@ function toHash(v){
 function parseHash(){
   const parts=location.hash.replace(/^#\/?/,'').split('/').filter(Boolean);
   if(parts[0]==='lista'&&parts[1]) return parts[2]?{name:'item',slug:parts[1],is:parts[2]}:{name:'listview',slug:parts[1]};
-  if(['feed','groups','lists','dms','ranking'].includes(parts[0])) return {name:parts[0]==='ranking'?'rank':parts[0]};
+  if(['feed','groups','lists','dms','websites'].includes(parts[0])) return {name:parts[0]==='websites'?'sites':parts[0]};
   if(parts[0]==='group'&&parts[1]) return {name:'group',id:parts[1]};
   return {name:'feed'};
 }
@@ -380,19 +392,32 @@ function saveUser(patch){ const l=users(); const i=l.findIndex(u=>u.username===m
   if(i<0)return; l[i]={...l[i],...patch}; DB.set(K.users,l); me=l[i]; }
 function itemCtx(){ if(view.name!=='item')return null; const l=lists().find(x=>x.slug===view.slug); if(!l)return null;
   const it=l.items.find(x=>x.slug===view.is); return it?{list:l,item:it}:null; }
+function listByView(){ return lists().find(x=>x.slug===view.slug); }
 const membersOptions = () => users().map(u=>`<option>${esc(u.username)}</option>`).join('');
 
-/* ---------- leaderboard ---------- */
-function leaderboard(){
+/* ---------- per-list leaderboard ---------- */
+function listLeaderboard(l){
   const map={};
   const add=(name,pts,entry)=>{ if(!name)return; const k=name.toLowerCase();
     map[k]=map[k]||{name,pts:0,clears:[]}; map[k].pts+=pts; map[k].clears.push(entry); };
-  lists().forEach(l=>l.items.forEach(it=>{
+  l.items.forEach(it=>{
     const pts=+it.points||0;
     if(it.verifier&&it.verifier.name) add(it.verifier.name,pts,{level:it.title,pts,role:'verifier'});
     (it.victors||[]).forEach(v=>add(v.name,pts,{level:it.title,pts,role:'victor'}));
-  }));
+  });
   return Object.values(map).sort((a,b)=>b.pts-a.pts);
+}
+function lbRowsHTML(lb){
+  return lb.map((r,i)=>{ const u=findUser(r.name);
+    const rc=i===0?'r1':i===1?'r2':i===2?'r3':'';
+    return `<div class="panel lb-row">
+      <div class="rank ${rc}">${i+1}</div>
+      ${avatarHTML(u||{username:r.name},'s44')}
+      <div class="lb-name"><b>${u&&u.role==='admin'?'👑 ':''}${esc(r.name)}</b>
+        <div class="lb-clears">${r.clears.map(c=>`<span class="tagchip">${c.role==='verifier'?'🛠 verified':'✔ beat'} ${esc(c.level)} <b style="color:var(--yellow)">+${c.pts}</b></span>`).join('')}</div>
+      </div>
+      <div class="lb-pts">💠 ${r.pts}</div>
+    </div>`; }).join('');
 }
 
 /* ---------- render ---------- */
@@ -407,7 +432,7 @@ function renderAuth(){
     <div class="logo-big">
       <span class="cube s72" style="--c1:#8ee85d;--c2:#4db32a"><i></i><i></i><em></em></span>
       <h1>GD <span>COMMUNITY</span></h1>
-      <p class="mut">posts · groups · lists · leaderboard · DMs</p>
+      <p class="mut">posts · groups · lists · websites · DMs</p>
     </div>
     <div class="panel auth-card">
       <div class="auth-tabs">
@@ -434,7 +459,7 @@ function renderAuth(){
 
 function renderApp(){
   let html = topbarHTML() + '<div class="wrap">'+viewHTML()+'</div>';
-  if(profileOpen) html+=profileModalHTML();
+  if(settingsOpen) html+=settingsModalHTML();
   if(listModal!==null) html+=listModalHTML();
   if(itemModal) html+=itemModalHTML();
   if(ytModal) html+=ytModalHTML();
@@ -449,9 +474,9 @@ function topbarHTML(){
   const tab=(v,label)=>`<button data-act="nav" data-view="${v}" class="${at===v?'active':''}">${label}</button>`;
   return `<header class="topbar">
     <div class="logo">GD <span>COMMUNITY</span></div>
-    <nav class="nav">${tab('feed','FEED')}${tab('groups','GROUPS')}${tab('lists','LISTS')}${tab('rank','RANKING')}${tab('dms','DMS')}</nav>
+    <nav class="nav">${tab('feed','FEED')}${tab('groups','GROUPS')}${tab('lists','LISTS')}${tab('sites','WEBSITES')}${tab('dms','DMS')}</nav>
     <div class="top-right">
-      <button class="chip" data-act="profile">${avatarHTML(me,'s30')}<span>${esc(me.username)}${isAdmin()?' 👑':''}</span></button>
+      <button class="chip" data-act="settings">${avatarHTML(me,'s30')}<span>${esc(me.username)}${isAdmin()?' 👑':''}</span></button>
       <button class="gd-btn ghost small" data-act="logout">LOGOUT</button>
     </div>
   </header>`;
@@ -464,13 +489,13 @@ function viewHTML(){
     case 'lists': return listsBrowserHTML();
     case 'listview': return listViewHTML();
     case 'item': return itemHTML();
-    case 'rank': return rankHTML();
+    case 'sites': return sitesHTML();
     case 'dms': return dmsHTML();
     default: return feedHTML();
   }
 }
 
-/* ----- feed ----- */
+/* ----- feed (with search) ----- */
 function composerHTML(groupId){
   return `<form id="f-post" class="panel composer" data-group="${groupId||''}">
     ${avatarHTML(me,'s44')}
@@ -511,8 +536,14 @@ function postHTML(p){
     </div>`:''}
   </article>`;
 }
+function feedPostsHTML(){
+  const q=feedQ.trim().toLowerCase();
+  let list=posts().filter(p=>!p.group).sort((a,b)=>b.ts-a.ts);
+  if(q) list=list.filter(p=>p.text.toLowerCase().includes(q)||p.author.toLowerCase().includes(q));
+  if(!list.length) return `<div class="panel empty">${q?'nothing found for “'+esc(feedQ)+'”':'it\'s quiet in here… be the first to post!'}</div>`;
+  return list.map(postHTML).join('');
+}
 function feedHTML(){
-  const list=posts().filter(p=>!p.group).sort((a,b)=>b.ts-a.ts);
   const stars=posts().reduce((n,p)=>n+(p.author===me.username?p.likes.length:0),0);
   const myPosts=posts().filter(p=>p.author===me.username).length;
   const myLists=lists().filter(l=>l.author===me.username).length;
@@ -521,17 +552,18 @@ function feedHTML(){
       ${avatarHTML(me,'s72')}
       <h3>${esc(me.username)}${isAdmin()?'<span class="admintag">ADMIN</span>':''}</h3>
       <p class="mut small">joined ${fmtDate(me.joined)}</p>
-      <p class="bio">${esc(me.bio||'no bio yet — edit your profile!')}</p>
+      <p class="bio">${esc(me.bio||'no bio yet — open settings!')}</p>
       <div class="stats">
         <div><b>${myPosts}</b><span>posts</span></div>
         <div><b>${stars}</b><span>stars</span></div>
         <div><b>${myLists}</b><span>lists</span></div>
       </div>
-      <button class="gd-btn blue small" data-act="profile">EDIT PROFILE</button>
+      <button class="gd-btn blue small" data-act="settings">⚙ SETTINGS</button>
     </aside>
     <div>
       ${composerHTML('')}
-      <div class="feed-list">${list.length?list.map(postHTML).join(''):'<div class="panel empty">it\'s quiet in here… be the first to post!</div>'}</div>
+      <div class="panel searchbar">🔍<input id="feed-search" placeholder="search posts… (text or @author)" autocomplete="off"></div>
+      <div class="feed-list" id="feed-list">${feedPostsHTML()}</div>
     </div>
   </div>`;
 }
@@ -589,9 +621,9 @@ function listsBrowserHTML(){
   </div>`;
 }
 
-/* ----- list page (LEVELS / RULES tabs) ----- */
+/* ----- list page: LEVELS / RULES / LEADERBOARD + reactions & comments ----- */
 function listViewHTML(){
-  const l=lists().find(x=>x.slug===view.slug);
+  const l=listByView();
   if(!l) return '<div class="panel empty">list not found 🤔</div>';
   const can=canList(l);
   const link=location.href.split('#')[0]+'#/lista/'+l.slug;
@@ -601,14 +633,36 @@ function listViewHTML(){
       ${can?`<button class="gd-btn small" style="margin-left:auto" data-act="new-item" data-list="${l.id}">➕ ADD LEVEL</button>`:''}
     </div>
     <div class="i-grid">${l.items.map(itemCardHTML).join('') || `<div class="panel empty" style="grid-column:1/-1">no levels yet${can?' — add the first one!':''}</div>`}</div>`;
-  } else {
+  } else if(listTab==='rules'){
     body= can ? `
     <form id="f-rules" class="panel" style="padding:18px">
       <textarea class="inp" name="rules" rows="8" maxlength="2000" placeholder="write the rules of this list…">${esc(l.rules||'')}</textarea>
       <div style="display:flex;justify-content:flex-end;margin-top:10px"><button class="gd-btn small" type="submit">SAVE RULES</button></div>
     </form>` :
     `<div class="panel" style="padding:18px">${l.rules?`<p style="white-space:pre-wrap;line-height:1.65">${esc(l.rules)}</p>`:'<div class="empty">no rules yet</div>'}</div>`;
+  } else {
+    const lb=listLeaderboard(l);
+    body=`<div style="margin-top:4px">${lb.length?lbRowsHTML(lb):'<div class="panel empty">no points yet — add levels with points, victors and verifiers!</div>'}</div>`;
   }
+  const reacts=l.reacts||{}, lComments=l.comments||[];
+  const engagement=`<div class="panel" style="padding:16px;margin-top:18px">
+    <span class="mut small">REACTIONS TO THIS LIST</span>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+      ${REACTS.map(e=>{ const arr=reacts[e]||[]; const sel=arr.includes(me.username);
+        return `<button class="react-btn ${sel?'sel':''}" data-act="lreact" data-e="${e}">${e} ${arr.length||''}</button>`; }).join('')}
+    </div>
+    <div style="margin-top:16px">
+      <span class="mut small">COMMENTS (${lComments.length})</span>
+      ${lComments.map(c=>{ const ca=findUser(c.author)||{username:c.author,avatar:null};
+        const canDelC=isAdmin()||c.author===me.username;
+        return `<div class="cmt">${avatarHTML(ca,'s28')}<div class="cmt-body"><b>${ca.role==='admin'?'👑 ':''}${esc(ca.username)}</b> <span class="mut">${ago(c.ts)}</span><br>${esc(c.text)}</div>
+        ${canDelC?`<button class="del" data-act="del-lcomment" data-cid="${c.id}">✕</button>`:''}</div>`; }).join('')}
+      <form class="cmt-form" data-listcomment="1">
+        <input class="inp" name="c" maxlength="200" placeholder="comment on this list…" autocomplete="off">
+        <button class="gd-btn blue small" type="submit">SEND</button>
+      </form>
+    </div>
+  </div>`;
   return `
   <div class="page-head"><button class="gd-btn ghost small" data-act="nav-go" data-to="lists">← ALL LISTS</button></div>
   <div class="panel" style="overflow:hidden">
@@ -631,8 +685,10 @@ function listViewHTML(){
   <div class="ltabs">
     <button class="ltab ${listTab==='levels'?'active':''}" data-act="list-tab" data-t="levels">🎮 LEVELS</button>
     <button class="ltab ${listTab==='rules'?'active':''}" data-act="list-tab" data-t="rules">📋 RULES</button>
+    <button class="ltab ${listTab==='rank'?'active':''}" data-act="list-tab" data-t="rank">🏆 LEADERBOARD</button>
   </div>
-  ${body}`;
+  ${body}
+  ${engagement}`;
 }
 function itemCardHTML(it){
   const pts=+it.points||0;
@@ -650,12 +706,11 @@ function itemCardHTML(it){
       ${it.verifier&&it.verifier.name?`<span>🛠 ${esc(it.verifier.name)}</span>`:''}
       <span>🏆 ${victors}</span>
       ${avg?`<span style="color:var(--yellow)">★ ${avg}</span>`:''}
-      <span>💬 ${it.comments.length}</span>
     </div>
   </div>`;
 }
 
-/* ----- level page ----- */
+/* ----- level page (no comments/reactions here anymore) ----- */
 function itemHTML(){
   const ctx=itemCtx(); if(!ctx) return '<div class="panel empty">level not found 🤔</div>';
   const l=ctx.list, it=ctx.item, can=canList(l);
@@ -722,55 +777,55 @@ function itemHTML(){
         <span class="mut small" style="margin-left:12px">your rating:</span>
         ${[1,2,3,4,5].map(n=>`<button class="rate-star ${mine>=n?'on':''}" data-act="rate" data-val="${n}">★</button>`).join('')}
       </div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
-        ${REACTS.map(e=>{ const arr=(it.reacts||{})[e]||[]; const sel=arr.includes(me.username);
-          return `<button class="react-btn ${sel?'sel':''}" data-act="react" data-e="${e}">${e} ${arr.length||''}</button>`; }).join('')}
-      </div>
-      <div style="margin-top:18px">
-        <span class="mut small">COMMENTS (${it.comments.length})</span>
-        ${it.comments.map(c=>{ const ca=findUser(c.author)||{username:c.author,avatar:null};
-          const canDelC=isAdmin()||c.author===me.username;
-          return `<div class="cmt">${avatarHTML(ca,'s28')}<div class="cmt-body"><b>${ca.role==='admin'?'👑 ':''}${esc(ca.username)}</b> <span class="mut">${ago(c.ts)}</span><br>${esc(c.text)}</div>
-          ${canDelC?`<button class="del" data-act="del-icomment" data-iid="${it.id}" data-cid="${c.id}">✕</button>`:''}</div>`; }).join('')}
-        <form class="cmt-form" data-itemcomment="1">
-          <input class="inp" name="c" maxlength="200" placeholder="write a comment…" autocomplete="off">
-          <button class="gd-btn blue small" type="submit">SEND</button>
-        </form>
-      </div>
     </div>
   </div>`;
 }
 
-/* ----- leaderboard ----- */
-function rankHTML(){
-  const lb=leaderboard();
-  return `<div class="page-head"><h2>LEADERBOARD</h2><span class="mut small">points for beating & verifying levels across all lists</span></div>
-  ${lb.map((r,i)=>{ const u=findUser(r.name);
-    const rc=i===0?'r1':i===1?'r2':i===2?'r3':'';
-    return `<div class="panel lb-row">
-      <div class="rank ${rc}">${i+1}</div>
-      ${avatarHTML(u||{username:r.name},'s44')}
-      <div class="lb-name"><b>${u&&u.role==='admin'?'👑 ':''}${esc(r.name)}</b>
-        <div class="lb-clears">${r.clears.map(c=>`<span class="tagchip">${c.role==='verifier'?'🛠 verified':'✔ beat'} ${esc(c.level)} <b style="color:var(--yellow)">+${c.pts}</b></span>`).join('')}</div>
+/* ----- WEBSITES (admin managed) ----- */
+function sitesHTML(){
+  const ss=sites();
+  return `<div class="page-head"><h2>WEBSITES</h2><span class="mut small">${isAdmin()?'👑 you add & remove sites here':'cool GD sites picked by the admin'}</span></div>
+  ${isAdmin()?`<form id="f-site" class="panel g-create">
+    <input class="inp" name="name" maxlength="30" placeholder="website name">
+    <input class="inp" name="url" placeholder="link (https://...)">
+    <input class="inp" name="desc" maxlength="80" placeholder="short description">
+    <button class="gd-btn small" type="submit">ADD SITE</button>
+  </form>`:''}
+  <div class="g-grid">${ss.map(s=>`
+    <div class="panel g-card" data-act="open-site" data-url="${esc(s.url)}">
+      <div class="top"><span class="g-emoji">${s.emoji}</span><h4>${esc(s.name)}</h4>
+        ${isAdmin()?`<button class="del" style="margin-left:auto" data-act="del-site" data-id="${s.id}">✕</button>`:''}
       </div>
-      <div class="lb-pts">💠 ${r.pts}</div>
-    </div>`; }).join('') || '<div class="panel empty">no points yet — add levels with points, victors and verifiers!</div>'}`;
+      <p>${esc(s.desc||'')}</p>
+      <div class="g-foot"><span class="mut small">${esc(shortUrl(s.url))}</span><span class="gd-btn blue small">VISIT ↗</span></div>
+    </div>`).join('') || '<div class="panel empty">no websites yet'+(isAdmin()?' — add the first one above!':'')+'</div>'}
+  </div>`;
 }
 
-/* ----- modals ----- */
-function profileModalHTML(){
+/* ----- settings modal ----- */
+function settingsModalHTML(){
   return `<div class="overlay" data-act="m-close">
     <div class="modal panel">
-      <h3 class="m-title">EDIT PROFILE</h3>
+      <h3 class="m-title">⚙ ACCOUNT SETTINGS</h3>
       <div class="m-av">${avatarHTML(me,'s96')}</div>
       <div class="m-row">
         <label class="gd-btn blue small">📷 UPLOAD PHOTO<input type="file" id="av-file" accept="image/*" hidden></label>
         ${me.avatar?'<button class="gd-btn ghost small" data-act="remove-photo">REMOVE</button>':''}
       </div>
-      <p class="mut small" style="text-align:center;margin-bottom:12px">@${esc(me.username)}${isAdmin()?'<span class="admintag">ADMIN</span>':''}</p>
+      <p class="mut small" style="text-align:center;margin-bottom:12px">@${esc(me.username)}${isAdmin()?'<span class="admintag">ADMIN</span>':''} · joined ${fmtDate(me.joined)}</p>
       <form id="f-bio">
+        <label class="m-label">BIO</label>
         <textarea class="inp" name="bio" rows="3" maxlength="120" placeholder="your bio…">${esc(me.bio||'')}</textarea>
-        <div class="m-row" style="justify-content:flex-end;margin-top:12px"><button class="gd-btn small" type="submit">SAVE</button></div>
+        <div class="lf-row" style="margin-top:10px"><button class="gd-btn small" type="submit">SAVE BIO</button></div>
+      </form>
+      <hr class="sep">
+      <form id="f-pass">
+        <label class="m-label">CHANGE PASSWORD</label>
+        <input class="inp" type="password" name="cur" placeholder="current password" style="margin-bottom:8px">
+        <input class="inp" type="password" name="p1" placeholder="new password (min. 6)" style="margin-bottom:8px">
+        <input class="inp" type="password" name="p2" placeholder="repeat new password">
+        <div class="form-err" id="pass-err" style="text-align:left"></div>
+        <div class="lf-row"><button class="gd-btn blue small" type="submit">SAVE PASSWORD</button></div>
       </form>
     </div>
   </div>`;
@@ -877,7 +932,7 @@ function closeModal(){
   if(ytModal){ ytModal=null; render(); return; }
   if(listModal!==null) listModal=null;
   else if(itemModal) itemModal=null;
-  else profileOpen=false;
+  else settingsOpen=false;
   render();
 }
 function syncListDraft(){ const f=$('#f-list'); if(f&&listDraft){ listDraft.name=f.elements.name.value; listDraft.desc=f.elements.desc.value; listDraft.rules=f.elements.rules.value; } }
@@ -893,8 +948,8 @@ document.addEventListener('click',e=>{
     case 'auth-tab': authTab=b.dataset.tab; render(); break;
     case 'nav': go({name:b.dataset.view}); break;
     case 'nav-go': go({name:b.dataset.to}); break;
-    case 'logout': DB.set(K.session,null); profileOpen=false; listModal=null; itemModal=null; ytModal=null; dmWith=null; openComments.clear(); location.hash='#/feed'; render(); break;
-    case 'profile': profileOpen=true; render(); break;
+    case 'logout': DB.set(K.session,null); settingsOpen=false; listModal=null; itemModal=null; ytModal=null; dmWith=null; openComments.clear(); location.hash='#/feed'; render(); break;
+    case 'settings': settingsOpen=true; render(); break;
     case 'm-close': case 'm-close-btn': closeModal(); break;
     case 'remove-photo': saveUser({avatar:null}); toast('photo removed'); render(); break;
     case 'like': { const l=posts(); const p=l.find(x=>x.id===b.dataset.id);
@@ -922,11 +977,19 @@ document.addEventListener('click',e=>{
     case 'copy-link': copyText(b.dataset.href); break;
     case 'watch': { const id=ytId(b.dataset.url);
       if(id){ ytModal={title:b.dataset.title||'video',id}; render(); } else window.open(b.dataset.url,'_blank'); break; }
+    /* list reactions + comments */
+    case 'lreact': { const L=lists(); const l=L.find(x=>x.slug===view.slug); if(!l)break;
+      l.reacts=l.reacts||{}; const e=b.dataset.e; l.reacts[e]=l.reacts[e]||[];
+      const i=l.reacts[e].indexOf(me.username); i<0?l.reacts[e].push(me.username):l.reacts[e].splice(i,1);
+      DB.set(K.lists,L); render(); break; }
+    case 'del-lcomment': { const L=lists(); const l=L.find(x=>x.slug===view.slug); if(!l)break;
+      l.comments=l.comments||[]; const c=l.comments.find(x=>x.id===b.dataset.cid);
+      if(c&&(isAdmin()||c.author===me.username)){ l.comments=l.comments.filter(x=>x.id!==c.id); DB.set(K.lists,L); render(); } break; }
     /* levels */
     case 'new-item': itemModal={list:b.dataset.list,id:null};
       itemDraft={title:'',desc:'',tags:'',points:'',vname:'',vvideo:'',thumb:null,photos:[]}; render(); break;
     case 'edit-item': { const L=lists();
-      const l=L.find(x=>x.id===(view.name==='item'?lists().find(y=>y.slug===view.slug)?.id:(view.name==='listview'?L.find(y=>y.slug===view.slug)?.id:null)));
+      const l=L.find(x=>x.slug===view.slug);
       const it=l&&l.items.find(x=>x.id===b.dataset.id);
       if(l&&it&&canList(l)){ itemModal={list:l.id,id:it.id};
         itemDraft={title:it.title,desc:it.desc||'',tags:(it.tags||[]).join(', '),points:it.points||'',
@@ -945,15 +1008,10 @@ document.addEventListener('click',e=>{
       const it=l.items.find(x=>x.id===ctx.item.id); it.ratings=it.ratings||{};
       const v=+b.dataset.val; if(it.ratings[me.username]===v) delete it.ratings[me.username]; else it.ratings[me.username]=v;
       DB.set(K.lists,L); render(); break; }
-    case 'react': { const ctx=itemCtx(); if(!ctx)break; const L=lists(); const l=L.find(x=>x.id===ctx.list.id);
-      const it=l.items.find(x=>x.id===ctx.item.id); it.reacts=it.reacts||{}; const e=b.dataset.e;
-      it.reacts[e]=it.reacts[e]||[]; const i=it.reacts[e].indexOf(me.username);
-      i<0?it.reacts[e].push(me.username):it.reacts[e].splice(i,1);
-      DB.set(K.lists,L); render(); break; }
-    case 'del-icomment': { const ctx=itemCtx(); if(!ctx)break; const L=lists(); const l=L.find(x=>x.id===ctx.list.id);
-      const it=l.items.find(x=>x.id===b.dataset.iid); if(!it)break;
-      const c=it.comments.find(x=>x.id===b.dataset.cid);
-      if(c&&(isAdmin()||c.author===me.username)){ it.comments=it.comments.filter(x=>x.id!==c.id); DB.set(K.lists,L); render(); } break; }
+    /* websites */
+    case 'open-site': window.open(b.dataset.url,'_blank'); break;
+    case 'del-site': if(isAdmin()){ DB.set(K.sites,sites().filter(s=>s.id!==b.dataset.id)); toast('website removed'); render(); } break;
+    /* dms */
     case 'dm': dmWith=b.dataset.user; go({name:'dms'}); break;
     case 'del-user': { if(isAdmin()) deleteUser(b.dataset.user); break; }
   }
@@ -966,9 +1024,11 @@ function deleteUser(name){
   DB.set(K.groups, groups().map(g=>({...g, members:g.members.filter(m=>m!==name)})));
   DB.set(K.dms, dms().filter(t=>!t.members.includes(name)));
   const L=lists().filter(l=>l.author!==name);
-  L.forEach(l=>l.items.forEach(it=>{ it.comments=it.comments.filter(c=>c.author!==name);
-    Object.values(it.reacts||{}).forEach(arr=>{ let i; while((i=arr.indexOf(name))>-1) arr.splice(i,1); });
-    delete (it.ratings||{})[name]; }));
+  L.forEach(l=>{
+    l.comments=(l.comments||[]).filter(c=>c.author!==name);
+    Object.values(l.reacts||{}).forEach(arr=>{ let i; while((i=arr.indexOf(name))>-1) arr.splice(i,1); });
+    l.items.forEach(it=>{ delete (it.ratings||{})[name]; });
+  });
   DB.set(K.lists,L);
   if(dmWith===name) dmWith=null;
   toast('@'+name+' removed from the community'); render();
@@ -978,13 +1038,16 @@ function deleteUser(name){
 function bindForms(){
   const on=(sel,fn)=>{ const el=$(sel); if(el) el.addEventListener('submit',e=>{ e.preventDefault(); fn(el); }); };
   on('#f-login',doLogin); on('#f-signup',doSignup); on('#f-post',doPost);
-  on('#f-group-create',doCreateGroup); on('#f-dm',doSendDM); on('#f-bio',doSaveBio);
-  on('#f-list',doSaveList); on('#f-item',doSaveItem); on('#f-victor',doAddVictor); on('#f-rules',doSaveRules);
+  on('#f-group-create',doCreateGroup); on('#f-dm',doSendDM); on('#f-bio',doSaveBio); on('#f-pass',doChangePass);
+  on('#f-list',doSaveList); on('#f-item',doSaveItem); on('#f-victor',doAddVictor); on('#f-rules',doSaveRules); on('#f-site',doAddSite);
   document.querySelectorAll('form[data-comment]').forEach(f=>
     f.addEventListener('submit',e=>{ e.preventDefault(); doComment(f.dataset.comment,f); }));
-  const ic=document.querySelector('form[data-itemcomment]');
-  if(ic) ic.addEventListener('submit',e=>{ e.preventDefault(); doItemComment(ic); });
+  const lc=document.querySelector('form[data-listcomment]');
+  if(lc) lc.addEventListener('submit',e=>{ e.preventDefault(); doListComment(lc); });
   const af=$('#av-file'); if(af) af.addEventListener('change',onAvatarFile);
+  const fs=$('#feed-search');
+  if(fs){ fs.value=feedQ; fs.addEventListener('input',e=>{ feedQ=e.target.value;
+    const el=$('#feed-list'); if(el) el.innerHTML=feedPostsHTML(); }); }
   const bf=$('#li-banner-file'); if(bf) bf.addEventListener('change',async e=>{
     const file=e.target.files[0]; if(!file)return;
     try{ syncListDraft(); listDraft.banner=await cropImage(file,900,300); render(); }catch{ toast('could not read image','error'); } });
@@ -1019,7 +1082,7 @@ function doSignup(f){
 function doPost(f){
   const t=f.elements.t.value.trim(); if(!t) return;
   DB.set(K.posts,[{id:uid(),author:me.username,text:t,ts:Date.now(),likes:[],comments:[],group:f.dataset.group||null},...posts()]);
-  render();
+  feedQ=''; render();
 }
 function doComment(id,f){
   const t=f.elements.c.value.trim(); if(!t) return;
@@ -1028,12 +1091,11 @@ function doComment(id,f){
   DB.set(K.posts,l); render();
   const inp=document.querySelector('form[data-comment="'+id+'"] input'); if(inp) inp.focus();
 }
-function doItemComment(f){
-  const ctx=itemCtx(); if(!ctx) return;
+function doListComment(f){
   const t=f.elements.c.value.trim(); if(!t) return;
-  const L=lists(); const l=L.find(x=>x.id===ctx.list.id); const it=l.items.find(x=>x.id===ctx.item.id);
-  it.comments.push({id:uid(),author:me.username,text:t,ts:Date.now()});
-  it.edited=l.edited=Date.now();
+  const L=lists(); const l=L.find(x=>x.slug===view.slug); if(!l) return;
+  l.comments=l.comments||[];
+  l.comments.push({id:uid(),author:me.username,text:t,ts:Date.now()});
   DB.set(K.lists,L); render();
 }
 function doCreateGroup(f){
@@ -1051,7 +1113,16 @@ function doSendDM(f){
   th.msgs.push({from:me.username,text:t,ts:Date.now()});
   DB.set(K.dms,l); focusDM=true; render();
 }
-function doSaveBio(f){ saveUser({bio:f.elements.bio.value.trim()}); toast('profile saved ✓'); profileOpen=false; render(); }
+function doSaveBio(f){ saveUser({bio:f.elements.bio.value.trim()}); toast('bio saved ✓'); render(); }
+function doChangePass(f){
+  const err=$('#pass-err'); err.textContent='';
+  const cur=f.elements.cur.value, p1=f.elements.p1.value, p2=f.elements.p2.value;
+  if(me.pass!==hashPw(me.username,cur)){ err.textContent='current password is wrong'; return; }
+  if(p1.length<6){ err.textContent='new password needs at least 6 characters'; return; }
+  if(p1!==p2){ err.textContent="new passwords don't match"; return; }
+  saveUser({pass:hashPw(me.username,p1)});
+  toast('password changed ✓'); render();
+}
 function doSaveRules(f){
   const l0=lists().find(x=>x.slug===view.slug); if(!l0||!canList(l0)) return;
   const L=lists(); const l=L.find(x=>x.id===l0.id);
@@ -1068,6 +1139,14 @@ function doAddVictor(f){
   it.edited=l.edited=Date.now();
   DB.set(K.lists,L); toast(name+' added as victor 🏆'); render();
 }
+function doAddSite(f){
+  if(!isAdmin()) return;
+  const name=f.elements.name.value.trim(), url=normUrl(f.elements.url.value), desc=f.elements.desc.value.trim();
+  if(!name||!url){ toast('site needs a name and a link','error'); return; }
+  const emojis=['🌐','🔗','⭐','🎮','📺','🗺️','🧰','📰'];
+  DB.set(K.sites,[...sites(),{id:uid(),name,url,desc,emoji:emojis[Math.floor(Math.random()*emojis.length)],ts:Date.now()}]);
+  toast('website added 🌐'); render();
+}
 function doSaveList(f){
   syncListDraft();
   const name=(listDraft.name||'').trim();
@@ -1076,7 +1155,7 @@ function doSaveList(f){
   const L=lists();
   if(listModal==='new'){
     L.push({id:uid(),slug:uniqueListSlug(name),name,desc,rules,icon:listDraft.icon,color:listDraft.color,banner:listDraft.banner,
-      author:me.username,created:Date.now(),edited:Date.now(),items:[]});
+      author:me.username,created:Date.now(),edited:Date.now(),reacts:{},comments:[],items:[]});
     DB.set(K.lists,L); listModal=null; toast('list created ✓');
     go({name:'listview',slug:L[L.length-1].slug}); return;
   }
@@ -1100,7 +1179,7 @@ function doSaveItem(f){
       l.edited=Date.now(); toast('level updated ✓'); }
   } else {
     l.items.push({id:uid(),slug:uniqueItemSlug(l,title),title,desc:d.desc.trim(),tags,points,verifier,
-      victors:[],thumb:d.thumb,photos:d.photos,ratings:{},reacts:{},comments:[],
+      victors:[],thumb:d.thumb,photos:d.photos,ratings:{},
       author:me.username,created:Date.now(),edited:Date.now()});
     l.edited=Date.now(); toast('level added ✓');
   }
