@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GD COMMUNITY</title>
 <link href="https://fonts.googleapis.com/css2?family=Titan+One&family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root{
     --bg1:#0b62c4; --bg2:#073b83; --deep:#051a35;
@@ -18,19 +19,17 @@
   button{font:inherit;cursor:pointer}
   ::selection{background:rgba(255,217,59,.4)}
   .mut{color:var(--mut)} .small{font-size:.8rem}
-
   .gd-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;
     font-family:'Titan One';font-size:.9rem;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.3);
     background:linear-gradient(180deg,var(--green),var(--green2));
     border:3px solid #1d5c10;border-radius:12px;padding:11px 20px;
     box-shadow:inset 0 2px 0 rgba(255,255,255,.35),0 4px 0 #17490d;transition:transform .1s,filter .15s}
   .gd-btn:hover{filter:brightness(1.08)}
-  .gd-btn:active{transform:translateY(3px);box-shadow:inset 0 2px 0 rgba(255,255,255,.35),0 1px 0 #17490d}
+  .gd-btn:active{transform:translateY(3px)}
   .gd-btn.blue{background:linear-gradient(180deg,#5db9ff,#2a7fd4);border-color:#0f3d73;box-shadow:inset 0 2px 0 rgba(255,255,255,.35),0 4px 0 #0c315c}
   .gd-btn.ghost{background:var(--panel);border-color:var(--edge);box-shadow:inset 0 2px 0 rgba(255,255,255,.06),0 4px 0 var(--deep)}
   .gd-btn.small{font-size:.72rem;padding:8px 14px;border-width:2px;border-radius:10px}
   .gd-btn:disabled{opacity:.4;pointer-events:none}
-
   .panel{background:var(--panel);border:2px solid var(--edge);border-radius:14px;
     box-shadow:inset 0 2px 0 rgba(255,255,255,.06),0 4px 0 rgba(0,0,0,.22)}
   .inp,textarea.inp,select.inp{width:100%;background:var(--panel2);border:2px solid var(--edge);border-radius:10px;
@@ -38,7 +37,6 @@
   .inp:focus{border-color:var(--blue)}
   .inp::placeholder,textarea.inp::placeholder{color:#5f7ea6}
   textarea.inp{resize:vertical}
-
   .av,.cube{display:inline-block;flex:none;border-radius:18%}
   .av{object-fit:cover;border:2px solid rgba(0,0,0,.35)}
   .cube{position:relative;background:linear-gradient(180deg,var(--c1),var(--c2));
@@ -49,38 +47,32 @@
   .cube em{left:30%;right:30%;bottom:18%;height:12%}
   .s28{width:28px;height:28px} .s30{width:30px;height:30px} .s44{width:44px;height:44px}
   .s64{width:64px;height:64px} .s72{width:72px;height:72px} .s96{width:96px;height:96px}
-  .admintag{display:inline-block;background:#ffd93b;color:#3d2c00;
-    font-size:.58rem;font-weight:700;letter-spacing:.14em;padding:3px 8px;border-radius:6px;margin-left:7px;vertical-align:middle}
-  .ogtag{display:inline-block;background:#5db9ff;color:#062a3a;
-    font-size:.58rem;font-weight:700;letter-spacing:.14em;padding:3px 8px;border-radius:6px;margin-left:7px;vertical-align:middle}
+  .admintag{display:inline-block;background:#ffd93b;color:#3d2c00;font-size:.58rem;font-weight:700;letter-spacing:.14em;padding:3px 8px;border-radius:6px;margin-left:7px;vertical-align:middle}
+  .ogtag{display:inline-block;background:#5db9ff;color:#062a3a;font-size:.58rem;font-weight:700;letter-spacing:.14em;padding:3px 8px;border-radius:6px;margin-left:7px;vertical-align:middle}
   .uname{background:none;border:none;padding:0;font:inherit;font-weight:700;color:#fff;cursor:pointer}
   .uname:hover{text-decoration:underline}
   .top-btn{font-family:'Titan One';font-size:.68rem;padding:9px 12px;border-radius:10px;border:2px solid var(--edge);background:var(--panel);color:var(--mut);transition:.15s;display:inline-flex;align-items:center}
   .top-btn:hover{color:#fff;border-color:#1c4f92}
   .badge-n{background:#ffd93b;color:#3d2c00;border-radius:99px;font-size:.6rem;font-weight:700;padding:2px 6px;margin-left:6px}
   .badge-n.red{background:#ff7a6b;color:#3a0d0d}
-
-  /* ACHIEVEMENTS */
   .ach-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
   .ach{padding:10px 6px;border-radius:10px;background:var(--panel2);border:2px solid var(--edge);text-align:center;font-size:.66rem;color:var(--mut);line-height:1.3}
   .ach .ic{font-size:1.35rem;display:block;margin-bottom:6px}
   .ach.got{border-color:var(--yellow);color:#fff;background:rgba(255,217,59,.08)}
   .ach:not(.got){opacity:.4}
   .ach-mini{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;font-size:1.05rem}
-  .ach-mini span{cursor:default}
-
-  /* AUTH */
   .auth-wrap{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;padding:30px 18px}
   .logo-big{text-align:center}
   .logo-big h1{font-family:'Titan One';font-size:clamp(2rem,6vw,3.1rem);text-shadow:0 4px 0 rgba(0,0,0,.3);margin-top:14px}
   .logo-big h1 span{color:var(--yellow)}
   .logo-big p{margin-top:6px}
-  .auth-card{width:min(400px,100%);padding:24px}
+  .auth-card{width:min(420px,100%);padding:24px}
   .auth-tabs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px}
   .aform label{display:block;font-size:.66rem;letter-spacing:.2em;color:var(--mut);font-weight:700;margin:14px 0 6px}
   .form-err{color:#ff9090;min-height:22px;font-size:.88rem;margin-top:8px;text-align:center}
-
-  /* TOPBAR */
+  .setup{max-width:640px;margin:60px auto;padding:26px;line-height:1.7}
+  .setup li{margin:8px 0 8px 18px}
+  .setup code{background:var(--panel2);padding:2px 7px;border-radius:6px;font-size:.85rem}
   .topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:12px;flex-wrap:wrap;
     padding:10px clamp(14px,3vw,28px);background:#0a2c55;border-bottom:3px solid var(--deep);box-shadow:0 4px 0 rgba(0,0,0,.22)}
   .logo{font-family:'Titan One';font-size:1.1rem;white-space:nowrap;text-shadow:0 2px 0 rgba(0,0,0,.35)}
@@ -92,12 +84,9 @@
   .top-right{margin-left:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
   .chip{display:flex;align-items:center;gap:8px;background:none;border:none;color:#fff;font-weight:700;padding:4px 10px;border-radius:10px;transition:.15s}
   .chip:hover{background:rgba(255,255,255,.08)}
-
   .wrap{max-width:1000px;margin:0 auto;padding:22px clamp(14px,3vw,28px) 70px}
   .page-head{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
   .page-head h2{font-family:'Titan One';font-size:1.4rem;text-shadow:0 2px 0 rgba(0,0,0,.3)}
-
-  /* FEED */
   .cols{display:grid;grid-template-columns:270px 1fr;gap:18px;align-items:start}
   .side-wrap{display:flex;flex-direction:column;gap:18px;position:sticky;top:78px}
   .side-card{padding:20px;text-align:center}
@@ -130,7 +119,6 @@
   .post-head{display:flex;gap:11px;align-items:center}
   .post-head .who span{font-size:.78rem;color:var(--mut);display:block}
   .gtag{margin-left:auto;font-size:.72rem;background:#1c4f92;border:1px solid #0d3568;color:#cfe3fa;border-radius:99px;padding:4px 11px;white-space:nowrap}
-  .gtag:hover{background:#2663b3}
   .post-text{margin-top:11px;line-height:1.55;white-space:pre-wrap;word-break:break-word;font-size:.96rem}
   .post-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
   .post-actions{display:flex;gap:6px;align-items:center;margin-top:11px;border-top:1px solid rgba(255,255,255,.07);padding-top:9px}
@@ -147,8 +135,6 @@
   .cmt-form{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center}
   .cmt-form .inp{flex:1;min-width:120px}
   .empty{padding:30px;text-align:center;color:var(--mut)}
-
-  /* ATTACHMENTS */
   .clip{display:inline-grid;place-items:center;width:40px;height:40px;border:2px solid var(--edge);border-radius:10px;background:var(--panel2);cursor:pointer;font-size:1rem;flex:none;transition:.15s}
   .clip:hover{border-color:var(--blue)}
   .attach-strip{display:flex;gap:8px;flex-wrap:wrap}
@@ -158,14 +144,11 @@
   .att-chip.file{display:inline-flex;align-items:center;gap:6px;background:var(--panel2);border:2px solid var(--edge);border-radius:10px;padding:8px 28px 8px 10px;font-size:.74rem;color:var(--blue);max-width:210px}
   .att-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .atts{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-  .att-img{width:110px;height:110px;object-fit:cover;border-radius:10px;border:2px solid var(--edge);cursor:pointer;transition:transform .15s}
-  .att-img:hover{transform:scale(1.04)}
+  .att-img{width:110px;height:110px;object-fit:cover;border-radius:10px;border:2px solid var(--edge);cursor:pointer}
   .att-file{display:inline-flex;align-items:center;gap:6px;background:var(--panel2);border:2px solid var(--edge);border-radius:10px;padding:7px 11px;font-size:.76rem;color:var(--blue);text-decoration:none;max-width:230px}
   .att-file span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .bub .atts{margin-top:8px}
   .bub .att-img{width:140px;height:140px}
-
-  /* GROUPS */
   .g-create{display:flex;gap:10px;padding:14px;flex-wrap:wrap;margin-bottom:16px}
   .g-create .inp{flex:1;min-width:140px}
   .g-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(235px,1fr));gap:14px}
@@ -181,8 +164,6 @@
   .g-head .info{flex:1;min-width:180px}
   .g-head h2{font-family:'Titan One';font-size:1.3rem}
   .g-head p{color:var(--mut);font-size:.9rem;margin-top:3px}
-
-  /* LISTS */
   .l-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(258px,1fr));gap:14px;margin-top:6px}
   .l-card{cursor:pointer;overflow:hidden;transition:transform .15s}
   .l-card:hover{transform:translateY(-3px)}
@@ -195,10 +176,8 @@
   .lc-meta{font-size:.72rem;color:var(--mut);line-height:1.5}
   .pick-row{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
   .icon-pick{width:36px;height:36px;border-radius:9px;border:2px solid var(--edge);background:var(--panel2);font-size:18px;display:grid;place-items:center;transition:.15s}
-  .icon-pick:hover{transform:scale(1.08)}
   .icon-pick.sel{border-color:var(--yellow);background:rgba(255,217,59,.14)}
-  .color-pick{width:34px;height:34px;border-radius:9px;border:2px solid rgba(255,255,255,.18);transition:.15s}
-  .color-pick:hover{transform:scale(1.1)}
+  .color-pick{width:34px;height:34px;border-radius:9px;border:2px solid rgba(255,255,255,.18)}
   .color-pick.sel{box-shadow:0 0 0 2px var(--deep),0 0 0 4px #fff}
   .banprev{height:86px;border-radius:10px;background-size:cover;background-position:center;border:2px dashed var(--edge);display:grid;place-items:center;color:var(--mut);font-size:.8rem;margin-top:8px}
   .m-label{font-size:.64rem;letter-spacing:.2em;color:var(--mut);font-weight:700;margin:14px 0 6px;display:block}
@@ -214,13 +193,11 @@
   .ltab{font-family:'Titan One';font-size:.78rem;padding:9px 18px;border-radius:10px;border:2px solid var(--edge);background:var(--panel);color:var(--mut);transition:.15s}
   .ltab:hover{color:#fff}
   .ltab.active{background:#1c4f92;color:#fff;border-color:#0d3568}
-
-  /* LEVEL ROWS */
   .dlist{display:flex;flex-direction:column;gap:12px}
   .drow{display:flex;align-items:center;gap:14px;padding:12px 16px;cursor:pointer;transition:transform .15s}
   .drow:hover{transform:translateX(4px)}
   .drow.open{border-radius:14px 14px 0 0;transform:none}
-  .drank{font-family:'Titan One';font-size:1.45rem;min-width:62px;color:#7d9cc4;text-shadow:0 2px 0 rgba(0,0,0,.3);text-align:center}
+  .drank{font-family:'Titan One';font-size:1.45rem;min-width:62px;color:#7d9cc4;text-align:center}
   .drank.r1{color:#ffd93b} .drank.r2{color:#d5dee8} .drank.r3{color:#e8a06a}
   .dthumb{width:96px;height:54px;object-fit:cover;border-radius:8px;border:2px solid var(--edge);flex:none}
   .dthumb-ph{width:96px;height:54px;border-radius:8px;border:2px solid var(--edge);display:grid;place-items:center;background:var(--panel2);font-size:1.3rem;flex:none}
@@ -233,33 +210,25 @@
   .ddesc{line-height:1.6;white-space:pre-wrap;word-break:break-word;margin-bottom:10px}
   .i-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
   .dphotos{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-  .dphotos img{height:80px;border-radius:8px;border:2px solid var(--edge);cursor:pointer;transition:transform .15s}
-  .dphotos img:hover{transform:scale(1.05)}
+  .dphotos img{height:80px;border-radius:8px;border:2px solid var(--edge);cursor:pointer}
   .dtools{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
   .vrow{display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--panel2);border:2px solid var(--edge);border-radius:10px;margin-top:8px;flex-wrap:wrap}
-  .rate-star{background:none;border:none;font-size:1.35rem;color:#3f5f8d;padding:2px;transition:transform .1s}
-  .rate-star:hover{transform:scale(1.15)}
+  .rate-star{background:none;border:none;font-size:1.35rem;color:#3f5f8d;padding:2px}
   .rate-star.on{color:var(--yellow)}
   .react-btn{display:inline-flex;align-items:center;gap:6px;background:var(--panel2);border:2px solid var(--edge);border-radius:99px;padding:6px 12px;font-size:.9rem;color:#fff;transition:.15s}
-  .react-btn:hover{border-color:#1c4f92;background:#1c4f92}
   .react-btn.sel{border-color:var(--green);background:rgba(142,232,93,.14)}
   .f-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   .ph-x{position:absolute;top:-6px;right:-6px;width:18px;height:18px;border-radius:50%;background:#b23b3b;color:#fff;border:none;font-size:.6rem;display:grid;place-items:center}
   .lf-row{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}
   .sep{border:none;border-top:2px dashed var(--edge);margin:18px 0}
-
-  /* LEADERBOARD */
   .lb-row{display:flex;gap:12px;align-items:center;padding:14px 16px;margin-bottom:12px;flex-wrap:wrap}
-  .rank{font-family:'Titan One';width:46px;height:46px;border-radius:12px;display:grid;place-items:center;font-size:1.1rem;background:#1c4f92;border:2px solid #0d3568;flex:none;text-shadow:0 2px 0 rgba(0,0,0,.3)}
-  .rank.r1{background:linear-gradient(180deg,#ffe45e,#e0a013);border-color:#8a6206;color:#3d2c00;text-shadow:none}
-  .rank.r2{background:linear-gradient(180deg,#e8eef4,#9fb2c4);border-color:#5d6f80;color:#22303d;text-shadow:none}
-  .rank.r3{background:linear-gradient(180deg,#e8a06a,#b0642e);border-color:#6e3d17;color:#3a2008;text-shadow:none}
+  .rank{font-family:'Titan One';width:46px;height:46px;border-radius:12px;display:grid;place-items:center;font-size:1.1rem;background:#1c4f92;border:2px solid #0d3568;flex:none}
+  .rank.r1{background:linear-gradient(180deg,#ffe45e,#e0a013);border-color:#8a6206;color:#3d2c00}
+  .rank.r2{background:linear-gradient(180deg,#e8eef4,#9fb2c4);border-color:#5d6f80;color:#22303d}
+  .rank.r3{background:linear-gradient(180deg,#e8a06a,#b0642e);border-color:#6e3d17;color:#3a2008}
   .lb-name{flex:1;min-width:170px}
-  .lb-name b{font-size:1rem}
   .lb-clears{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
   .lb-pts{font-family:'Titan One';color:var(--yellow);font-size:1.15rem;margin-left:auto}
-
-  /* DMS */
   .dms{display:grid;grid-template-columns:230px 1fr;gap:14px;height:calc(100vh - 160px);min-height:430px}
   .dm-list{padding:10px;overflow-y:auto;display:flex;flex-direction:column;gap:4px}
   .dm-user{display:flex;align-items:center;gap:10px;width:100%;padding:9px 10px;border-radius:10px;cursor:pointer;color:#fff;font-weight:500;transition:.15s}
@@ -273,17 +242,12 @@
   .bub.theirs{align-self:flex-start;background:#1c4f92;border-bottom-left-radius:4px}
   .dm-form{display:flex;gap:8px;padding:12px;border-top:2px solid var(--edge);align-items:center}
   .dm-empty{height:100%;display:grid;place-items:center;color:var(--mut);text-align:center;padding:20px}
-
-  /* NOTIFS / REPORTS / PROFILE */
   .ntf{padding:11px 6px;border-top:1px solid rgba(255,255,255,.07);font-size:.88rem}
   .ntf.click{cursor:pointer}
-  .ntf.click:hover{background:rgba(255,255,255,.06)}
   .rep{padding:12px 6px;border-top:1px solid rgba(255,255,255,.07);font-size:.88rem}
   .rep .quote{color:var(--mut);margin:6px 0 8px;font-style:italic}
   .prof-head{display:flex;gap:14px;align-items:center;margin-bottom:10px}
   .prof-recs{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-
-  /* MODAL / TOAST */
   .overlay{position:fixed;inset:0;background:rgba(3,12,26,.62);display:grid;place-items:center;z-index:40;animation:fadeIn .2s ease;padding:16px}
   .modal{width:min(430px,94vw);padding:24px;animation:pop .2s ease-out;max-height:92vh;overflow-y:auto}
   .modal.wide{width:min(600px,94vw)}
@@ -296,7 +260,6 @@
   .toast{background:var(--deep);border:2px solid #123c6e;border-radius:10px;padding:10px 18px;font-size:.9rem;animation:pop .2s ease-out;white-space:nowrap}
   .toast.error{border-color:#a33;color:#ffb0b0}
   .toast.out{opacity:0;transition:opacity .3s}
-
   @media(max-width:820px){
     .cols{grid-template-columns:1fr}
     .side-wrap{position:static}
@@ -316,96 +279,192 @@
 
 <script>
 'use strict';
+/* ================= SUPABASE CONFIG — PASTE YOURS HERE ================= */
+const SUPABASE_URL = 'https://bqiteymzkajvszdaowqg.supabase.co';        // Project Settings → API → Project URL
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJxaXRleW16a2FqdnN6ZGFvd3FnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU5MDk5NDAsImV4cCI6MjEwMTQ4NTk0MH0.7g8D4VlbkcENKts9u4b0iCHY-qYXWUG_Kjhaa33aXKA'; // Project Settings → API → anon public
+/* ====================================================================== */
+
+const CONFIGURED = !SUPABASE_URL.includes('PASTE') && !SUPABASE_ANON_KEY.includes('PASTE');
+let sb=null, authUser=null, bootState='loading', bootError='';
+if(CONFIGURED) sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const u2e = u => u.toLowerCase()+'@users.gdcommunity.app';
+
 const $ = s => document.querySelector(s);
-
-const DB = {
-  get(k,d){ try{ const v=localStorage.getItem(k); return v?JSON.parse(v):d; }catch{ return d; } },
-  set(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); return true; }catch{ toast('storage full — use smaller images','error'); return false; } }
-};
-const K = { users:'gd.users', posts:'gd.posts', groups:'gd.groups', dms:'gd.dms', lists:'gd.lists', sites:'gd.sites', olists:'gd.olists',
-  follows:'gd.follows', notifs:'gd.notifs', reports:'gd.reports', fav:'gd.favicon', session:'gd.session' };
-
-const users  = () => DB.get(K.users,[]);
-const posts  = () => DB.get(K.posts,[]);
-const groups = () => DB.get(K.groups,[]);
-const dms    = () => DB.get(K.dms,[]);
-const lists  = () => DB.get(K.lists,[]);
-const sites  = () => DB.get(K.sites,[]);
-const olists = () => DB.get(K.olists,[]);
-const followsMap = () => DB.get(K.follows,{});
-const findUser = n => users().find(u=>u.username.toLowerCase()===String(n).toLowerCase());
-const isAdmin  = () => !!(me && me.role==='admin');
-const canList  = l => isAdmin() || (l && l.author===me.username);
-
 const uid = () => Math.random().toString(36).slice(2,9)+Date.now().toString(36);
 const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const hashPw = (u,p) => { let h=5381; const s=u.toLowerCase()+'::'+p; for(let i=0;i<s.length;i++) h=((h<<5)+h+s.charCodeAt(i))>>>0; return 'h'+h.toString(16); };
-const hashNum = s => [...String(s)].reduce((a,c)=>a+c.charCodeAt(0),0);
 function ago(t){ const s=Math.floor((Date.now()-t)/1000); if(s<60)return'now'; if(s<3600)return Math.floor(s/60)+'m'; if(s<86400)return Math.floor(s/3600)+'h'; return Math.floor(s/86400)+'d'; }
 function fmtDate(t){ return new Date(t).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}); }
 function normUrl(v){ v=(v||'').trim(); if(!v) return ''; if(!/^https?:\/\//i.test(v)) v='https://'+v; return /^https?:\/\//i.test(v)?v:''; }
 function shortUrl(u){ return String(u||'').replace(/^https?:\/\//,'').replace(/^www\./,'').slice(0,30); }
 function ytId(url){ const m=String(url||'').match(/(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)([\w-]{6,})/); return m?m[1]:null; }
+function toast(msg,type){ const t=document.createElement('div'); t.className='toast '+(type||''); t.textContent=msg;
+  $('#toasts').appendChild(t); setTimeout(()=>{ t.classList.add('out'); setTimeout(()=>t.remove(),320); },2600); }
+function copyText(t){ if(navigator.clipboard){ navigator.clipboard.writeText(t).then(()=>toast('link copied')).catch(()=>toast('copy failed','error')); }
+  else prompt('copy this link:',t); }
 
-const CUBES = [['#8ee85d','#4db32a'],['#ffd93b','#e0a013'],['#ff9f2e','#d3711a'],['#6ad7ff','#2e9ad0'],['#ff6b81','#d33d55'],['#c98bff','#8a3fd0']];
-function avatarHTML(u,cls){
-  cls=cls||'s44';
-  if(u && u.avatar) return '<img class="av '+cls+'" src="'+u.avatar+'" alt="">';
-  const p=CUBES[hashNum((u&&u.username)||'?')%CUBES.length];
-  return '<span class="cube '+cls+'" style="--c1:'+p[0]+';--c2:'+p[1]+'"><i></i><i></i><em></em></span>';
+/* ---------------- in-memory cache + db helpers ---------------- */
+const S={users:[],posts:[],groups:[],dms:[],lists:[],sites:[],olists:[],follows:[],notifs:[],reports:[],favicon:null};
+const users=()=>S.users, posts=()=>S.posts, groups=()=>S.groups, dms=()=>S.dms, lists=()=>S.lists, sites=()=>S.sites, olists=()=>S.olists;
+const findUser = n => S.users.find(u=>u.username.toLowerCase()===String(n).toLowerCase());
+let me=null;
+const isAdmin = () => !!(me && me.role==='admin');
+const canList = l => isAdmin() || (l && l.author===me.username);
+
+async function dbInsert(table,row){ const {error}=await sb.from(table).insert(row);
+  if(error){ toast('save failed: '+error.message,'error'); return false; } return true; }
+async function dbUpd(table,id,patch){ const {error}=await sb.from(table).update(patch).eq('id',id);
+  if(error){ toast('save failed: '+error.message,'error'); return false; } return true; }
+async function dbDel(table,id){ const {error}=await sb.from(table).delete().eq('id',id);
+  if(error){ toast('delete failed: '+error.message,'error'); return false; } return true; }
+const savePostRow = p => dbUpd('posts',p.id,{data:p});
+const saveGroupRow = g => dbUpd('groups',g.id,{data:g});
+const saveListRow = l => dbUpd('lists',l.id,{data:l,slug:l.slug});
+
+async function loadAll(){
+  const names=['profiles','posts','groups','dms','lists','sites','olists','follows','notifs','reports','meta'];
+  const res=await Promise.all(names.map(t=>sb.from(t).select('*')));
+  const bad=res.find(r=>r.error); if(bad) throw new Error(bad.error.message);
+  S.users=res[0].data.map(r=>({id:r.id,username:r.username,avatar:r.avatar||'',bio:r.bio||'',role:r.role||'',joined:Date.parse(r.joined)||Date.now()}));
+  S.posts=res[1].data.map(r=>r.data); S.groups=res[2].data.map(r=>r.data);
+  S.dms=res[3].data.map(r=>r.data);   S.lists=res[4].data.map(r=>r.data);
+  S.sites=res[5].data.map(r=>r.data); S.olists=res[6].data.map(r=>r.data);
+  S.follows=res[7].data; S.notifs=res[8].data; S.reports=res[9].data;
+  const fav=res[10].data.find(r=>r.key==='favicon'); S.favicon=fav?fav.value:null;
+  S.posts.sort((a,b)=>b.ts-a.ts);
 }
-const avatarByName = (n,cls) => avatarHTML(findUser(n)||{username:n}, cls);
+async function init(){
+  try{
+    const {data:{session}}=await sb.auth.getSession();
+    authUser=session?session.user:null;
+    await loadAll();
+    if(authUser && !S.users.some(u=>u.id===authUser.id)){ await sb.auth.signOut(); authUser=null; }
+    bootState='ready';
+  }catch(e){ bootState='error'; bootError=e.message; }
+  render();
+  sb.auth.onAuthStateChange(async(evt,sess)=>{ authUser=sess?sess.user:null;
+    if(evt==='SIGNED_IN'){ try{ await loadAll(); }catch(e){} }
+    render(); });
+}
 
+/* ---------------- follows / notifs / reports ---------------- */
+function followsMap(){ const id2={}; S.users.forEach(u=>id2[u.id]=u.username); const m={};
+  S.follows.forEach(r=>{ const f=id2[r.follower_id],t=id2[r.target_id];
+    if(f&&t){ m[f]=m[f]||[]; m[f].push(t); } }); return m; }
+const isFollowing = t => (followsMap()[me.username]||[]).includes(t);
+const followerCount = t => Object.values(followsMap()).filter(a=>a.includes(t)).length;
+const followingCount = t => (followsMap()[t]||[]).length;
+function myNotifRows(){ return me?S.notifs.filter(r=>r.user_id===me.id):[]; }
+function unreadCount(){ return myNotifRows().filter(r=>!r.data.read).length; }
+function openReports(){ return S.reports.filter(r=>r.data.status==='open').map(r=>({id:r.id,...r.data})); }
+async function notify(username,n){ if(!me||username===me.username)return; const u=findUser(username); if(!u)return;
+  const row={id:uid(),user_id:u.id,data:{type:n.type,from:n.from,where:n.where||'',ts:Date.now(),read:false}};
+  S.notifs.push(row); await sb.from('notifs').insert(row); }
+async function toggleFollow(tName){ const t=findUser(tName); if(!t||t.username===me.username)return;
+  const ex=S.follows.find(r=>r.follower_id===me.id&&r.target_id===t.id);
+  if(ex){ S.follows=S.follows.filter(r=>r!==ex);
+    await sb.from('follows').delete().eq('follower_id',me.id).eq('target_id',t.id);
+    toast('unfollowed @'+t.username);
+  } else { const row={follower_id:me.id,target_id:t.id}; S.follows.push(row);
+    await sb.from('follows').insert(row);
+    notify(t.username,{type:'follow',from:me.username});
+    toast('following @'+t.username);
+  }
+  render(); }
+async function makeReport(type,targetId,postId,author,text){
+  if(S.reports.some(r=>r.data.status==='open'&&r.data.targetId===targetId&&r.data.reporter===me.username)){ toast('you already reported this'); return; }
+  const row={id:uid(),owner:me.id,data:{type,targetId,postId,author,text:String(text||'').slice(0,140),reporter:me.username,ts:Date.now(),status:'open'}};
+  S.reports.push(row); await sb.from('reports').insert(row); toast('report sent to admin'); }
+async function resolveReport(id){ const r=S.reports.find(x=>x.id===id); if(!r)return;
+  r.data.status='resolved'; await dbUpd('reports',id,{data:r.data}); }
+
+/* ---------------- mentions / search / achievements ---------------- */
+function addMentions(html){ return html.replace(/@([a-z0-9_]{3,16})/gi,(all,name)=> findUser(name)
+  ? `<button class="uname" data-act="profile-view" data-user="${esc(name)}">${all}</button>` : all); }
+function richText(t){ return addMentions(esc(t)); }
+function extractMentions(text){ const out=[]; const re=/@([a-z0-9_]{3,16})/gi; let m;
+  while((m=re.exec(text))) out.push(m[1]); return out; }
+function notifyMentions(text,where){ extractMentions(text).forEach(n=>{ const u=findUser(n);
+  if(u&&u.username!==me.username) notify(u.username,{type:'mention',from:me.username,where}); }); }
+
+const STOP=new Set(['i','a','an','the','some','my','me','to','of','in','on','for','and','or','is','it','at','u','ur','plz','please','with','that','this','have','has','do','does','can','you','your']);
+function tokenize(s){ return String(s).toLowerCase().split(/[^a-z0-9ąćęłńóśźż]+/).filter(w=>w.length>1); }
+function editDist(a,b){ if(Math.abs(a.length-b.length)>2) return 99;
+  let prev=Array.from({length:b.length+1},(_,j)=>j);
+  for(let i=1;i<=a.length;i++){ const cur=[i];
+    for(let j=1;j<=b.length;j++) cur[j]=Math.min(prev[j]+1,cur[j-1]+1,prev[j-1]+(a[i-1]===b[j-1]?0:1));
+    prev=cur; } return prev[b.length]; }
+function wordScore(w,t){ if(w===t)return 3;
+  if(t.length>=3&&w.startsWith(t))return 2; if(t.length>=3&&w.includes(t))return 2;
+  if(t.length>=4){ const allow=t.length>=8?2:1;
+    const d=Math.min(editDist(w,t),editDist(w.slice(0,t.length+1),t)); if(d<=allow)return 1; } return 0; }
+function docScore(words,tokens){ let s=0;
+  for(const t of tokens){ if(STOP.has(t))continue; let best=0;
+    for(const w of words){ const sc=wordScore(w,t); if(sc>best){best=sc;if(best===3)break;} } s+=best; } return s; }
+
+let ogSet=new Set();
+function refreshOG(){ ogSet=new Set(S.users.slice().sort((a,b)=>a.joined-b.joined).slice(0,5).map(u=>u.username)); }
+function nameTags(u){ return (u&&u.role==='admin'?'👑 ':'')+(u&&ogSet.has(u.username)?'<span class="ogtag">OG</span>':''); }
+function getAchievements(user){
+  const name=user.username.toLowerCase();
+  const myPosts=posts().filter(p=>p.author.toLowerCase()===name);
+  const likesGot=posts().reduce((n,p)=>n+(p.author.toLowerCase()===name?p.likes.length:0),0);
+  const myLists=lists().filter(l=>l.author.toLowerCase()===name);
+  const lvlCount=myLists.reduce((n,l)=>n+l.items.length,0);
+  let victor=false,verifier=false;
+  lists().forEach(l=>l.items.forEach(it=>{
+    if((it.victors||[]).some(v=>String(v.name).toLowerCase()===name)) victor=true;
+    if(it.verifier&&String(it.verifier.name).toLowerCase()===name) verifier=true; }));
+  let comments=0;
+  posts().forEach(p=>p.comments.forEach(c=>{ if(c.author.toLowerCase()===name)comments++; }));
+  lists().forEach(l=>(l.comments||[]).forEach(c=>{ if(c.author.toLowerCase()===name)comments++; }));
+  let dmCount=0; dms().forEach(t=>t.msgs.forEach(m=>{ if(m.from.toLowerCase()===name)dmCount++; }));
+  return [
+    {ic:'⭐',name:'OG',desc:'One of the first 5 members',got:ogSet.has(user.username)},
+    {ic:'✏️',name:'First Post',desc:'Wrote your first post',got:myPosts.length>0},
+    {ic:'💬',name:'Social',desc:'Wrote 5 posts',got:myPosts.length>=5},
+    {ic:'❤️',name:'Appreciated',desc:'Received 5 stars',got:likesGot>=5},
+    {ic:'📋',name:'List Maker',desc:'Created a list',got:myLists.length>0},
+    {ic:'🗂️',name:'Curator',desc:'Your list has 3+ levels',got:lvlCount>=3},
+    {ic:'🏆',name:'Demon Slayer',desc:'Beat a listed level',got:victor},
+    {ic:'🛠️',name:'Verifier',desc:'Verified a listed level',got:verifier},
+    {ic:'✍️',name:'Critic',desc:'Wrote 5 comments',got:comments>=5},
+    {ic:'📨',name:'Chatty',desc:'Sent 10 DMs',got:dmCount>=10},
+    {ic:'🎨',name:'Fresh',desc:'Set an avatar and a bio',got:!!user.avatar&&!!user.bio}
+  ];
+}
+function achPanelHTML(){ const ach=getAchievements(me); const got=ach.filter(a=>a.got);
+  return `<div class="panel" style="padding:16px;text-align:center">
+    <span class="mut small" style="letter-spacing:.2em">ACHIEVEMENTS (${got.length}/${ach.length})</span>
+    <div class="ach-mini">${got.length?got.map(a=>`<span title="${esc(a.name)} — ${esc(a.desc)}">${a.ic}</span>`).join(''):'<span class="mut small" style="font-size:.8rem">none yet — go earn some</span>'}</div>
+  </div>`; }
+
+/* ---------------- misc helpers ---------------- */
+const CUBES=[['#8ee85d','#4db32a'],['#ffd93b','#e0a013'],['#ff9f2e','#d3711a'],['#6ad7ff','#2e9ad0'],['#ff6b81','#d33d55'],['#c98bff','#8a3fd0']];
+function avatarHTML(u,cls){ cls=cls||'s44';
+  if(u&&u.avatar) return '<img class="av '+cls+'" src="'+u.avatar+'" alt="">';
+  const p=CUBES[hashNum((u&&u.username)||'?')%CUBES.length];
+  return '<span class="cube '+cls+'" style="--c1:'+p[0]+';--c2:'+p[1]+'"><i></i><i></i><em></em></span>'; }
+function hashNum(s){ return [...String(s)].reduce((a,c)=>a+c.charCodeAt(0),0); }
+const avatarByName=(n,cls)=>avatarHTML(findUser(n)||{username:n},cls);
 const LIST_ICONS=['⭐','🔥','🎮','👾','🌀','💠','🟩','🏆','🎯','🚀','😈','🧊','🎨','🎵','💎','🕹️'];
 const LIST_COLORS=['linear-gradient(135deg,#0e4ea8,#2fb6ff)','linear-gradient(135deg,#7a2fb0,#ff6bd6)','linear-gradient(135deg,#0c8a4e,#8ee85d)',
  'linear-gradient(135deg,#c9641a,#ffd93b)','linear-gradient(135deg,#b02438,#ff8a6b)','linear-gradient(135deg,#153e58,#58d5e8)',
  'linear-gradient(135deg,#5c1a8a,#8a5cff)','linear-gradient(135deg,#3a3f4a,#9aa7b8)'];
 const REACTS=['👍','❤️','🔥','😂','⭐'];
 const TAG_PRESETS=['need help','showcase','question','collab','meme','news','recruit'];
-
 function slugify(s){ const map={'ą':'a','ć':'c','ę':'e','ł':'l','ń':'n','ó':'o','ś':'s','ź':'z','ż':'z'};
   return (String(s).toLowerCase().replace(/[ąćęłńóśźż]/g,c=>map[c]).replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,''))||'lista'; }
-function uniqueListSlug(name){ const base=slugify(name); let s=base,i=2; while(lists().some(l=>l.slug===s)) s=base+'-'+(i++); return s; }
-function uniqueItemSlug(list,title){ const base=slugify(title)||'level'; let s=base,i=2; while(list.items.some(x=>x.slug===s)) s=base+'-'+(i++); return s; }
+function uniqueListSlug(name){ const base=slugify(name); let s=base,i=2; while(lists().some(l=>l.slug===s))s=base+'-'+(i++); return s; }
+function uniqueItemSlug(list,title){ const base=slugify(title)||'level'; let s=base,i=2; while(list.items.some(x=>x.slug===s))s=base+'-'+(i++); return s; }
+async function saveUser(patch){ Object.assign(me,patch);
+  await sb.from('profiles').update({avatar:me.avatar||'',bio:me.bio||''}).eq('id',me.id); render(); }
+function defaultFavicon(){ const c=document.createElement('canvas'); c.width=c.height=64; const x=c.getContext('2d');
+  x.fillStyle='#4db32a'; x.fillRect(0,0,64,64); x.fillStyle='#8ee85d'; x.fillRect(5,5,54,54);
+  x.fillStyle='#102540'; x.fillRect(15,18,10,16); x.fillRect(39,18,10,16); x.fillRect(20,44,24,7); return c.toDataURL(); }
+function applyFavicon(){ let l=document.querySelector('link[rel="icon"]');
+  if(!l){ l=document.createElement('link'); l.rel='icon'; document.head.appendChild(l); }
+  l.href=S.favicon||defaultFavicon(); }
 
-/* ---- text with @mentions ---- */
-function addMentions(html){
-  return html.replace(/@([a-z0-9_]{3,16})/gi,(all,name)=> findUser(name)
-    ? `<button class="uname" data-act="profile-view" data-user="${esc(name)}">${all}</button>` : all);
-}
-function richText(t){ return addMentions(esc(t)); }
-function extractMentions(text){ const out=[]; const re=/@([a-z0-9_]{3,16})/gi; let m;
-  while((m=re.exec(text))) out.push(m[1]); return out; }
-function notifyMentions(text,where){
-  extractMentions(text).forEach(n=>{ const u=findUser(n);
-    if(u&&u.username!==me.username) notify(u.username,{type:'mention',from:me.username,where}); });
-}
-
-/* ---- notifications ---- */
-function notify(user,n){
-  if(!user||!me||user===me.username) return;
-  const all=DB.get(K.notifs,{}); all[user]=all[user]||[];
-  all[user].push({id:uid(),ts:Date.now(),read:false,...n});
-  DB.set(K.notifs,all);
-}
-function myNotifs(){ return me?((DB.get(K.notifs,{}))[me.username]||[]):[]; }
-function unreadCount(){ return myNotifs().filter(n=>!n.read).length; }
-function openReports(){ return DB.get(K.reports,[]).filter(r=>r.status==='open'); }
-
-/* ---- follows ---- */
-function isFollowing(t){ return (followsMap()[me.username]||[]).includes(t); }
-function followerCount(t){ return Object.values(followsMap()).filter(arr=>Array.isArray(arr)&&arr.includes(t)).length; }
-function followingCount(t){ return (followsMap()[t]||[]).length; }
-
-/* ---- reports ---- */
-function makeReport(type,targetId,postId,author,text){
-  const reps=DB.get(K.reports,[]);
-  if(reps.some(r=>r.status==='open'&&r.targetId===targetId&&r.reporter===me.username)){ toast('you already reported this'); return; }
-  reps.push({id:uid(),type,targetId,postId,author,text:String(text||'').slice(0,140),reporter:me.username,ts:Date.now(),status:'open'});
-  DB.set(K.reports,reps); toast('report sent to admin');
-}
-
-/* ---- image / file helpers ---- */
 function loadImage(file){ return new Promise((res,rej)=>{ const img=new Image(),u=URL.createObjectURL(file);
   img.onload=()=>{URL.revokeObjectURL(u);res(img)}; img.onerror=rej; img.src=u; }); }
 async function cropImage(file,W,H){ const img=await loadImage(file); const c=document.createElement('canvas'); c.width=W;c.height=H;
@@ -416,300 +475,104 @@ async function fitImage(file,max){ const img=await loadImage(file); const r=Math
   c.getContext('2d').drawImage(img,0,0,c.width,c.height); return c.toDataURL('image/jpeg',.75); }
 function fileToData(file){ return new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=rej; r.readAsDataURL(file); }); }
 
-/* ---- favicon ---- */
-function defaultFavicon(){
-  const c=document.createElement('canvas'); c.width=c.height=64; const x=c.getContext('2d');
-  x.fillStyle='#4db32a'; x.fillRect(0,0,64,64);
-  x.fillStyle='#8ee85d'; x.fillRect(5,5,54,54);
-  x.fillStyle='#102540'; x.fillRect(15,18,10,16); x.fillRect(39,18,10,16); x.fillRect(20,44,24,7);
-  return c.toDataURL();
-}
-function setFavicon(url){ let l=document.querySelector('link[rel="icon"]');
-  if(!l){ l=document.createElement('link'); l.rel='icon'; document.head.appendChild(l); } l.href=url; }
-function applyFavicon(){ setFavicon(DB.get(K.fav,null)||defaultFavicon()); }
-
-/* ---- SMART SEARCH ---- */
-const STOP=new Set(['i','a','an','the','some','my','me','to','of','in','on','for','and','or','is','it','at','u','ur','plz','please','with','that','this','have','has','do','does','can','you','your']);
-function tokenize(s){ return String(s).toLowerCase().split(/[^a-z0-9ąćęłńóśźż]+/).filter(w=>w.length>1); }
-function editDist(a,b){
-  if(Math.abs(a.length-b.length)>2) return 99;
-  const m=a.length,n=b.length;
-  let prev=Array.from({length:n+1},(_,j)=>j);
-  for(let i=1;i<=m;i++){
-    const cur=[i];
-    for(let j=1;j<=n;j++) cur[j]=Math.min(prev[j]+1,cur[j-1]+1,prev[j-1]+(a[i-1]===b[j-1]?0:1));
-    prev=cur;
-  }
-  return prev[n];
-}
-function wordScore(w,t){
-  if(w===t) return 3;
-  if(t.length>=3&&w.startsWith(t)) return 2;
-  if(t.length>=3&&w.includes(t)) return 2;
-  if(t.length>=4){
-    const allow=t.length>=8?2:1;
-    const d=Math.min(editDist(w,t),editDist(w.slice(0,t.length+1),t));
-    if(d<=allow) return 1;
-  }
-  return 0;
-}
-function docScore(words,tokens){
-  let s=0;
-  for(const t of tokens){
-    if(STOP.has(t)) continue;
-    let best=0;
-    for(const w of words){ const sc=wordScore(w,t); if(sc>best){ best=sc; if(best===3)break; } }
-    s+=best;
-  }
-  return s;
-}
-
-/* ---- ACHIEVEMENTS ---- */
-let ogSet=new Set();
-function refreshOG(){ ogSet=new Set(users().slice().sort((a,b)=>a.joined-b.joined).slice(0,5).map(u=>u.username)); }
-function nameTags(u){ return (u&&u.role==='admin'?'👑 ':'')+(u&&ogSet.has(u.username)?'<span class="ogtag">OG</span>':''); }
-function getAchievements(user){
-  const name=user.username.toLowerCase();
-  const myPosts=posts().filter(p=>p.author.toLowerCase()===name);
-  const likesGot=posts().reduce((n,p)=>n+(p.author.toLowerCase()===name?p.likes.length:0),0);
-  const myLists=lists().filter(l=>l.author.toLowerCase()===name);
-  const levelsInMyLists=myLists.reduce((n,l)=>n+l.items.length,0);
-  let victor=false,verifier=false;
-  lists().forEach(l=>l.items.forEach(it=>{
-    if((it.victors||[]).some(v=>String(v.name).toLowerCase()===name)) victor=true;
-    if(it.verifier&&String(it.verifier.name).toLowerCase()===name) verifier=true;
-  }));
-  let comments=0;
-  posts().forEach(p=>p.comments.forEach(c=>{ if(c.author.toLowerCase()===name) comments++; }));
-  lists().forEach(l=>(l.comments||[]).forEach(c=>{ if(c.author.toLowerCase()===name) comments++; }));
-  let dmCount=0;
-  dms().forEach(t=>t.msgs.forEach(m=>{ if(m.from.toLowerCase()===name) dmCount++; }));
-  return [
-    {ic:'⭐',name:'OG',desc:'One of the first 5 members of the site',got:ogSet.has(user.username)},
-    {ic:'✏️',name:'First Post',desc:'Wrote your first post',got:myPosts.length>0},
-    {ic:'💬',name:'Social',desc:'Wrote 5 posts',got:myPosts.length>=5},
-    {ic:'❤️',name:'Appreciated',desc:'Received 5 stars on your posts',got:likesGot>=5},
-    {ic:'📋',name:'List Maker',desc:'Created a list',got:myLists.length>0},
-    {ic:'🗂️',name:'Curator',desc:'Your list has 3+ levels',got:levelsInMyLists>=3},
-    {ic:'🏆',name:'Demon Slayer',desc:'Beat a level on any list',got:victor},
-    {ic:'🛠️',name:'Verifier',desc:'Verified a level on any list',got:verifier},
-    {ic:'✍️',name:'Critic',desc:'Wrote 5 comments',got:comments>=5},
-    {ic:'📨',name:'Chatty',desc:'Sent 10 DMs',got:dmCount>=10},
-    {ic:'🎨',name:'Fresh',desc:'Set an avatar and a bio',got:!!user.avatar&&!!user.bio}
-  ];
-}
-function achPanelHTML(){
-  const ach=getAchievements(me); const got=ach.filter(a=>a.got);
-  return `<div class="panel" style="padding:16px;text-align:center">
-    <span class="mut small" style="letter-spacing:.2em">ACHIEVEMENTS (${got.length}/${ach.length})</span>
-    <div class="ach-mini">${got.length?got.map(a=>`<span title="${esc(a.name)} — ${esc(a.desc)}">${a.ic}</span>`).join(''):'<span class="mut small" style="font-size:.8rem">none yet — go earn some</span>'}</div>
-  </div>`;
-}
-
-/* ---------- seed ---------- */
-function sampleLists(){ return [{
-  id:uid(), slug:'my-gd-goals', name:'My GD Goals', desc:'Everything I want to beat this year.',
-  icon:'🎯', iconImg:null, color:3, banner:null, discord:'', author:'NovaDash', created:Date.now()-86400000*12, edited:Date.now()-86400000*2,
-  rules:'1. Only legit completions — no hacks.\n2. Every victor must add a youtube video as proof.\n3. Points are set by the list owner.',
-  reacts:{'🔥':['CubeLord'],'⭐':['WaveMaster']},
-  comments:[{id:uid(),author:'CubeLord',text:'this list is brutal',ts:Date.now()-86400000}],
-  items:[
-    {id:uid(),slug:'silent-clubstep',title:'Silent Clubstep',desc:'The legendary impossible level.',thumb:null,photos:[],
-     tags:['demon','impossible'],points:500,
-     verifier:{name:'CubeLord',video:'https://www.youtube.com/watch?v=dQw4w9WgXcQ'},
-     victors:[{name:'Victor',video:'https://www.youtube.com/watch?v=dQw4w9WgXcQ',ts:Date.now()-3600000*5}],
-     ratings:{CubeLord:5,WaveMaster:4},
-     author:'NovaDash',created:Date.now()-86400000*10,edited:Date.now()-86400000*2},
-    {id:uid(),slug:'bloodbath',title:'Bloodbath',desc:'The classic extreme demon.',thumb:null,photos:[],
-     tags:['demon','extreme'],points:250,
-     verifier:{name:'WaveMaster',video:''},victors:[],
-     ratings:{},
-     author:'NovaDash',created:Date.now()-86400000*5,edited:Date.now()-86400000*5}
-  ]}];}
-function seed(){
-  if(!DB.get(K.users,null)){
-    const rnd=Math.random().toString(36);
-    DB.set(K.users,[
-      {username:'CubeLord',  pass:'x'+rnd, avatar:null, bio:'maining cubes since 1.9', joined:Date.now()-86400000*40},
-      {username:'WaveMaster',pass:'x'+rnd, avatar:null, bio:'wave is easy (lie)',       joined:Date.now()-86400000*22},
-      {username:'NovaDash',  pass:'x'+rnd, avatar:null, bio:'collab manager — dm me',   joined:Date.now()-86400000*9}
-    ]);
-    DB.set(K.posts,[
-      {id:uid(),author:'WaveMaster',text:'just beat deadlocked... my hands are gone',tags:['showcase'],ts:Date.now()-3600000*2,likes:['CubeLord','NovaDash'],group:null,
-        comments:[{id:uid(),author:'CubeLord',text:'insane. the ship part got me 200 times',ts:Date.now()-3600000}]},
-      {id:uid(),author:'NovaDash',text:'looking for 3 people for a mega collab — demon difficulty. comment or dm me',tags:['collab','recruit'],ts:Date.now()-3600000*7,likes:['WaveMaster'],group:null,comments:[]},
-      {id:uid(),author:'CubeLord',text:'i ned some help with the wave part of stereo madness, any tips? @NovaDash',tags:['need help'],ts:Date.now()-86400000,likes:[],group:null,
-        comments:[{id:uid(),author:'NovaDash',text:'hold frame perfects, you got this',ts:Date.now()-82000000}]}
-    ]);
-    DB.set(K.groups,[{id:uid(),name:'Demon Players',desc:'only the brave. share your demon clears and fails.',emoji:'😈',members:['CubeLord','WaveMaster'],owner:'CubeLord',ts:Date.now()-86400000*30}]);
-    DB.set(K.dms,[]);
-    DB.set(K.sites,[
-      {id:uid(),name:'Pointercrate',url:'https://pointercrate.com',desc:'The famous demon list of Geometry Dash.',emoji:'😈',ts:Date.now()},
-      {id:uid(),name:'GD Forum',url:'https://gdforum.net',desc:'The biggest Geometry Dash forum.',emoji:'💬',ts:Date.now()},
-      {id:uid(),name:'Geometry Dash',url:'https://geometrydash.com',desc:'The official game website.',emoji:'🎮',ts:Date.now()}
-    ]);
-    DB.set(K.olists,[
-      {id:uid(),name:'Demon List',url:'https://pointercrate.com/demonlist/',desc:'The official top extreme demons ranking.',emoji:'🏆',ts:Date.now()},
-      {id:uid(),name:'Impossible Levels',url:'https://www.youtube.com/results?search_query=impossible+levels+geometry+dash',desc:'The craziest impossible levels, ranked by the community.',emoji:'😈',ts:Date.now()}
-    ]);
-    DB.set(K.follows,{NovaDash:['CubeLord']});
-    DB.set(K.notifs,{});
-    DB.set(K.reports,[]);
-  }
-  const old=DB.get(K.lists,null);
-  if(!old || (old.length && !('items' in old[0]))) DB.set(K.lists,sampleLists());
-  if(DB.get(K.sites,null)===null) DB.set(K.sites,[]);
-  if(DB.get(K.olists,null)===null) DB.set(K.olists,[]);
-  if(DB.get(K.follows,null)===null) DB.set(K.follows,{});
-  if(DB.get(K.notifs,null)===null) DB.set(K.notifs,{});
-  if(DB.get(K.reports,null)===null) DB.set(K.reports,[]);
-}
-
-/* ---------- state + router ---------- */
-let me=null, view={name:'feed'}, authTab='login', settingsOpen=false, dmWith=null, listTab='levels', openLevel=null, editingVictor=null, ytModal=null, imgModal=null, feedQ='', feedFilter='all';
+/* ---------------- state ---------------- */
+let view={name:'feed'}, authTab='login', settingsOpen=false, dmWith=null, listTab='levels', openLevel=null, editingVictor=null, ytModal=null, imgModal=null, feedQ='', feedFilter='all';
 let profileView=null, notifsOpen=false, reportsOpen=false;
-let listModal=null, listDraft=null;
-let itemModal=null, itemDraft=null;
-let postTags=[];
-const attach={};
-const openComments=new Set(); let focusDM=false;
-
-function toHash(v){
-  switch(v.name){
-    case 'groups': return '#/groups';
-    case 'group': return '#/group/'+v.id;
-    case 'lists': return '#/lists';
-    case 'listview': return '#/lista/'+v.slug;
-    case 'sites': return '#/websites';
-    case 'olists': return '#/other-lists';
-    case 'dms': return '#/dms';
-    default: return '#/feed';
-  }
-}
-function parseHash(){
-  const parts=location.hash.replace(/^#\/?/,'').split('/').filter(Boolean);
+let listModal=null, listDraft=null, itemModal=null, itemDraft=null, postTags=[];
+const attach={}; const openComments=new Set(); let focusDM=false;
+function toHash(v){ switch(v.name){ case 'groups':return '#/groups'; case 'group':return '#/group/'+v.id;
+  case 'lists':return '#/lists'; case 'listview':return '#/lista/'+v.slug; case 'sites':return '#/websites';
+  case 'olists':return '#/other-lists'; case 'dms':return '#/dms'; default:return '#/feed'; } }
+function parseHash(){ const parts=location.hash.replace(/^#\/?/,'').split('/').filter(Boolean);
   if(parts[0]==='lista'&&parts[1]) return {name:'listview',slug:parts[1],expand:parts[2]||null};
   if(['feed','groups','lists','dms','websites'].includes(parts[0])) return {name:parts[0]==='websites'?'sites':parts[0]};
   if(parts[0]==='other-lists') return {name:'olists'};
   if(parts[0]==='group'&&parts[1]) return {name:'group',id:parts[1]};
-  return {name:'feed'};
-}
-function go(v){ view=v; listTab='levels'; openLevel=null; editingVictor=null; const h=toHash(v); if(location.hash!==h) location.hash=h; else render(); }
+  return {name:'feed'}; }
+function go(v){ view=v; listTab='levels'; openLevel=null; editingVictor=null;
+  const h=toHash(v); if(location.hash!==h) location.hash=h; else render(); }
 window.addEventListener('hashchange',()=>{ view=parseHash(); listTab='levels'; openLevel=null; editingVictor=null; render(); });
+function levelCtx(){ if(view.name!=='listview')return null;
+  const l=lists().find(x=>x.slug===view.slug); if(!l)return null;
+  const it=l.items.find(x=>x.slug===openLevel); return it?{list:l,item:it}:null; }
+const membersOptions=()=>S.users.map(u=>`<option>${esc(u.username)}</option>`).join('');
 
-function toast(msg,type){ const t=document.createElement('div'); t.className='toast '+(type||''); t.textContent=msg;
-  $('#toasts').appendChild(t); setTimeout(()=>{ t.classList.add('out'); setTimeout(()=>t.remove(),320); },2600); }
-function copyText(t){ if(navigator.clipboard){ navigator.clipboard.writeText(t).then(()=>toast('link copied')).catch(()=>toast('copy failed','error')); }
-  else prompt('copy this link:',t); }
-function saveUser(patch){ const l=users(); const i=l.findIndex(u=>u.username===me.username);
-  if(i<0)return; l[i]={...l[i],...patch}; DB.set(K.users,l); me=l[i]; }
-function levelCtx(){
-  if(view.name!=='listview') return null;
-  const l=lists().find(x=>x.slug===view.slug); if(!l) return null;
-  const it=l.items.find(x=>x.slug===openLevel); return it?{list:l,item:it}:null;
-}
-const membersOptions = () => users().map(u=>`<option>${esc(u.username)}</option>`).join('');
-
-/* ---------- attachments ---------- */
-function attsHTML(atts){
-  if(!atts||!atts.length) return '';
-  return `<div class="atts">${atts.map(a=> a.kind==='img'
-    ? `<img class="att-img" src="${a.data}" data-act="view-img" data-src="${a.data}">`
-    : `<a class="att-file" href="${a.data}" download="${esc(a.name)}">📄 <span>${esc(a.name)}</span></a>`).join('')}</div>`;
-}
-function stripHTML(key){
-  const arr=attach[key]||[];
-  return arr.map((a,i)=> a.kind==='img'
-    ? `<span class="att-chip"><img src="${a.data}"><button type="button" class="ph-x" data-act="attach-del" data-key="${key}" data-i="${i}">✕</button></span>`
-    : `<span class="att-chip file">📄<span class="att-name">${esc(a.name)}</span><button type="button" class="ph-x" data-act="attach-del" data-key="${key}" data-i="${i}">✕</button></span>`).join('');
-}
-function updateStrip(key){ const el=document.querySelector('.attach-strip[data-key="'+key+'"]'); if(el) el.innerHTML=stripHTML(key); }
-async function onAttach(key,fileList){
-  const files=[...fileList]; if(!files.length) return;
+/* attachments */
+function attsHTML(atts){ if(!atts||!atts.length)return '';
+  return `<div class="atts">${atts.map(a=>a.kind==='img'
+    ?`<img class="att-img" src="${a.data}" data-act="view-img" data-src="${a.data}">`
+    :`<a class="att-file" href="${a.data}" download="${esc(a.name)}">📄 <span>${esc(a.name)}</span></a>`).join('')}</div>`; }
+function stripHTML(key){ const arr=attach[key]||[];
+  return arr.map((a,i)=>a.kind==='img'
+    ?`<span class="att-chip"><img src="${a.data}"><button type="button" class="ph-x" data-act="attach-del" data-key="${key}" data-i="${i}">✕</button></span>`
+    :`<span class="att-chip file">📄<span class="att-name">${esc(a.name)}</span><button type="button" class="ph-x" data-act="attach-del" data-key="${key}" data-i="${i}">✕</button></span>`).join(''); }
+function updateStrip(key){ const el=document.querySelector('.attach-strip[data-key="'+key+'"]'); if(el)el.innerHTML=stripHTML(key); }
+async function onAttach(key,fileList){ const files=[...fileList]; if(!files.length)return;
   attach[key]=attach[key]||[];
-  for(const f of files){
-    if(attach[key].length>=6){ toast('max 6 attachments','error'); break; }
-    if(f.type.startsWith('image/')){
-      try{ attach[key].push({kind:'img',name:f.name,data:await fitImage(f,800)}); }catch{ toast('could not read image','error'); }
-    } else if(f.size<=1000000){
-      attach[key].push({kind:'file',name:f.name,data:await fileToData(f)});
-    } else toast('file too big (max 1MB) — images get compressed','error');
-  }
-  updateStrip(key);
-}
-document.addEventListener('change',e=>{
-  const inp=e.target.closest?e.target.closest('input[data-attach]'):null;
-  if(inp){ onAttach(inp.dataset.attach,inp.files); inp.value=''; }
-});
+  for(const f of files){ if(attach[key].length>=6){toast('max 6 attachments','error');break}
+    if(f.type.startsWith('image/')){ try{attach[key].push({kind:'img',name:f.name,data:await fitImage(f,800)});}catch{toast('could not read image','error')} }
+    else if(f.size<=1000000){ attach[key].push({kind:'file',name:f.name,data:await fileToData(f)}); }
+    else toast('file too big (max 1MB)','error'); }
+  updateStrip(key); }
+document.addEventListener('change',e=>{ const inp=e.target.closest?e.target.closest('input[data-attach]'):null;
+  if(inp){ onAttach(inp.dataset.attach,inp.files); inp.value=''; } });
 
-/* ---------- per-list leaderboard ---------- */
-function listLeaderboard(l){
-  const map={};
+/* leaderboard */
+function listLeaderboard(l){ const map={};
   const add=(name,pts,entry)=>{ if(!name)return; const k=name.toLowerCase();
     map[k]=map[k]||{name,pts:0,clears:[]}; map[k].pts+=pts; map[k].clears.push(entry); };
-  l.items.forEach(it=>{
-    const pts=+it.points||0;
-    if(it.verifier&&it.verifier.name) add(it.verifier.name,pts,{level:it.title,pts,role:'verifier'});
-    (it.victors||[]).forEach(v=>add(v.name,pts,{level:it.title,pts,role:'victor'}));
-  });
-  return Object.values(map).sort((a,b)=>b.pts-a.pts);
-}
-function lbRowsHTML(lb){
-  return lb.map((r,i)=>{ const u=findUser(r.name);
-    const rc=i===0?'r1':i===1?'r2':i===2?'r3':'';
-    return `<div class="panel lb-row">
-      <div class="rank ${rc}">${i+1}</div>
-      ${avatarHTML(u||{username:r.name},'s44')}
-      <div class="lb-name"><b><button class="uname" data-act="profile-view" data-user="${esc(r.name)}">${nameTags(u)}${esc(r.name)}</button></b>
-        <div class="lb-clears">${r.clears.map(c=>`<span class="tagchip">${c.role==='verifier'?'verified':'beat'} ${esc(c.level)} <b style="color:var(--yellow)">+${c.pts}</b></span>`).join('')}</div>
-      </div>
-      <div class="lb-pts">${r.pts} pts</div>
-    </div>`; }).join('');
-}
+  l.items.forEach(it=>{ const pts=+it.points||0;
+    if(it.verifier&&it.verifier.name)add(it.verifier.name,pts,{level:it.title,pts,role:'verifier'});
+    (it.victors||[]).forEach(v=>add(v.name,pts,{level:it.title,pts,role:'victor'})); });
+  return Object.values(map).sort((a,b)=>b.pts-a.pts); }
+function lbRowsHTML(lb){ return lb.map((r,i)=>{ const u=findUser(r.name);
+  const rc=i===0?'r1':i===1?'r2':i===2?'r3':'';
+  return `<div class="panel lb-row"><div class="rank ${rc}">${i+1}</div>
+    ${avatarHTML(u||{username:r.name},'s44')}
+    <div class="lb-name"><b><button class="uname" data-act="profile-view" data-user="${esc(r.name)}">${nameTags(u)}${esc(r.name)}</button></b>
+      <div class="lb-clears">${r.clears.map(c=>`<span class="tagchip">${c.role==='verifier'?'verified':'beat'} ${esc(c.level)} <b style="color:var(--yellow)">+${c.pts}</b></span>`).join('')}</div></div>
+    <div class="lb-pts">${r.pts} pts</div></div>`; }).join(''); }
 
-/* ---------- feed extras ---------- */
-function statsHTML(){
-  const totalLevels=lists().reduce((n,l)=>n+l.items.length,0);
-  const totalRecords=lists().reduce((n,l)=>n+l.items.reduce((m,it)=>m+(it.victors||[]).length,0),0);
+/* feed extras */
+function statsHTML(){ const tl=lists().reduce((n,l)=>n+l.items.length,0);
+  const tr=lists().reduce((n,l)=>n+l.items.reduce((m,it)=>m+(it.victors||[]).length,0),0);
   return `<div class="panel" style="padding:16px;text-align:center">
     <span class="mut small" style="letter-spacing:.2em">STATS</span>
-    <div class="stats" style="margin:12px 0 0">
-      <div><b>${users().length}</b><span>members</span></div>
-      <div><b>${posts().length}</b><span>posts</span></div>
-      <div><b>${lists().length}</b><span>lists</span></div>
-    </div>
-    <div class="stats" style="margin:8px 0 0">
-      <div><b>${totalLevels}</b><span>levels</span></div>
-      <div><b>${totalRecords}</b><span>records</span></div>
-    </div>
-  </div>`;
-}
-function recordsHTML(){
-  const recs=[];
-  lists().forEach(l=>l.items.forEach(it=>{ (it.victors||[]).forEach(v=>{ if(v.ts) recs.push({v,it,l}); }); }));
-  if(!recs.length) return '';
-  recs.sort((a,b)=>b.v.ts-a.v.ts);
+    <div class="stats" style="margin:12px 0 0"><div><b>${users().length}</b><span>members</span></div><div><b>${posts().length}</b><span>posts</span></div><div><b>${lists().length}</b><span>lists</span></div></div>
+    <div class="stats" style="margin:8px 0 0"><div><b>${tl}</b><span>levels</span></div><div><b>${tr}</b><span>records</span></div></div></div>`; }
+function recordsHTML(){ const recs=[];
+  lists().forEach(l=>l.items.forEach(it=>{(it.victors||[]).forEach(v=>{if(v.ts)recs.push({v,it,l})})}));
+  if(!recs.length)return ''; recs.sort((a,b)=>b.v.ts-a.v.ts);
   return `<div class="panel" style="padding:12px 14px;margin-bottom:14px">
-    <span class="mut small" style="letter-spacing:.2em">LATEST RECORDS</span>
-    <div style="margin-top:6px">
+    <span class="mut small" style="letter-spacing:.2em">LATEST RECORDS</span><div style="margin-top:6px">
     ${recs.slice(0,5).map(r=>`<div class="rec-row" data-act="go-record" data-slug="${esc(r.l.slug)}" data-lv="${esc(r.it.slug)}">
       ${avatarByName(r.v.name,'s28')}<button class="uname" data-act="profile-view" data-user="${esc(r.v.name)}" style="font-weight:600">${esc(r.v.name)}</button><span class="mut small">beat</span><b>${esc(r.it.title)}</b>
-      <span class="mut small">· ${esc(r.l.name)}</span>
-      <span class="mut small" style="margin-left:auto">${ago(r.v.ts)} ago</span>
-    </div>`).join('')}
-    </div>
-  </div>`;
-}
+      <span class="mut small">· ${esc(r.l.name)}</span><span class="mut small" style="margin-left:auto">${ago(r.v.ts)} ago</span></div>`).join('')}
+    </div></div>`; }
 
-/* ---------- render ---------- */
+/* ---------------- render ---------------- */
+function screenMsg(t,body){ return `<div class="auth-wrap"><div class="logo-big">
+  <span class="cube s72" style="--c1:#8ee85d;--c2:#4db32a"><i></i><i></i><em></em></span>
+  <h1>GD <span>COMMUNITY</span></h1></div>
+  <div class="panel auth-card" style="text-align:center"><h3 style="font-family:'Titan One';margin-bottom:10px">${t}</h3>
+  <p class="mut" style="line-height:1.6">${body}</p></div></div>`; }
+function renderSetup(){ $('#root').innerHTML=`<div class="setup panel">
+  <h2 style="font-family:'Titan One';margin-bottom:12px">SETUP — connect Supabase</h2>
+  <ol class="mut">
+    <li>Open this file in a text editor and paste your <code>Project URL</code> and <code>anon public key</code> into <b>SUPABASE_URL</b> and <b>SUPABASE_ANON_KEY</b> at the top of the script (Project Settings → API).</li>
+    <li>In Supabase go to <b>SQL Editor</b> and run the schema SQL you got with this build.</li>
+    <li>Authentication → Sign In / Providers → Email → turn <b>OFF "Confirm email"</b>.</li>
+    <li>Refresh this page.</li>
+  </ol></div>`; }
 function render(){
-  me=findUser(DB.get(K.session,''));
+  if(!CONFIGURED){ renderSetup(); return; }
+  if(bootState==='loading'){ $('#root').innerHTML=screenMsg('LOADING','connecting to the database…'); return; }
+  if(bootState==='error'){ $('#root').innerHTML=screenMsg('CONNECTION PROBLEM',esc(bootError)+'<br><br>check the URL, the anon key, and that you ran the SQL — then refresh'); return; }
+  me=authUser?S.users.find(u=>u.id===authUser.id):null;
   refreshOG();
-  me ? renderApp() : renderAuth();
+  me?renderApp():renderAuth();
 }
-
-function renderAuth(){
-  $('#root').innerHTML = `
+function renderAuth(){ $('#root').innerHTML=`
   <div class="auth-wrap">
     <div class="logo-big">
       <span class="cube s72" style="--c1:#8ee85d;--c2:#4db32a"><i></i><i></i><em></em></span>
@@ -721,12 +584,12 @@ function renderAuth(){
         <button class="gd-btn small ${authTab==='login'?'':'ghost'}" data-act="auth-tab" data-tab="login">LOGIN</button>
         <button class="gd-btn small ${authTab==='signup'?'':'ghost'}" data-act="auth-tab" data-tab="signup">SIGN UP</button>
       </div>
-      ${authTab==='login' ? `
+      ${authTab==='login'?`
       <form id="f-login" class="aform">
         <label>USERNAME</label><input class="inp" name="u" autocomplete="username" placeholder="your username">
         <label>PASSWORD</label><input class="inp" name="p" type="password" autocomplete="current-password" placeholder="••••••••">
         <button class="gd-btn" type="submit" style="width:100%;margin-top:16px">LET'S GO</button>
-      </form>` : `
+      </form>`:`
       <form id="f-signup" class="aform">
         <label>USERNAME</label><input class="inp" name="u" placeholder="3–16 letters / numbers / _">
         <label>PASSWORD</label><input class="inp" name="p" type="password" placeholder="min. 6 characters">
@@ -735,83 +598,55 @@ function renderAuth(){
       </form>`}
       <div class="form-err" id="auth-err"></div>
     </div>
-  </div>`;
-  bindForms();
-}
-
+  </div>`; bindForms(); }
 function renderApp(){
-  let html = topbarHTML() + '<div class="wrap">'+viewHTML()+'</div>';
-  if(settingsOpen) html+=settingsModalHTML();
-  if(profileView!==null) html+=profileModalHTML();
-  if(notifsOpen) html+=notifsModalHTML();
-  if(reportsOpen) html+=reportsModalHTML();
-  if(listModal!==null) html+=listModalHTML();
-  if(itemModal) html+=itemModalHTML();
-  if(ytModal) html+=ytModalHTML();
-  if(imgModal) html+=imgModalHTML();
-  $('#root').innerHTML=html;
-  bindForms();
+  let html=topbarHTML()+'<div class="wrap">'+viewHTML()+'</div>';
+  if(settingsOpen)html+=settingsModalHTML();
+  if(profileView!==null)html+=profileModalHTML();
+  if(notifsOpen)html+=notifsModalHTML();
+  if(reportsOpen)html+=reportsModalHTML();
+  if(listModal!==null)html+=listModalHTML();
+  if(itemModal)html+=itemModalHTML();
+  if(ytModal)html+=ytModalHTML();
+  if(imgModal)html+=imgModalHTML();
+  $('#root').innerHTML=html; bindForms();
   Object.keys(attach).forEach(updateStrip);
-  const msgs=$('#dm-msgs'); if(msgs) msgs.scrollTop=msgs.scrollHeight;
-  if(focusDM){ const i=$('#dm-input'); if(i) i.focus(); focusDM=false; }
+  const msgs=$('#dm-msgs'); if(msgs)msgs.scrollTop=msgs.scrollHeight;
+  if(focusDM){ const i=$('#dm-input'); if(i)i.focus(); focusDM=false; }
 }
-
-function topbarHTML(){
-  const at=view.name==='group'?'groups':(view.name==='listview')?'lists':view.name;
-  const tab=(v,label)=>`<button data-act="nav" data-view="${v}" class="${at===v?'active':''}">${label}</button>`;
+function topbarHTML(){ const at=view.name==='group'?'groups':(view.name==='listview')?'lists':view.name;
+  const tab=(v,lb)=>`<button data-act="nav" data-view="${v}" class="${at===v?'active':''}">${lb}</button>`;
   const un=unreadCount(); const rep=openReports().length;
-  return `<header class="topbar">
-    <div class="logo">GD <span>COMMUNITY</span></div>
+  return `<header class="topbar"><div class="logo">GD <span>COMMUNITY</span></div>
     <nav class="nav">${tab('feed','FEED')}${tab('groups','GROUPS')}${tab('lists','LISTS')}${tab('sites','WEBSITES')}${tab('olists','OTHER LISTS')}${tab('dms','DMS')}</nav>
     <div class="top-right">
       ${isAdmin()&&rep>0?`<button class="top-btn" data-act="open-reports">REPORTS<span class="badge-n red">${rep}</span></button>`:''}
       <button class="top-btn" data-act="notifs">NOTIFS${un?`<span class="badge-n">${un}</span>`:''}</button>
       <button class="chip" data-act="settings">${avatarHTML(me,'s30')}<span>${esc(me.username)}${isAdmin()?' 👑':''}</span></button>
       <button class="gd-btn ghost small" data-act="logout">LOGOUT</button>
-    </div>
-  </header>`;
-}
+    </div></header>`; }
+function viewHTML(){ switch(view.name){
+  case 'groups':return groupsHTML(); case 'group':return groupPageHTML(view.id);
+  case 'lists':return listsBrowserHTML(); case 'listview':return listViewHTML();
+  case 'sites':return sitesHTML(); case 'olists':return olistsHTML();
+  case 'dms':return dmsHTML(); default:return feedHTML(); } }
 
-function viewHTML(){
-  switch(view.name){
-    case 'groups': return groupsHTML();
-    case 'group': return groupPageHTML(view.id);
-    case 'lists': return listsBrowserHTML();
-    case 'listview': return listViewHTML();
-    case 'sites': return sitesHTML();
-    case 'olists': return olistsHTML();
-    case 'dms': return dmsHTML();
-    default: return feedHTML();
-  }
-}
-
-/* ----- feed ----- */
-function composerHTML(groupId){
-  return `<form id="f-post" class="panel composer" data-group="${groupId||''}">
-    ${avatarHTML(me,'s44')}
-    <div class="stack">
-      <textarea class="inp" name="t" rows="2" maxlength="280" placeholder="what's happening in GD? (use @name to mention)"></textarea>
-      <div class="tagrow">${TAG_PRESETS.map(t=>`<button type="button" class="tagchip ttag ${postTags.includes(t)?'sel':''}" data-act="ptag" data-t="${t}">#${t}</button>`).join('')}</div>
-      <div class="attach-strip" data-key="post"></div>
-      <div class="row">
-        <label class="clip" title="add photos / files">📎<input type="file" multiple hidden data-attach="post"></label>
-        <button class="gd-btn small" type="submit" style="margin-left:auto">POST</button>
-      </div>
-    </div>
-  </form>`;
-}
-function postHTML(p){
-  const a=findUser(p.author)||{username:p.author,avatar:null};
+function composerHTML(groupId){ return `<form id="f-post" class="panel composer" data-group="${groupId||''}">
+  ${avatarHTML(me,'s44')}<div class="stack">
+  <textarea class="inp" name="t" rows="2" maxlength="280" placeholder="what's happening in GD? (use @name to mention)"></textarea>
+  <div class="tagrow">${TAG_PRESETS.map(t=>`<button type="button" class="tagchip ttag ${postTags.includes(t)?'sel':''}" data-act="ptag" data-t="${t}">#${t}</button>`).join('')}</div>
+  <div class="attach-strip" data-key="post"></div>
+  <div class="row"><label class="clip" title="add photos / files">📎<input type="file" multiple hidden data-attach="post"></label>
+  <button class="gd-btn small" type="submit" style="margin-left:auto">POST</button></div></div></form>`; }
+function postHTML(p){ const a=findUser(p.author)||{username:p.author,avatar:null};
   const liked=p.likes.includes(me.username);
   const g=p.group?groups().find(x=>x.id===p.group):null;
   const open=openComments.has(p.id);
-  const canDelPost=isAdmin()||p.author===me.username;
+  const canDel=isAdmin()||p.author===me.username;
   return `<article class="panel post">
-    <div class="post-head">
-      ${avatarHTML(a,'s44')}
+    <div class="post-head">${avatarHTML(a,'s44')}
       <div class="who"><button class="uname" data-act="profile-view" data-user="${esc(a.username)}">${nameTags(a)}${esc(a.username)}</button><span>@${esc(a.username)} · ${ago(p.ts)}</span></div>
-      ${g?`<button class="gtag" data-act="open-group" data-id="${g.id}">${g.emoji} ${esc(g.name)}</button>`:''}
-    </div>
+      ${g?`<button class="gtag" data-act="open-group" data-id="${g.id}">${g.emoji} ${esc(g.name)}</button>`:''}</div>
     <p class="post-text">${richText(p.text)}</p>
     ${(p.tags&&p.tags.length)?`<div class="post-tags">${p.tags.map(t=>`<button class="tagchip clicktag" data-act="ftag" data-t="${esc(t)}">#${esc(t)}</button>`).join('')}</div>`:''}
     ${attsHTML(p.attachments)}
@@ -820,218 +655,135 @@ function postHTML(p){
       <button class="act" data-act="comments" data-id="${p.id}">${p.comments.length} comments</button>
       ${p.author!==me.username?`<button class="act" data-act="dm" data-user="${esc(p.author)}">dm</button>`:''}
       ${p.author!==me.username?`<button class="act" style="color:#7d94b5" data-act="report-post" data-id="${p.id}">report</button>`:''}
-      ${canDelPost?`<button class="del" style="margin-left:auto" data-act="del-post" data-id="${p.id}">delete</button>`:''}
-    </div>
+      ${canDel?`<button class="del" style="margin-left:auto" data-act="del-post" data-id="${p.id}">delete</button>`:''}</div>
     ${open?`<div class="comments">
-      ${p.comments.map(c=>{ const ca=findUser(c.author)||{username:c.author,avatar:null};
+      ${p.comments.map(c=>{const ca=findUser(c.author)||{username:c.author,avatar:null};
         const canDelC=isAdmin()||c.author===me.username;
         return `<div class="cmt">${avatarHTML(ca,'s28')}<div class="cmt-body"><button class="uname" data-act="profile-view" data-user="${esc(ca.username)}">${nameTags(ca)}${esc(ca.username)}</button> <span class="mut">${ago(c.ts)}</span><br>${richText(c.text)}${attsHTML(c.attachments)}</div>
         ${c.author!==me.username?`<button class="del" data-act="report-comment" data-post="${p.id}" data-cid="${c.id}">report</button>`:''}
-        ${canDelC?`<button class="del" data-act="del-comment" data-post="${p.id}" data-cid="${c.id}">✕</button>`:''}</div>`; }).join('')}
+        ${canDelC?`<button class="del" data-act="del-comment" data-post="${p.id}" data-cid="${c.id}">✕</button>`:''}</div>`;}).join('')}
       <div class="attach-strip" data-key="cmt:${p.id}"></div>
       <form class="cmt-form" data-comment="${p.id}">
         <input class="inp" name="c" maxlength="200" placeholder="write a comment…" autocomplete="off">
         <label class="clip" title="add photos / files">📎<input type="file" multiple hidden data-attach="cmt:${p.id}"></label>
-        <button class="gd-btn blue small" type="submit">SEND</button>
-      </form>
-    </div>`:''}
-  </article>`;
-}
-function feedPostsHTML(){
-  const q=feedQ.trim();
+        <button class="gd-btn blue small" type="submit">SEND</button></form></div>`:''}
+  </article>`; }
+function feedPostsHTML(){ const q=feedQ.trim();
   let list=posts().filter(p=>!p.group).sort((a,b)=>b.ts-a.ts);
-  if(feedFilter==='following'){
-    const allowed=new Set([me.username,...(followsMap()[me.username]||[])]);
-    list=list.filter(p=>allowed.has(p.author));
-  }
-  if(q){
-    const ql=q.toLowerCase();
-    const tokens=tokenize(ql);
+  if(feedFilter==='following'){ const allowed=new Set([me.username,...(followsMap()[me.username]||[])]);
+    list=list.filter(p=>allowed.has(p.author)); }
+  if(q){ const ql=q.toLowerCase(); const tokens=tokenize(ql);
     const exact=list.some(p=>(p.text+' '+p.author+' '+(p.tags||[]).join(' ')).toLowerCase().includes(ql));
-    const scored=list.map(p=>{
-      const words=[...tokenize(p.text),...tokenize(p.author),...(p.tags||[]).map(t=>String(t).toLowerCase())];
-      return {p,s:docScore(words,tokens)};
-    }).filter(x=>x.s>0).sort((a,b)=> b.s-a.s || b.p.ts-a.p.ts);
+    const scored=list.map(p=>{ const words=[...tokenize(p.text),...tokenize(p.author),...(p.tags||[]).map(t=>String(t).toLowerCase())];
+      return {p,s:docScore(words,tokens)}; }).filter(x=>x.s>0).sort((a,b)=>b.s-a.s||b.p.ts-a.p.ts);
     list=scored.map(x=>x.p);
-    if(!list.length) return `<div class="panel empty">no results for “${esc(q)}”</div>`;
-    return (exact?'':`<div class="mut small" style="padding:0 4px 10px">no exact match — showing similar results</div>`)+list.map(postHTML).join('');
-  }
-  if(!list.length) return `<div class="panel empty">${feedFilter==='following'?'posts from people you follow will appear here':'no posts yet'}</div>`;
-  return list.map(postHTML).join('');
-}
-function feedHTML(){
-  const stars=posts().reduce((n,p)=>n+(p.author===me.username?p.likes.length:0),0);
+    if(!list.length)return `<div class="panel empty">no results for “${esc(q)}”</div>`;
+    return (exact?'':`<div class="mut small" style="padding:0 4px 10px">no exact match — showing similar results</div>`)+list.map(postHTML).join(''); }
+  if(!list.length)return `<div class="panel empty">${feedFilter==='following'?'posts from people you follow will appear here':'no posts yet'}</div>`;
+  return list.map(postHTML).join(''); }
+function feedHTML(){ const stars=posts().reduce((n,p)=>n+(p.author===me.username?p.likes.length:0),0);
   const myPosts=posts().filter(p=>p.author===me.username).length;
   const myLists=lists().filter(l=>l.author===me.username).length;
   return `<div class="cols">
     <div class="side-wrap">
-      <aside class="panel side-card">
-        ${avatarHTML(me,'s72')}
+      <aside class="panel side-card">${avatarHTML(me,'s72')}
         <h3>${nameTags(me)}${esc(me.username)}</h3>
         <p class="mut small">joined ${fmtDate(me.joined)}</p>
         <p class="bio">${esc(me.bio||'no bio yet — open settings')}</p>
-        <div class="stats">
-          <div><b>${myPosts}</b><span>posts</span></div>
-          <div><b>${stars}</b><span>stars</span></div>
-          <div><b>${myLists}</b><span>lists</span></div>
-        </div>
-        <div class="stats" style="margin:0 0 16px">
-          <div><b>${followerCount(me.username)}</b><span>followers</span></div>
-          <div><b>${followingCount(me.username)}</b><span>following</span></div>
-        </div>
-        <button class="gd-btn blue small" data-act="settings">SETTINGS</button>
-      </aside>
-      ${achPanelHTML()}
-      ${statsHTML()}
-    </div>
+        <div class="stats"><div><b>${myPosts}</b><span>posts</span></div><div><b>${stars}</b><span>stars</span></div><div><b>${myLists}</b><span>lists</span></div></div>
+        <div class="stats" style="margin:0 0 16px"><div><b>${followerCount(me.username)}</b><span>followers</span></div><div><b>${followingCount(me.username)}</b><span>following</span></div></div>
+        <button class="gd-btn blue small" data-act="settings">SETTINGS</button></aside>
+      ${achPanelHTML()}${statsHTML()}</div>
     <div>
       <div class="panel searchbar"><input id="feed-search" placeholder="search… (typos are fine)" autocomplete="off"></div>
-      ${composerHTML('')}
-      ${recordsHTML()}
+      ${composerHTML('')}${recordsHTML()}
       <div class="ftabs">
         <button class="ftab ${feedFilter==='all'?'active':''}" data-act="feed-filter" data-f="all">ALL POSTS</button>
-        <button class="ftab ${feedFilter==='following'?'active':''}" data-act="feed-filter" data-f="following">FOLLOWING</button>
-      </div>
-      <div class="feed-list" id="feed-list">${feedPostsHTML()}</div>
-    </div>
-  </div>`;
-}
-
-/* ----- groups ----- */
-function groupsHTML(){
-  const gs=groups();
+        <button class="ftab ${feedFilter==='following'?'active':''}" data-act="feed-filter" data-f="following">FOLLOWING</button></div>
+      <div class="feed-list" id="feed-list">${feedPostsHTML()}</div></div></div>`; }
+function groupsHTML(){ const gs=groups();
   return `<div class="page-head"><h2>GROUPS</h2><span class="mut small">${gs.length} group${gs.length===1?'':'s'}</span></div>
-  <form id="f-group-create" class="panel g-create">
-    <input class="inp" name="name" maxlength="24" placeholder="new group name">
+  <form id="f-group-create" class="panel g-create"><input class="inp" name="name" maxlength="24" placeholder="new group name">
     <input class="inp" name="desc" maxlength="80" placeholder="short description">
-    <button class="gd-btn small" type="submit">CREATE</button>
-  </form>
-  <div class="g-grid">${gs.map(g=>{
-    const joined=g.members.includes(me.username);
+    <button class="gd-btn small" type="submit">CREATE</button></form>
+  <div class="g-grid">${gs.map(g=>{const joined=g.members.includes(me.username);
     return `<div class="panel g-card" data-act="open-group" data-id="${g.id}">
       <div class="top"><span class="g-emoji">${g.emoji}</span><h4>${esc(g.name)}</h4></div>
       <p>${esc(g.desc||'')}</p>
       <div class="g-foot"><span class="mut small">${g.members.length} member${g.members.length===1?'':'s'}</span>
-        <button class="gd-btn small ${joined?'ghost':'blue'}" data-act="join" data-id="${g.id}">${joined?'JOINED':'JOIN'}</button></div>
-    </div>`; }).join('') || '<div class="panel empty">no groups yet</div>'}
-  </div>`;
-}
-function groupPageHTML(id){
-  const g=groups().find(x=>x.id===id);
-  if(!g){ view={name:'groups'}; return groupsHTML(); }
+      <button class="gd-btn small ${joined?'ghost':'blue'}" data-act="join" data-id="${g.id}">${joined?'JOINED':'JOIN'}</button></div></div>`;}).join('')||'<div class="panel empty">no groups yet</div>'}</div>`; }
+function groupPageHTML(id){ const g=groups().find(x=>x.id===id);
+  if(!g){view={name:'groups'};return groupsHTML();}
   const joined=g.members.includes(me.username);
   const list=posts().filter(p=>p.group===g.id).sort((a,b)=>b.ts-a.ts);
   return `<div class="page-head"><button class="gd-btn ghost small" data-act="nav-go" data-to="groups">← BACK</button></div>
-  <div class="panel g-head">
-    <span class="g-emoji">${g.emoji}</span>
+  <div class="panel g-head"><span class="g-emoji">${g.emoji}</span>
     <div class="info"><h2>${esc(g.name)}</h2><p>${esc(g.desc||'')} · ${g.members.length} member${g.members.length===1?'':'s'} · by @${esc(g.owner)}</p></div>
-    <button class="gd-btn small ${joined?'ghost':''}" data-act="join" data-id="${g.id}">${joined?'LEAVE':'JOIN GROUP'}</button>
-  </div>
+    <button class="gd-btn small ${joined?'ghost':''}" data-act="join" data-id="${g.id}">${joined?'LEAVE':'JOIN GROUP'}</button></div>
   ${composerHTML(g.id)}
-  <div class="feed-list">${list.length?list.map(postHTML).join(''):'<div class="panel empty">nothing posted here yet</div>'}</div>`;
-}
-
-/* ----- LISTS ----- */
-function listsBrowserHTML(){
-  const ls=lists().slice().sort((a,b)=>b.edited-a.edited);
+  <div class="feed-list">${list.length?list.map(postHTML).join(''):'<div class="panel empty">nothing posted here yet</div>'}</div>`; }
+function listsBrowserHTML(){ const ls=lists().slice().sort((a,b)=>b.edited-a.edited);
   return `<div class="page-head"><h2>LISTS</h2><span class="mut small">${ls.length} list${ls.length===1?'':'s'} · everyone can make their own</span>
     <button class="gd-btn small" style="margin-left:auto" data-act="new-list">NEW LIST</button></div>
   <div class="l-grid">${ls.map(l=>`
     <div class="panel l-card" data-act="go-list" data-slug="${esc(l.slug)}">
       <div class="lc-banner" style="background:${l.banner?`url('${l.banner}') center/cover`:LIST_COLORS[l.color]||LIST_COLORS[0]}">${l.banner?'':(l.iconImg?'':l.icon)}
-        <div class="lc-icon">${l.iconImg?`<img src="${l.iconImg}">`:l.icon}</div>
-      </div>
-      <div class="lc-body">
-        <h4>${esc(l.name)}</h4>
-        <p>${esc(l.desc||'no description')}</p>
-        <div class="lc-meta">by @${esc(l.author)} · ${l.items.length} level${l.items.length===1?'':'s'}${l.discord?' · discord':''}<br>created ${fmtDate(l.created)} · edited ${ago(l.edited)} ago</div>
-      </div>
-    </div>`).join('') || '<div class="panel empty">no lists yet</div>'}
-  </div>`;
-}
-function listViewHTML(){
-  const l=lists().find(x=>x.slug===view.slug);
-  if(!l) return '<div class="panel empty">list not found</div>';
-  if(view.expand){ openLevel=view.expand; view.expand=null; }
-  const can=canList(l);
-  const link=location.href.split('#')[0]+'#/lista/'+l.slug;
+        <div class="lc-icon">${l.iconImg?`<img src="${l.iconImg}">`:l.icon}</div></div>
+      <div class="lc-body"><h4>${esc(l.name)}</h4><p>${esc(l.desc||'no description')}</p>
+        <div class="lc-meta">by @${esc(l.author)} · ${l.items.length} level${l.items.length===1?'':'s'}${l.discord?' · discord':''}<br>created ${fmtDate(l.created)} · edited ${ago(l.edited)} ago</div></div></div>`).join('')||'<div class="panel empty">no lists yet</div>'}</div>`; }
+function listViewHTML(){ const l=lists().find(x=>x.slug===view.slug);
+  if(!l)return '<div class="panel empty">list not found</div>';
+  if(view.expand){openLevel=view.expand;view.expand=null;}
+  const can=canList(l); const link=location.href.split('#')[0]+'#/lista/'+l.slug;
   const la=findUser(l.author)||{username:l.author};
   let body='';
-  if(listTab==='levels'){
-    body=`${can?'<datalist id="members">'+membersOptions()+'</datalist>':''}
-    <div class="page-head" style="margin-top:4px"><span class="mut small">${l.items.length} level${l.items.length===1?'':'s'} · placement = order on the list${can?' · use ↑↓ to move':''}</span>
-      ${can?`<button class="gd-btn small" style="margin-left:auto" data-act="new-item" data-list="${l.id}">ADD LEVEL</button>`:''}
-    </div>
-    <div class="dlist">${l.items.map((it,i)=>drowHTML(l,it,i,can)).join('') || `<div class="panel empty">no levels yet</div>`}</div>`;
-  } else if(listTab==='rules'){
-    body= can ? `
-    <form id="f-rules" class="panel" style="padding:18px">
-      <textarea class="inp" name="rules" rows="8" maxlength="2000" placeholder="write the rules of this list…">${esc(l.rules||'')}</textarea>
-      <div style="display:flex;justify-content:flex-end;margin-top:10px"><button class="gd-btn small" type="submit">SAVE RULES</button></div>
-    </form>` :
-    `<div class="panel" style="padding:18px">${l.rules?`<p style="white-space:pre-wrap;line-height:1.65">${esc(l.rules)}</p>`:'<div class="empty">no rules yet</div>'}</div>`;
-  } else {
-    const lb=listLeaderboard(l);
-    body=`<div style="margin-top:4px">${lb.length?lbRowsHTML(lb):'<div class="panel empty">no points yet — add levels with points, victors and verifiers</div>'}</div>`;
-  }
-  const reacts=l.reacts||{}, lComments=l.comments||[];
+  if(listTab==='levels'){ body=`${can?'<datalist id="members">'+membersOptions()+'</datalist>':''}
+    <div class="page-head" style="margin-top:4px"><span class="mut small">${l.items.length} level${l.items.length===1?'':'s'} · placement = order${can?' · use ↑↓ to move':''}</span>
+    ${can?`<button class="gd-btn small" style="margin-left:auto" data-act="new-item" data-list="${l.id}">ADD LEVEL</button>`:''}</div>
+    <div class="dlist">${l.items.map((it,i)=>drowHTML(l,it,i,can)).join('')||'<div class="panel empty">no levels yet</div>'}</div>`; }
+  else if(listTab==='rules'){ body=can?`<form id="f-rules" class="panel" style="padding:18px">
+    <textarea class="inp" name="rules" rows="8" maxlength="2000" placeholder="write the rules of this list…">${esc(l.rules||'')}</textarea>
+    <div style="display:flex;justify-content:flex-end;margin-top:10px"><button class="gd-btn small" type="submit">SAVE RULES</button></div></form>`
+    :`<div class="panel" style="padding:18px">${l.rules?`<p style="white-space:pre-wrap;line-height:1.65">${esc(l.rules)}</p>`:'<div class="empty">no rules yet</div>'}</div>`; }
+  else { const lb=listLeaderboard(l);
+    body=`<div style="margin-top:4px">${lb.length?lbRowsHTML(lb):'<div class="panel empty">no points yet — add levels with points, victors and verifiers</div>'}</div>`; }
+  const reacts=l.reacts||{}, lc=l.comments||[];
   const engagement=`<div class="panel" style="padding:16px;margin-top:18px">
     <span class="mut small">REACTIONS</span>
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
-      ${REACTS.map(e=>{ const arr=reacts[e]||[]; const sel=arr.includes(me.username);
-        return `<button class="react-btn ${sel?'sel':''}" data-act="lreact" data-e="${e}">${e} ${arr.length||''}</button>`; }).join('')}
-    </div>
-    <div style="margin-top:16px">
-      <span class="mut small">COMMENTS (${lComments.length})</span>
-      ${lComments.map(c=>{ const ca=findUser(c.author)||{username:c.author,avatar:null};
+      ${REACTS.map(e=>{const arr=reacts[e]||[];const sel=arr.includes(me.username);
+        return `<button class="react-btn ${sel?'sel':''}" data-act="lreact" data-e="${e}">${e} ${arr.length||''}</button>`;}).join('')}</div>
+    <div style="margin-top:16px"><span class="mut small">COMMENTS (${lc.length})</span>
+      ${lc.map(c=>{const ca=findUser(c.author)||{username:c.author,avatar:null};
         const canDelC=isAdmin()||c.author===me.username;
         return `<div class="cmt">${avatarHTML(ca,'s28')}<div class="cmt-body"><button class="uname" data-act="profile-view" data-user="${esc(ca.username)}">${nameTags(ca)}${esc(ca.username)}</button> <span class="mut">${ago(c.ts)}</span><br>${richText(c.text)}${attsHTML(c.attachments)}</div>
         ${c.author!==me.username?`<button class="del" data-act="report-lcomment" data-cid="${c.id}">report</button>`:''}
-        ${canDelC?`<button class="del" data-act="del-lcomment" data-cid="${c.id}">✕</button>`:''}</div>`; }).join('')}
+        ${canDelC?`<button class="del" data-act="del-lcomment" data-cid="${c.id}">✕</button>`:''}</div>`;}).join('')}
       <div class="attach-strip" data-key="lcmt"></div>
-      <form class="cmt-form" data-listcomment="1">
-        <input class="inp" name="c" maxlength="200" placeholder="comment on this list…" autocomplete="off">
-        <label class="clip" title="add photos / files">📎<input type="file" multiple hidden data-attach="lcmt"></label>
-        <button class="gd-btn blue small" type="submit">SEND</button>
-      </form>
-    </div>
-  </div>`;
-  return `
-  <div class="page-head"><button class="gd-btn ghost small" data-act="nav-go" data-to="lists">← ALL LISTS</button></div>
+      <form class="cmt-form" data-listcomment="1"><input class="inp" name="c" maxlength="200" placeholder="comment on this list…" autocomplete="off">
+      <label class="clip" title="add photos / files">📎<input type="file" multiple hidden data-attach="lcmt"></label>
+      <button class="gd-btn blue small" type="submit">SEND</button></form></div></div>`;
+  return `<div class="page-head"><button class="gd-btn ghost small" data-act="nav-go" data-to="lists">← ALL LISTS</button></div>
   <div class="panel" style="overflow:hidden">
     <div class="lv-banner" style="background:${l.banner?`url('${l.banner}') center/cover`:LIST_COLORS[l.color]||LIST_COLORS[0]}">${l.banner?'':(l.iconImg?'':l.icon)}
-      <div class="lv-icon">${l.iconImg?`<img src="${l.iconImg}">`:l.icon}</div>
-    </div>
-    <div class="lv-head">
-      <h2>${esc(l.name)}</h2>
-      <p class="desc">${esc(l.desc||'')}</p>
+      <div class="lv-icon">${l.iconImg?`<img src="${l.iconImg}">`:l.icon}</div></div>
+    <div class="lv-head"><h2>${esc(l.name)}</h2><p class="desc">${esc(l.desc||'')}</p>
       <div class="lv-meta">
         <span>by <b style="color:#fff"><button class="uname" data-act="profile-view" data-user="${esc(l.author)}">${nameTags(la)}${esc(l.author)}</button></b></span>
-        <span>created ${fmtDate(l.created)}</span>
-        <span>edited ${ago(l.edited)} ago</span>
+        <span>created ${fmtDate(l.created)}</span><span>edited ${ago(l.edited)} ago</span>
         ${l.discord?`<button class="gd-btn blue small" data-act="open-site" data-url="${esc(l.discord)}">DISCORD</button>`:''}
         <button class="gd-btn ghost small" data-act="copy-link" data-href="${esc(link)}">COPY LINK</button>
         ${can?`<button class="gd-btn blue small" data-act="edit-list" data-id="${l.id}">EDIT LIST</button>
-        <button class="gd-btn ghost small" data-act="del-list" data-id="${l.id}">DELETE</button>`:''}
-      </div>
-    </div>
-  </div>
+        <button class="gd-btn ghost small" data-act="del-list" data-id="${l.id}">DELETE</button>`:''}</div></div></div>
   <div class="ltabs">
     <button class="ltab ${listTab==='levels'?'active':''}" data-act="list-tab" data-t="levels">LEVELS</button>
     <button class="ltab ${listTab==='rules'?'active':''}" data-act="list-tab" data-t="rules">RULES</button>
-    <button class="ltab ${listTab==='rank'?'active':''}" data-act="list-tab" data-t="rank">LEADERBOARD</button>
-  </div>
-  ${body}
-  ${engagement}`;
-}
-
-/* one ranked level row */
-function drowHTML(l,it,i,can){
-  const pts=+it.points||0;
+    <button class="ltab ${listTab==='rank'?'active':''}" data-act="list-tab" data-t="rank">LEADERBOARD</button></div>
+  ${body}${engagement}`; }
+function drowHTML(l,it,i,can){ const pts=+it.points||0;
   const rates=Object.values(it.ratings||{});
   const avg=rates.length?(rates.reduce((a,b)=>a+b,0)/rates.length).toFixed(1):null;
-  const victors=it.victors||[];
-  const open=openLevel===it.slug;
+  const victors=it.victors||[]; const open=openLevel===it.slug;
   const rc=i===0?'r1':i===1?'r2':i===2?'r3':'';
   const link=location.href.split('#')[0]+'#/lista/'+l.slug+'/'+it.slug;
   const mine=(it.ratings||{})[me.username]||0;
@@ -1039,407 +791,278 @@ function drowHTML(l,it,i,can){
     <div class="panel drow ${open?'open':''}" data-act="lvl-toggle" data-slug="${esc(it.slug)}">
       <div class="drank ${rc}">#${i+1}</div>
       ${it.thumb?`<img class="dthumb" src="${it.thumb}">`:`<div class="dthumb-ph">🎮</div>`}
-      <div class="dmain">
-        <h4>${esc(it.title)}</h4>
-        <div class="dmeta">
-          <span style="color:var(--yellow)">${pts} pts</span>
+      <div class="dmain"><h4>${esc(it.title)}</h4>
+        <div class="dmeta"><span style="color:var(--yellow)">${pts} pts</span>
           ${it.verifier&&it.verifier.name?`<span>verifier: ${esc(it.verifier.name)}</span>`:''}
           <span>${victors.length} victor${victors.length===1?'':'s'}</span>
-          ${avg?`<span style="color:var(--yellow)">★ ${avg}</span>`:''}
-        </div>
-      </div>
+          ${avg?`<span style="color:var(--yellow)">★ ${avg}</span>`:''}</div></div>
       <div class="dside">
         ${it.verifier&&it.verifier.video?`<button class="gd-btn blue small" data-act="watch" data-url="${esc(it.verifier.video)}" data-title="${esc(it.verifier.name)} verifies ${esc(it.title)}">▶ VIDEO</button>`:''}
-        <span class="chev">${open?'▲':'▼'}</span>
-      </div>
-    </div>
+        <span class="chev">${open?'▲':'▼'}</span></div></div>
     ${open?`<div class="panel dexp">
       ${it.desc?`<p class="ddesc">${esc(it.desc)}</p>`:''}
       ${(it.tags&&it.tags.length)?`<div class="i-meta" style="margin-top:0">${it.tags.map(t=>`<span class="tagchip">#${esc(t)}</span>`).join('')}</div>`:''}
       ${it.photos&&it.photos.length?`<div class="dphotos">${it.photos.map(p=>`<img src="${p}" data-act="view-img" data-src="${p}">`).join('')}</div>`:''}
-      <div style="margin-top:12px">
-        <span class="mut small">VERIFIER · +${pts} pts</span>
-        <div class="vrow">
-          ${it.verifier&&it.verifier.name?`${avatarByName(it.verifier.name,'s30')}<button class="uname" data-act="profile-view" data-user="${esc(it.verifier.name)}">${esc(it.verifier.name)}</button>
-            ${it.verifier.video?`<button class="gd-btn blue small" style="margin-left:auto" data-act="watch" data-url="${esc(it.verifier.video)}" data-title="${esc(it.verifier.name)} verifies ${esc(it.title)}">▶ VIDEO</button>`:''}`
-          :'<span class="mut small">not set yet</span>'}
-        </div>
-      </div>
-      <div style="margin-top:14px">
-        <span class="mut small">RECORDS (${victors.length})</span>
-        ${victors.map((v,vi)=> (editingVictor && editingVictor.slug===it.slug && editingVictor.i===vi) ? `
-          <div class="vrow">
-            <input class="inp" id="vic-name" value="${esc(v.name)}" maxlength="20" placeholder="username" style="flex:1;min-width:110px">
+      <div style="margin-top:12px"><span class="mut small">VERIFIER · +${pts} pts</span>
+        <div class="vrow">${it.verifier&&it.verifier.name?`${avatarByName(it.verifier.name,'s30')}<button class="uname" data-act="profile-view" data-user="${esc(it.verifier.name)}">${esc(it.verifier.name)}</button>
+          ${it.verifier.video?`<button class="gd-btn blue small" style="margin-left:auto" data-act="watch" data-url="${esc(it.verifier.video)}" data-title="${esc(it.verifier.name)} verifies ${esc(it.title)}">▶ VIDEO</button>`:''}`
+        :'<span class="mut small">not set yet</span>'}</div></div>
+      <div style="margin-top:14px"><span class="mut small">RECORDS (${victors.length})</span>
+        ${victors.map((v,vi)=>(editingVictor&&editingVictor.slug===it.slug&&editingVictor.i===vi)?`
+          <div class="vrow"><input class="inp" id="vic-name" value="${esc(v.name)}" maxlength="20" placeholder="username" style="flex:1;min-width:110px">
             <input class="inp" id="vic-video" value="${esc(v.video||'')}" placeholder="youtube link (proof)" style="flex:2;min-width:140px">
             <button class="gd-btn small" data-act="vic-save">SAVE</button>
-            <button class="gd-btn ghost small" data-act="vic-cancel">✕</button>
-          </div>` : `
-          <div class="vrow">
-            ${avatarByName(v.name,'s30')}<button class="uname" data-act="profile-view" data-user="${esc(v.name)}">${esc(v.name)}</button><span class="mut small">+${pts} pts${v.ts?' · '+ago(v.ts)+' ago':''}</span>
+            <button class="gd-btn ghost small" data-act="vic-cancel">✕</button></div>`:`
+          <div class="vrow">${avatarByName(v.name,'s30')}<button class="uname" data-act="profile-view" data-user="${esc(v.name)}">${esc(v.name)}</button><span class="mut small">+${pts} pts${v.ts?' · '+ago(v.ts)+' ago':''}</span>
             ${v.video?`<button class="gd-btn blue small" data-act="watch" data-url="${esc(v.video)}" data-title="${esc(v.name)} beats ${esc(it.title)}">▶ VIDEO</button>`:''}
             ${can?`<span style="margin-left:auto;display:flex;gap:2px">
               <button class="del" data-act="vic-edit" data-i="${vi}">edit</button>
-              <button class="del" data-act="del-victor" data-i="${vi}">✕</button></span>`:''}
-          </div>`).join('') || '<div class="mut small" style="margin-top:6px">no records yet</div>'}
+              <button class="del" data-act="del-victor" data-i="${vi}">✕</button></span>`:''}</div>`).join('')||'<div class="mut small" style="margin-top:6px">no records yet</div>'}
         ${can?`<form class="cmt-form" id="f-victor" style="margin-top:10px">
           <input class="inp" name="name" list="members" maxlength="20" placeholder="who beat it? (username)">
           <input class="inp" name="video" placeholder="youtube link (proof)">
-          <button class="gd-btn small" type="submit">ADD VICTOR</button>
-        </form>`:''}
-      </div>
+          <button class="gd-btn small" type="submit">ADD VICTOR</button></form>`:''}</div>
       <div style="margin-top:14px;border-top:1px solid rgba(255,255,255,.08);padding-top:12px">
         <span class="mut small">rating:</span> <b style="color:var(--yellow)">${avg?'★ '+avg:'★ –'}</b> <span class="mut small">(${rates.length})</span>
         <span class="mut small" style="margin-left:12px">your rating:</span>
-        ${[1,2,3,4,5].map(n=>`<button class="rate-star ${mine>=n?'on':''}" data-act="rate" data-val="${n}">★</button>`).join('')}
-      </div>
+        ${[1,2,3,4,5].map(n=>`<button class="rate-star ${mine>=n?'on':''}" data-act="rate" data-val="${n}">★</button>`).join('')}</div>
       <div class="dtools">
         <button class="gd-btn ghost small" data-act="copy-link" data-href="${esc(link)}">COPY LEVEL LINK</button>
         ${can?`<button class="gd-btn blue small" data-act="edit-item" data-id="${it.id}">EDIT</button>
         <button class="gd-btn ghost small" data-act="lvl-up" data-slug="${esc(it.slug)}" ${i===0?'disabled':''}>↑ UP</button>
         <button class="gd-btn ghost small" data-act="lvl-down" data-slug="${esc(it.slug)}" ${i===l.items.length-1?'disabled':''}>↓ DOWN</button>
-        <button class="gd-btn ghost small" data-act="del-item" data-id="${it.id}">DELETE</button>`:''}
-      </div>
-    </div>`:''}
-  </div>`;
-}
-
-/* ----- WEBSITES + OTHER LISTS ----- */
+        <button class="gd-btn ghost small" data-act="del-item" data-id="${it.id}">DELETE</button>`:''}</div></div>`:''}
+  </div>`; }
 function dirHTML(title,sub,arr,formId,delAct,visitLabel){
   return `<div class="page-head"><h2>${title}</h2><span class="mut small">${isAdmin()?sub[0]:sub[1]}</span></div>
-  ${isAdmin()?`<form id="${formId}" class="panel g-create">
-    <input class="inp" name="name" maxlength="30" placeholder="name">
-    <input class="inp" name="url" placeholder="link (https://...)">
-    <input class="inp" name="desc" maxlength="80" placeholder="short description">
-    <button class="gd-btn small" type="submit">ADD</button>
-  </form>`:''}
+  ${isAdmin()?`<form id="${formId}" class="panel g-create"><input class="inp" name="name" maxlength="30" placeholder="name">
+    <input class="inp" name="url" placeholder="link (https://...)"><input class="inp" name="desc" maxlength="80" placeholder="short description">
+    <button class="gd-btn small" type="submit">ADD</button></form>`:''}
   <div class="g-grid">${arr.map(s=>`
     <div class="panel g-card" data-act="open-site" data-url="${esc(s.url)}">
       <div class="top"><span class="g-emoji">${s.emoji}</span><h4>${esc(s.name)}</h4>
         ${isAdmin()?`<button class="del" style="margin-left:auto" data-act="${delAct}" data-id="${s.id}">✕</button>`:''}</div>
       <p>${esc(s.desc||'')}</p>
-      <div class="g-foot"><span class="mut small">${esc(shortUrl(s.url))}</span><span class="gd-btn blue small">${visitLabel}</span></div>
-    </div>`).join('') || '<div class="panel empty">nothing here yet</div>'}
-  </div>`;
-}
-const sitesHTML  = () => dirHTML('WEBSITES',['admin: you add & remove sites here','GD sites picked by the admin'],sites(),'f-site','del-site','VISIT ↗');
-const olistsHTML = () => dirHTML('OTHER LISTS',['admin: you add & remove lists here','other GD lists from around the internet'],olists(),'f-osite','del-osite','OPEN ↗');
+      <div class="g-foot"><span class="mut small">${esc(shortUrl(s.url))}</span><span class="gd-btn blue small">${visitLabel}</span></div></div>`).join('')||'<div class="panel empty">nothing here yet</div>'}</div>`; }
+const sitesHTML=()=>dirHTML('WEBSITES',['admin: you add & remove sites here','GD sites picked by the admin'],sites(),'f-site','del-site','VISIT ↗');
+const olistsHTML=()=>dirHTML('OTHER LISTS',['admin: you add & remove lists here','other GD lists from around the internet'],olists(),'f-osite','del-osite','OPEN ↗');
 
-/* ----- modals ----- */
-function settingsModalHTML(){
-  const ach=getAchievements(me);
-  const got=ach.filter(a=>a.got).length;
-  return `<div class="overlay" data-act="m-close">
-    <div class="modal panel">
-      <h3 class="m-title">ACCOUNT SETTINGS</h3>
-      <div class="m-av">${avatarHTML(me,'s96')}</div>
-      <div class="m-row">
-        <label class="gd-btn blue small">UPLOAD PHOTO<input type="file" id="av-file" accept="image/*" hidden></label>
-        ${me.avatar?'<button class="gd-btn ghost small" data-act="remove-photo">REMOVE</button>':''}
-      </div>
-      <p class="mut small" style="text-align:center;margin-bottom:12px">@${esc(me.username)}${nameTags(me)} · joined ${fmtDate(me.joined)} · ${followerCount(me.username)} followers · following ${followingCount(me.username)}</p>
-      <form id="f-bio">
-        <label class="m-label">BIO</label>
-        <textarea class="inp" name="bio" rows="3" maxlength="120" placeholder="your bio…">${esc(me.bio||'')}</textarea>
-        <div class="lf-row" style="margin-top:10px"><button class="gd-btn small" type="submit">SAVE BIO</button></div>
-      </form>
-      <hr class="sep">
-      <label class="m-label">ACHIEVEMENTS (${got}/${ach.length})</label>
-      <div class="ach-grid">${ach.map(a=>`<div class="ach ${a.got?'got':''}" title="${esc(a.desc)}"><span class="ic">${a.ic}</span>${esc(a.name)}</div>`).join('')}</div>
-      ${isAdmin()?`
-      <hr class="sep">
-      <label class="m-label">SITE ICON (shows in the browser tab)</label>
-      <div class="m-row" style="justify-content:flex-start">
-        <img src="${DB.get(K.fav,null)||defaultFavicon()}" style="width:44px;height:44px;border-radius:10px;border:2px solid var(--edge)">
-        <label class="gd-btn blue small">UPLOAD ICON<input type="file" id="fav-file" accept="image/*" hidden></label>
-        <button class="gd-btn ghost small" data-act="fav-reset">RESET</button>
-      </div>
-      <hr class="sep">
-      <label class="m-label">BACKUP & RESTORE (whole site data)</label>
-      <div class="m-row" style="justify-content:flex-start">
-        <button class="gd-btn blue small" data-act="backup" type="button">DOWNLOAD BACKUP</button>
-        <label class="gd-btn ghost small">RESTORE<input type="file" id="restore-file" accept="application/json,.json" hidden></label>
-      </div>`:''}
-      <hr class="sep">
-      <form id="f-pass">
-        <label class="m-label">CHANGE PASSWORD</label>
-        <input class="inp" type="password" name="cur" placeholder="current password" style="margin-bottom:8px">
-        <input class="inp" type="password" name="p1" placeholder="new password (min. 6)" style="margin-bottom:8px">
-        <input class="inp" type="password" name="p2" placeholder="repeat new password">
-        <div class="form-err" id="pass-err" style="text-align:left"></div>
-        <div class="lf-row"><button class="gd-btn blue small" type="submit">SAVE PASSWORD</button></div>
-      </form>
-    </div>
-  </div>`;
-}
-function profileModalHTML(){
-  const name=profileView;
-  const u=findUser(name);
-  const nl=name.toLowerCase();
+/* modals */
+function settingsModalHTML(){ const ach=getAchievements(me); const got=ach.filter(a=>a.got).length;
+  return `<div class="overlay" data-act="m-close"><div class="modal panel">
+    <h3 class="m-title">ACCOUNT SETTINGS</h3>
+    <div class="m-av">${avatarHTML(me,'s96')}</div>
+    <div class="m-row"><label class="gd-btn blue small">UPLOAD PHOTO<input type="file" id="av-file" accept="image/*" hidden></label>
+      ${me.avatar?'<button class="gd-btn ghost small" data-act="remove-photo">REMOVE</button>':''}</div>
+    <p class="mut small" style="text-align:center;margin-bottom:12px">@${esc(me.username)}${nameTags(me)} · joined ${fmtDate(me.joined)} · ${followerCount(me.username)} followers</p>
+    <form id="f-bio"><label class="m-label">BIO</label>
+      <textarea class="inp" name="bio" rows="3" maxlength="120" placeholder="your bio…">${esc(me.bio||'')}</textarea>
+      <div class="lf-row" style="margin-top:10px"><button class="gd-btn small" type="submit">SAVE BIO</button></div></form>
+    <hr class="sep">
+    <label class="m-label">ACHIEVEMENTS (${got}/${ach.length})</label>
+    <div class="ach-grid">${ach.map(a=>`<div class="ach ${a.got?'got':''}" title="${esc(a.desc)}"><span class="ic">${a.ic}</span>${esc(a.name)}</div>`).join('')}</div>
+    ${isAdmin()?`<hr class="sep">
+    <label class="m-label">SITE ICON (browser tab)</label>
+    <div class="m-row" style="justify-content:flex-start">
+      <img src="${S.favicon||defaultFavicon()}" style="width:44px;height:44px;border-radius:10px;border:2px solid var(--edge)">
+      <label class="gd-btn blue small">UPLOAD ICON<input type="file" id="fav-file" accept="image/*" hidden></label>
+      <button class="gd-btn ghost small" data-act="fav-reset">RESET</button></div>
+    <hr class="sep">
+    <label class="m-label">BACKUP</label>
+    <div class="m-row" style="justify-content:flex-start">
+      <button class="gd-btn blue small" data-act="backup" type="button">DOWNLOAD BACKUP</button></div>`:''}
+  </div></div>`; }
+function profileModalHTML(){ const name=profileView; const u=findUser(name); const nl=name.toLowerCase();
   const theirPosts=posts().filter(p=>p.author.toLowerCase()===nl).length;
   const stars=posts().reduce((n,p)=>n+(p.author.toLowerCase()===nl?p.likes.length:0),0);
   const theirLists=lists().filter(l=>l.author.toLowerCase()===nl);
-  const recs=[];
-  lists().forEach(l=>l.items.forEach(it=>{
-    if(it.verifier&&String(it.verifier.name).toLowerCase()===nl) recs.push({role:'verified',level:it.title,pts:+it.points||0});
-    (it.victors||[]).forEach(v=>{ if(String(v.name).toLowerCase()===nl) recs.push({role:'beat',level:it.title,pts:+it.points||0}); });
-  }));
+  const recs=[]; lists().forEach(l=>l.items.forEach(it=>{
+    if(it.verifier&&String(it.verifier.name).toLowerCase()===nl)recs.push({role:'verified',level:it.title,pts:+it.points||0});
+    (it.victors||[]).forEach(v=>{if(String(v.name).toLowerCase()===nl)recs.push({role:'beat',level:it.title,pts:+it.points||0});}); }));
   const isSelf=me.username===name;
   const ach=u?getAchievements(u).filter(a=>a.got):[];
-  return `<div class="overlay" data-act="m-close">
-    <div class="modal panel">
-      <div class="prof-head">
-        ${avatarHTML(u||{username:name},'s72')}
-        <div>
-          <h3 style="font-size:1.1rem">${nameTags(u)}${esc(name)}</h3>
-          <p class="mut small">${u?'@'+esc(u.username)+' · joined '+fmtDate(u.joined):'not a registered member'}</p>
-        </div>
-      </div>
-      ${u&&u.bio?`<p style="font-size:.9rem;color:var(--mut);margin-bottom:10px">${esc(u.bio)}</p>`:''}
-      <div class="stats" style="margin:6px 0">
-        <div><b>${theirPosts}</b><span>posts</span></div>
-        <div><b>${stars}</b><span>stars</span></div>
-        <div><b>${theirLists.length}</b><span>lists</span></div>
-      </div>
-      <div class="stats" style="margin:0 0 10px">
-        <div><b>${followerCount(name)}</b><span>followers</span></div>
-        <div><b>${followingCount(name)}</b><span>following</span></div>
-      </div>
-      ${ach.length?`<label class="m-label">ACHIEVEMENTS</label><div class="ach-mini" style="justify-content:flex-start;margin:0 0 10px">${ach.map(a=>`<span title="${esc(a.name)}">${a.ic}</span>`).join('')}</div>`:''}
-      ${theirLists.length?`<label class="m-label">THEIR LISTS</label><div class="prof-recs" style="margin:0 0 10px">${theirLists.map(l=>`<button class="tagchip clicktag" data-act="plist-open" data-slug="${esc(l.slug)}">${l.iconImg?'':l.icon+' '}${esc(l.name)} · ${l.items.length} lvl</button>`).join('')}</div>`:''}
-      ${recs.length?`<label class="m-label">RECORDS</label><div class="prof-recs">${recs.slice(0,6).map(r=>`<span class="tagchip">${r.role} ${esc(r.level)} +${r.pts}</span>`).join('')}</div>`:''}
-      ${u&&!isSelf?`<div class="lf-row" style="margin-top:16px">
-        <button class="gd-btn small ${isFollowing(name)?'ghost':''}" data-act="follow" data-user="${esc(name)}">${isFollowing(name)?'FOLLOWING':'FOLLOW'}</button>
-        <button class="gd-btn blue small" data-act="prof-dm">MESSAGE</button>
-      </div>`:''}
-    </div>
-  </div>`;
-}
-function notifsModalHTML(){
-  const list=myNotifs().slice().reverse();
-  return `<div class="overlay" data-act="m-close">
-    <div class="modal panel">
-      <h3 class="m-title">NOTIFICATIONS</h3>
-      ${list.length?list.map(n=>`<div class="ntf ${n.type==='follow'?'click':''}" ${n.type==='follow'?`data-act="profile-view" data-user="${esc(n.from)}"`:''}>
-        <b>${esc(n.from)}</b> ${n.type==='mention'?'mentioned you in a '+(n.where||'post'):'started following you'} <span class="mut small">· ${ago(n.ts)} ago</span>
-      </div>`).join(''):'<div class="empty">no notifications yet</div>'}
-    </div>
-  </div>`;
-}
-function reportsModalHTML(){
-  const reps=openReports().slice().reverse();
-  return `<div class="overlay" data-act="m-close">
-    <div class="modal panel">
-      <h3 class="m-title">REPORT QUEUE (${reps.length})</h3>
-      ${reps.length?reps.map(r=>`<div class="rep">
-        <span class="mut small">${r.type} · reported by @${esc(r.reporter)} · ${ago(r.ts)} ago</span>
-        <div class="quote">@${esc(r.author)}: "${esc(r.text)}"</div>
-        <div class="lf-row">
-          <button class="gd-btn ghost small" data-act="rep-dismiss" data-id="${r.id}">DISMISS</button>
-          <button class="gd-btn blue small" data-act="rep-delete" data-id="${r.id}">DELETE CONTENT</button>
-        </div>
-      </div>`).join(''):'<div class="empty">no open reports</div>'}
-    </div>
-  </div>`;
-}
-function listModalHTML(){
-  const d=listDraft, editing=listModal!=='new';
+  return `<div class="overlay" data-act="m-close"><div class="modal panel">
+    <div class="prof-head">${avatarHTML(u||{username:name},'s72')}
+      <div><h3 style="font-size:1.1rem">${nameTags(u)}${esc(name)}</h3>
+      <p class="mut small">${u?'@'+esc(u.username)+' · joined '+fmtDate(u.joined):'not a registered member'}</p></div></div>
+    ${u&&u.bio?`<p style="font-size:.9rem;color:var(--mut);margin-bottom:10px">${esc(u.bio)}</p>`:''}
+    <div class="stats" style="margin:6px 0"><div><b>${theirPosts}</b><span>posts</span></div><div><b>${stars}</b><span>stars</span></div><div><b>${theirLists.length}</b><span>lists</span></div></div>
+    <div class="stats" style="margin:0 0 10px"><div><b>${followerCount(name)}</b><span>followers</span></div><div><b>${followingCount(name)}</b><span>following</span></div></div>
+    ${ach.length?`<label class="m-label">ACHIEVEMENTS</label><div class="ach-mini" style="justify-content:flex-start;margin:0 0 10px">${ach.map(a=>`<span title="${esc(a.name)}">${a.ic}</span>`).join('')}</div>`:''}
+    ${theirLists.length?`<label class="m-label">THEIR LISTS</label><div class="prof-recs" style="margin:0 0 10px">${theirLists.map(l=>`<button class="tagchip clicktag" data-act="plist-open" data-slug="${esc(l.slug)}">${l.iconImg?'':l.icon+' '}${esc(l.name)} · ${l.items.length} lvl</button>`).join('')}</div>`:''}
+    ${recs.length?`<label class="m-label">RECORDS</label><div class="prof-recs">${recs.slice(0,6).map(r=>`<span class="tagchip">${r.role} ${esc(r.level)} +${r.pts}</span>`).join('')}</div>`:''}
+    ${u&&!isSelf?`<div class="lf-row" style="margin-top:16px">
+      <button class="gd-btn small ${isFollowing(name)?'ghost':''}" data-act="follow" data-user="${esc(name)}">${isFollowing(name)?'FOLLOWING':'FOLLOW'}</button>
+      <button class="gd-btn blue small" data-act="prof-dm">MESSAGE</button></div>`:''}
+  </div></div>`; }
+function notifsModalHTML(){ const list=myNotifRows().slice().reverse();
+  return `<div class="overlay" data-act="m-close"><div class="modal panel">
+    <h3 class="m-title">NOTIFICATIONS</h3>
+    ${list.length?list.map(n=>`<div class="ntf ${n.data.type==='follow'?'click':''}" ${n.data.type==='follow'?`data-act="profile-view" data-user="${esc(n.data.from)}"`:''}>
+      <b>${esc(n.data.from)}</b> ${n.data.type==='mention'?'mentioned you in a '+(n.data.where||'post'):'started following you'} <span class="mut small">· ${ago(n.data.ts)} ago</span></div>`).join(''):'<div class="empty">no notifications yet</div>'}
+  </div></div>`; }
+function reportsModalHTML(){ const reps=openReports().slice().reverse();
+  return `<div class="overlay" data-act="m-close"><div class="modal panel">
+    <h3 class="m-title">REPORT QUEUE (${reps.length})</h3>
+    ${reps.length?reps.map(r=>`<div class="rep">
+      <span class="mut small">${r.type} · reported by @${esc(r.reporter)} · ${ago(r.ts)} ago</span>
+      <div class="quote">@${esc(r.author)}: "${esc(r.text)}"</div>
+      <div class="lf-row"><button class="gd-btn ghost small" data-act="rep-dismiss" data-id="${r.id}">DISMISS</button>
+      <button class="gd-btn blue small" data-act="rep-delete" data-id="${r.id}">DELETE CONTENT</button></div></div>`).join(''):'<div class="empty">no open reports</div>'}
+  </div></div>`; }
+function listModalHTML(){ const d=listDraft,editing=listModal!=='new';
   return `<div class="overlay" data-act="m-close"><div class="modal panel wide">
     <h3 class="m-title">${editing?'EDIT LIST':'NEW LIST'}</h3>
     <form id="f-list">
-      <label class="m-label">NAME</label>
-      <input class="inp" name="name" maxlength="40" value="${esc(d.name)}" placeholder="my awesome list">
-      <label class="m-label">DESCRIPTION</label>
-      <textarea class="inp" name="desc" rows="2" maxlength="200" placeholder="what is this list about?">${esc(d.desc)}</textarea>
-      <label class="m-label">RULES</label>
-      <textarea class="inp" name="rules" rows="3" maxlength="2000" placeholder="1. only legit completions…">${esc(d.rules)}</textarea>
-      <label class="m-label">DISCORD LINK (optional)</label>
-      <input class="inp" name="discord" value="${esc(d.discord)}" placeholder="https://discord.gg/...">
+      <label class="m-label">NAME</label><input class="inp" name="name" maxlength="40" value="${esc(d.name)}" placeholder="my awesome list">
+      <label class="m-label">DESCRIPTION</label><textarea class="inp" name="desc" rows="2" maxlength="200" placeholder="what is this list about?">${esc(d.desc)}</textarea>
+      <label class="m-label">RULES</label><textarea class="inp" name="rules" rows="3" maxlength="2000" placeholder="1. only legit completions…">${esc(d.rules)}</textarea>
+      <label class="m-label">DISCORD LINK (optional)</label><input class="inp" name="discord" value="${esc(d.discord)}" placeholder="https://discord.gg/...">
       <label class="m-label">ICON (pick an emoji…)</label>
       <div class="pick-row">${LIST_ICONS.map(ic=>`<button type="button" class="icon-pick ${!d.iconImg&&d.icon===ic?'sel':''}" data-act="li-icon" data-i="${ic}">${ic}</button>`).join('')}</div>
       <label class="m-label">…OR UPLOAD YOUR OWN ICON</label>
-      <div class="pick-row">
-        <label class="gd-btn blue small">UPLOAD ICON<input type="file" id="li-icon-file" accept="image/*" hidden></label>
+      <div class="pick-row"><label class="gd-btn blue small">UPLOAD ICON<input type="file" id="li-icon-file" accept="image/*" hidden></label>
         ${d.iconImg?`<img src="${d.iconImg}" style="width:40px;height:40px;object-fit:cover;border-radius:10px;border:2px solid var(--edge)">
-        <button type="button" class="gd-btn ghost small" data-act="li-icon-del">REMOVE</button>`:''}
-      </div>
+        <button type="button" class="gd-btn ghost small" data-act="li-icon-del">REMOVE</button>`:''}</div>
       <label class="m-label">COLOR</label>
       <div class="pick-row">${LIST_COLORS.map((c,i)=>`<button type="button" class="color-pick ${d.color===i?'sel':''}" style="background:${c}" data-act="li-color" data-i="${i}"></button>`).join('')}</div>
       <label class="m-label">BANNER (optional)</label>
-      <div class="pick-row">
-        <label class="gd-btn blue small">UPLOAD<input type="file" id="li-banner-file" accept="image/*" hidden></label>
-        ${d.banner?'<button type="button" class="gd-btn ghost small" data-act="li-banner-del">REMOVE</button>':''}
-      </div>
+      <div class="pick-row"><label class="gd-btn blue small">UPLOAD<input type="file" id="li-banner-file" accept="image/*" hidden></label>
+        ${d.banner?'<button type="button" class="gd-btn ghost small" data-act="li-banner-del">REMOVE</button>':''}</div>
       <div class="banprev" ${d.banner?`style="background:url('${d.banner}') center/cover"`:''}>${d.banner?'':'banner preview'}</div>
-      <div class="lf-row" style="margin-top:16px">
-        <button type="button" class="gd-btn ghost small" data-act="m-close-btn">CANCEL</button>
-        <button class="gd-btn small" type="submit">${editing?'SAVE':'CREATE LIST'}</button>
-      </div>
-    </form>
-  </div></div>`;
-}
-function itemModalHTML(){
-  const d=itemDraft, editing=!!itemModal.id;
+      <div class="lf-row" style="margin-top:16px"><button type="button" class="gd-btn ghost small" data-act="m-close-btn">CANCEL</button>
+        <button class="gd-btn small" type="submit">${editing?'SAVE':'CREATE LIST'}</button></div></form>
+  </div></div>`; }
+function itemModalHTML(){ const d=itemDraft,editing=!!itemModal.id;
   return `<div class="overlay" data-act="m-close"><div class="modal panel wide">
     <h3 class="m-title">${editing?'EDIT LEVEL':'ADD LEVEL'}</h3>
-    <form id="f-item">
-      <datalist id="members2">${membersOptions()}</datalist>
-      <label class="m-label">LEVEL NAME</label>
-      <input class="inp" name="title" maxlength="60" value="${esc(d.title)}" placeholder="level name">
-      <label class="m-label">DESCRIPTION</label>
-      <textarea class="inp" name="desc" rows="3" maxlength="500" placeholder="describe the level…">${esc(d.desc)}</textarea>
+    <form id="f-item"><datalist id="members2">${membersOptions()}</datalist>
+      <label class="m-label">LEVEL NAME</label><input class="inp" name="title" maxlength="60" value="${esc(d.title)}" placeholder="level name">
+      <label class="m-label">DESCRIPTION</label><textarea class="inp" name="desc" rows="3" maxlength="500" placeholder="describe the level…">${esc(d.desc)}</textarea>
       <div class="f-grid">
-        <div><label class="m-label">TAGS (comma separated)</label>
-          <input class="inp" name="tags" maxlength="120" value="${esc(d.tags)}" placeholder="demon, wave, fun"></div>
-        <div><label class="m-label">POINTS FOR BEATING</label>
-          <input class="inp" name="points" type="number" min="0" max="99999" value="${esc(d.points)}" placeholder="e.g. 250"></div>
-        <div><label class="m-label">VERIFIER (who verified it)</label>
-          <input class="inp" name="vname" list="members2" maxlength="20" value="${esc(d.vname)}" placeholder="username"></div>
-        <div><label class="m-label">VERIFIER VIDEO (youtube)</label>
-          <input class="inp" name="vvideo" value="${esc(d.vvideo)}" placeholder="https://youtube.com/..."></div>
-      </div>
+        <div><label class="m-label">TAGS (comma separated)</label><input class="inp" name="tags" maxlength="120" value="${esc(d.tags)}" placeholder="demon, wave, fun"></div>
+        <div><label class="m-label">POINTS FOR BEATING</label><input class="inp" name="points" type="number" min="0" max="99999" value="${esc(d.points)}" placeholder="e.g. 250"></div>
+        <div><label class="m-label">VERIFIER</label><input class="inp" name="vname" list="members2" maxlength="20" value="${esc(d.vname)}" placeholder="username"></div>
+        <div><label class="m-label">VERIFIER VIDEO (youtube)</label><input class="inp" name="vvideo" value="${esc(d.vvideo)}" placeholder="https://youtube.com/..."></div></div>
       <label class="m-label">THUMBNAIL</label>
-      <div class="pick-row">
-        <label class="gd-btn blue small">UPLOAD<input type="file" id="it-thumb-file" accept="image/*" hidden></label>
-        ${d.thumb?`<img src="${d.thumb}" style="width:44px;height:44px;object-fit:cover;border-radius:9px;border:2px solid var(--edge)">`:''}
-      </div>
+      <div class="pick-row"><label class="gd-btn blue small">UPLOAD<input type="file" id="it-thumb-file" accept="image/*" hidden></label>
+        ${d.thumb?`<img src="${d.thumb}" style="width:44px;height:44px;object-fit:cover;border-radius:9px;border:2px solid var(--edge)">`:''}</div>
       <label class="m-label">PHOTOS (${d.photos.length}/6)</label>
-      <div class="pick-row">
-        <label class="gd-btn blue small ${d.photos.length>=6?'ghost':''}">ADD PHOTOS<input type="file" id="it-photos-file" accept="image/*" multiple hidden></label>
-        ${d.photos.map((p,i)=>`<span style="position:relative;display:inline-block"><img src="${p}" style="width:44px;height:44px;object-fit:cover;border-radius:9px;border:2px solid var(--edge)"><button type="button" class="ph-x" data-act="iphoto-del" data-i="${i}">✕</button></span>`).join('')}
-      </div>
-      <div class="lf-row" style="margin-top:16px">
-        <button type="button" class="gd-btn ghost small" data-act="m-close-btn">CANCEL</button>
-        <button class="gd-btn small" type="submit">${editing?'SAVE':'ADD LEVEL'}</button>
-      </div>
-    </form>
-  </div></div>`;
-}
-function ytModalHTML(){
-  return `<div class="overlay" data-act="m-close"><div class="modal panel wide">
+      <div class="pick-row"><label class="gd-btn blue small ${d.photos.length>=6?'ghost':''}">ADD PHOTOS<input type="file" id="it-photos-file" accept="image/*" multiple hidden></label>
+        ${d.photos.map((p,i)=>`<span style="position:relative;display:inline-block"><img src="${p}" style="width:44px;height:44px;object-fit:cover;border-radius:9px;border:2px solid var(--edge)"><button type="button" class="ph-x" data-act="iphoto-del" data-i="${i}">✕</button></span>`).join('')}</div>
+      <div class="lf-row" style="margin-top:16px"><button type="button" class="gd-btn ghost small" data-act="m-close-btn">CANCEL</button>
+        <button class="gd-btn small" type="submit">${editing?'SAVE':'ADD LEVEL'}</button></div></form>
+  </div></div>`; }
+function ytModalHTML(){ return `<div class="overlay" data-act="m-close"><div class="modal panel wide">
     <h3 class="m-title">▶ ${esc(ytModal.title)}</h3>
     <div style="position:relative;padding-top:56.25%">
-      <iframe src="https://www.youtube-nocookie.com/embed/${ytModal.id}" style="position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:10px;background:#000" allowfullscreen allow="accelerometer;autoplay;encrypted-media;picture-in-picture"></iframe>
-    </div>
+      <iframe src="https://www.youtube-nocookie.com/embed/${ytModal.id}" style="position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:10px;background:#000" allowfullscreen allow="accelerometer;autoplay;encrypted-media;picture-in-picture"></iframe></div>
     <div class="lf-row" style="margin-top:12px"><button class="gd-btn ghost small" data-act="m-close-btn">CLOSE</button></div>
-  </div></div>`;
-}
-function imgModalHTML(){
-  return `<div class="overlay" data-act="m-close"><div class="modal" style="background:transparent;border:none;box-shadow:none;padding:0;width:auto;max-width:94vw">
+  </div></div>`; }
+function imgModalHTML(){ return `<div class="overlay" data-act="m-close"><div class="modal" style="background:transparent;border:none;box-shadow:none;padding:0;width:auto;max-width:94vw">
     <img src="${imgModal.src}" style="max-width:92vw;max-height:82vh;border-radius:12px;display:block;border:2px solid var(--edge)">
     <div class="lf-row" style="margin-top:12px;justify-content:center"><button class="gd-btn ghost small" data-act="m-close-btn">CLOSE</button></div>
-  </div></div>`;
-}
-
-/* ----- dms ----- */
-function dmsHTML(){
-  const others=users().filter(u=>u.username!==me.username).sort((a,b)=>a.username.localeCompare(b.username));
+  </div></div>`; }
+function dmsHTML(){ const others=S.users.filter(u=>u.username!==me.username).sort((a,b)=>a.username.localeCompare(b.username));
   let thread='';
-  if(dmWith){
-    const u=findUser(dmWith);
-    const tid=[me.username,dmWith].sort().join('|');
+  if(dmWith){ const u=findUser(dmWith); const tid=[me.username,dmWith].sort().join('|');
     const t=dms().find(x=>x.id===tid);
     thread=`<div class="dm-head">${avatarHTML(u,'s30')} <button class="uname" data-act="profile-view" data-user="${esc(dmWith)}">${nameTags(u)}@${esc(dmWith)}</button></div>
-    <div id="dm-msgs">${(t?t.msgs:[]).map(m=>`<div class="bub ${m.from===me.username?'mine':'theirs'}">${richText(m.text)}${attsHTML(m.attachments)}</div>`).join('') || '<div class="dm-empty">say hi</div>'}</div>
+    <div id="dm-msgs">${(t?t.msgs:[]).map(m=>`<div class="bub ${m.from===me.username?'mine':'theirs'}">${richText(m.text)}${attsHTML(m.attachments)}</div>`).join('')||'<div class="dm-empty">say hi</div>'}</div>
     <div class="attach-strip" data-key="dm" style="padding:8px 12px 0"></div>
-    <form id="f-dm" class="dm-form">
-      <input class="inp" id="dm-input" name="t" maxlength="500" placeholder="message…" autocomplete="off">
+    <form id="f-dm" class="dm-form"><input class="inp" id="dm-input" name="t" maxlength="500" placeholder="message…" autocomplete="off">
       <label class="clip" title="add photos / files">📎<input type="file" multiple hidden data-attach="dm"></label>
-      <button class="gd-btn small" type="submit">SEND</button>
-    </form>`;
-  } else thread='<div class="dm-empty">pick someone on the left to start chatting</div>';
+      <button class="gd-btn small" type="submit">SEND</button></form>`; }
+  else thread='<div class="dm-empty">pick someone on the left to start chatting</div>';
   return `<div class="page-head"><h2>DIRECT MESSAGES</h2></div>
   <div class="dms">
     <div class="panel dm-list">${others.map(u=>`<div class="dm-user ${dmWith===u.username?'sel':''}" data-act="dm" data-user="${esc(u.username)}">
-        ${avatarHTML(u,'s30')}<span>${nameTags(u)}${esc(u.username)}</span>
-        ${isAdmin()?`<button class="del" style="margin-left:auto" data-act="del-user" data-user="${esc(u.username)}" title="remove member">✕</button>`:''}
-      </div>`).join('') || '<div class="empty small">no other members yet</div>'}</div>
-    <div class="panel dm-thread">${thread}</div>
-  </div>`;
-}
+      ${avatarHTML(u,'s30')}<span>${nameTags(u)}${esc(u.username)}</span>
+      ${isAdmin()?`<button class="del" style="margin-left:auto" data-act="del-user" data-user="${esc(u.username)}" title="remove member">✕</button>`:''}</div>`).join('')||'<div class="empty small">no other members yet</div>'}</div>
+    <div class="panel dm-thread">${thread}</div></div>`; }
 
-/* ---------- actions ---------- */
-function closeModal(){
-  if(ytModal){ ytModal=null; render(); return; }
-  if(imgModal){ imgModal=null; render(); return; }
-  if(notifsOpen){ notifsOpen=false; render(); return; }
-  if(reportsOpen){ reportsOpen=false; render(); return; }
-  if(profileView!==null){ profileView=null; render(); return; }
-  if(listModal!==null) listModal=null;
-  else if(itemModal) itemModal=null;
-  else settingsOpen=false;
-  render();
-}
-function syncListDraft(){ const f=$('#f-list'); if(f&&listDraft){ listDraft.name=f.elements.name.value; listDraft.desc=f.elements.desc.value; listDraft.rules=f.elements.rules.value; listDraft.discord=f.elements.discord.value; } }
-function syncItemDraft(){ const f=$('#f-item'); if(f&&itemDraft){ itemDraft.title=f.elements.title.value; itemDraft.desc=f.elements.desc.value;
-  itemDraft.tags=f.elements.tags.value; itemDraft.points=f.elements.points.value;
-  itemDraft.vname=f.elements.vname.value; itemDraft.vvideo=f.elements.vvideo.value; } }
+/* ---------------- actions ---------------- */
+function closeModal(){ if(ytModal){ytModal=null;render();return}
+  if(imgModal){imgModal=null;render();return}
+  if(notifsOpen){notifsOpen=false;render();return}
+  if(reportsOpen){reportsOpen=false;render();return}
+  if(profileView!==null){profileView=null;render();return}
+  if(listModal!==null)listModal=null; else if(itemModal)itemModal=null; else settingsOpen=false;
+  render(); }
+function syncListDraft(){ const f=$('#f-list'); if(f&&listDraft){listDraft.name=f.elements.name.value;listDraft.desc=f.elements.desc.value;listDraft.rules=f.elements.rules.value;listDraft.discord=f.elements.discord.value;} }
+function syncItemDraft(){ const f=$('#f-item'); if(f&&itemDraft){itemDraft.title=f.elements.title.value;itemDraft.desc=f.elements.desc.value;
+  itemDraft.tags=f.elements.tags.value;itemDraft.points=f.elements.points.value;
+  itemDraft.vname=f.elements.vname.value;itemDraft.vvideo=f.elements.vvideo.value;} }
+
+async function doLike(id){ const p=S.posts.find(x=>x.id===id); if(!p)return;
+  const i=p.likes.indexOf(me.username); i<0?p.likes.push(me.username):p.likes.splice(i,1);
+  render(); await savePostRow(p); }
+async function doDelPost(id){ await dbDel('posts',id); S.posts=S.posts.filter(p=>p.id!==id); toast('post deleted'); render(); }
+async function doDelComment(postId,cid){ const p=S.posts.find(x=>x.id===postId); if(!p)return;
+  p.comments=p.comments.filter(c=>c.id!==cid); render(); await savePostRow(p); }
+async function doDelLComment(cid){ for(const l of S.lists){ const c=(l.comments||[]).find(x=>x.id===cid);
+  if(c){ l.comments=l.comments.filter(x=>x.id!==cid); render(); await saveListRow(l); break; } } }
+async function doJoin(id){ const g=S.groups.find(x=>x.id===id); if(!g)return;
+  const i=g.members.indexOf(me.username); i<0?g.members.push(me.username):g.members.splice(i,1);
+  render(); await saveGroupRow(g); }
 
 document.addEventListener('click',e=>{
-  const b=e.target.closest('[data-act]'); if(!b) return;
+  const b=e.target.closest('[data-act]'); if(!b)return;
   const act=b.dataset.act;
-  if(act==='m-close' && e.target.closest('.modal')) return;
+  if(act==='m-close'&&e.target.closest('.modal'))return;
   switch(act){
     case 'auth-tab': authTab=b.dataset.tab; render(); break;
     case 'nav': go({name:b.dataset.view}); break;
     case 'nav-go': go({name:b.dataset.to}); break;
-    case 'logout': DB.set(K.session,null); settingsOpen=false; profileView=null; notifsOpen=false; reportsOpen=false; listModal=null; itemModal=null; ytModal=null; imgModal=null; dmWith=null; editingVictor=null; openComments.clear(); location.hash='#/feed'; render(); break;
+    case 'logout': settingsOpen=false;profileView=null;notifsOpen=false;reportsOpen=false;listModal=null;itemModal=null;ytModal=null;imgModal=null;dmWith=null;editingVictor=null;openComments.clear();
+      sb.auth.signOut(); location.hash='#/feed'; render(); break;
     case 'settings': settingsOpen=true; render(); break;
     case 'm-close': case 'm-close-btn': closeModal(); break;
-    case 'remove-photo': saveUser({avatar:null}); toast('photo removed'); render(); break;
+    case 'remove-photo': saveUser({avatar:''}); toast('photo removed'); break;
     case 'view-img': imgModal={src:b.dataset.src}; render(); break;
-    case 'attach-del': { const k=b.dataset.key; if(attach[k]){ attach[k].splice(+b.dataset.i,1); updateStrip(k); } break; }
+    case 'attach-del': { const k=b.dataset.key; if(attach[k]){attach[k].splice(+b.dataset.i,1);updateStrip(k);} break; }
     case 'ptag': { const t=b.dataset.t; const i=postTags.indexOf(t); i<0?postTags.push(t):postTags.splice(i,1); b.classList.toggle('sel'); break; }
     case 'ftag': { feedQ=b.dataset.t;
-      if(view.name!=='feed'){ go({name:'feed'}); }
-      else { const fs=$('#feed-search'); if(fs)fs.value=feedQ; const el=$('#feed-list'); if(el) el.innerHTML=feedPostsHTML(); } break; }
+      if(view.name!=='feed'){go({name:'feed'});}
+      else{const fs=$('#feed-search');if(fs)fs.value=feedQ;const el=$('#feed-list');if(el)el.innerHTML=feedPostsHTML();} break; }
     case 'feed-filter': feedFilter=b.dataset.f; render(); break;
     case 'go-record': location.hash='#/lista/'+b.dataset.slug+'/'+b.dataset.lv; break;
-    /* profiles / follows / notifs / reports */
     case 'profile-view': notifsOpen=false; profileView=b.dataset.user; render(); break;
     case 'plist-open': profileView=null; go({name:'listview',slug:b.dataset.slug}); break;
     case 'prof-dm': dmWith=profileView; profileView=null; go({name:'dms'}); break;
-    case 'follow': { const t=b.dataset.user; if(t===me.username)break;
-      const f=followsMap(); const arr=f[me.username]||[]; const i=arr.indexOf(t);
-      if(i<0){ arr.push(t); notify(t,{type:'follow',from:me.username}); toast('following @'+t); }
-      else { arr.splice(i,1); toast('unfollowed @'+t); }
-      f[me.username]=arr; DB.set(K.follows,f); render(); break; }
-    case 'notifs': { const all=DB.get(K.notifs,{}); const list=all[me.username]||[];
-      list.forEach(n=>n.read=true); all[me.username]=list; DB.set(K.notifs,all); notifsOpen=true; render(); break; }
+    case 'follow': toggleFollow(b.dataset.user); break;
+    case 'notifs': { (async()=>{ const rows=myNotifRows().filter(r=>!r.data.read);
+        rows.forEach(r=>r.data.read=true);
+        for(const r of rows) await sb.from('notifs').update({data:r.data}).eq('id',r.id);
+        notifsOpen=true; render(); })(); break; }
     case 'open-reports': reportsOpen=true; render(); break;
     case 'report-post': { const p=posts().find(x=>x.id===b.dataset.id);
-      if(p) makeReport('post',p.id,null,p.author,p.text); break; }
+      if(p)makeReport('post',p.id,null,p.author,p.text); break; }
     case 'report-comment': { const p=posts().find(x=>x.id===b.dataset.post); const c=p&&p.comments.find(x=>x.id===b.dataset.cid);
-      if(c) makeReport('comment',c.id,p.id,c.author,c.text); break; }
+      if(c)makeReport('comment',c.id,p.id,c.author,c.text); break; }
     case 'report-lcomment': { const l=lists().find(x=>x.slug===view.slug); const c=l&&(l.comments||[]).find(x=>x.id===b.dataset.cid);
-      if(c) makeReport('list comment',c.id,null,c.author,c.text); break; }
-    case 'rep-dismiss': { const reps=DB.get(K.reports,[]); const r=reps.find(x=>x.id===b.dataset.id);
-      if(r){ r.status='resolved'; DB.set(K.reports,reps); render(); } break; }
-    case 'rep-delete': { const reps=DB.get(K.reports,[]); const r=reps.find(x=>x.id===b.dataset.id);
-      if(r){
-        if(r.type==='post'){ DB.set(K.posts,posts().filter(p=>p.id!==r.targetId)); }
-        else if(r.type==='comment'){ const L=posts(); const p=L.find(x=>x.id===r.postId);
-          if(p){ p.comments=p.comments.filter(c=>c.id!==r.targetId); DB.set(K.posts,L); } }
-        else { const L=lists(); L.forEach(l=>{ l.comments=(l.comments||[]).filter(c=>c.id!==r.targetId); }); DB.set(K.lists,L); }
-        r.status='resolved'; DB.set(K.reports,reps); toast('content deleted'); render();
-      } break; }
-    /* feed */
-    case 'like': { const l=posts(); const p=l.find(x=>x.id===b.dataset.id);
-      if(p){ const i=p.likes.indexOf(me.username); i<0?p.likes.push(me.username):p.likes.splice(i,1); DB.set(K.posts,l); render(); } break; }
+      if(c)makeReport('list comment',c.id,null,c.author,c.text); break; }
+    case 'rep-dismiss': (async()=>{ await resolveReport(b.dataset.id); render(); })(); break;
+    case 'rep-delete': (async()=>{ const r=S.reports.find(x=>x.id===b.dataset.id); if(!r)break;
+      const d=r.data;
+      if(d.type==='post'){ await dbDel('posts',d.targetId); S.posts=S.posts.filter(p=>p.id!==d.targetId); }
+      else if(d.type==='comment'){ const p=S.posts.find(x=>x.id===d.postId);
+        if(p){ p.comments=p.comments.filter(c=>c.id!==d.targetId); await savePostRow(p); } }
+      else { for(const l of S.lists){ const c=(l.comments||[]).find(x=>x.id===d.targetId);
+        if(c){ l.comments=l.comments.filter(x=>x.id!==d.targetId); await saveListRow(l); break; } } }
+      await resolveReport(b.dataset.id); toast('content deleted'); render(); })(); break;
+    case 'like': doLike(b.dataset.id); break;
     case 'comments': { const id=b.dataset.id; openComments.has(id)?openComments.delete(id):openComments.add(id); render(); break; }
-    case 'del-post': { const l=posts(); const p=l.find(x=>x.id===b.dataset.id);
-      if(p&&(isAdmin()||p.author===me.username)){ DB.set(K.posts,l.filter(x=>x.id!==p.id)); toast('post deleted'); render(); } break; }
-    case 'del-comment': { const l=posts(); const p=l.find(x=>x.id===b.dataset.post);
-      if(p){ const c=p.comments.find(x=>x.id===b.dataset.cid);
-        if(c&&(isAdmin()||c.author===me.username)){ p.comments=p.comments.filter(x=>x.id!==c.id); DB.set(K.posts,l); render(); } } break; }
+    case 'del-post': doDelPost(b.dataset.id); break;
+    case 'del-comment': doDelComment(b.dataset.post,b.dataset.cid); break;
     case 'open-group': go({name:'group',id:b.dataset.id}); break;
-    case 'join': { const l=groups(); const g=l.find(x=>x.id===b.dataset.id);
-      if(g){ const i=g.members.indexOf(me.username); i<0?g.members.push(me.username):g.members.splice(i,1); DB.set(K.groups,l); render(); } break; }
+    case 'join': doJoin(b.dataset.id); break;
     case 'new-list': listModal='new'; listDraft={name:'',desc:'',rules:'',discord:'',icon:'⭐',iconImg:null,color:0,banner:null}; render(); break;
     case 'edit-list': { const l=lists().find(x=>x.id===b.dataset.id);
-      if(l&&canList(l)){ listModal=l.id; listDraft={name:l.name,desc:l.desc||'',rules:l.rules||'',discord:l.discord||'',icon:l.icon,iconImg:l.iconImg||null,color:l.color,banner:l.banner}; render(); } break; }
+      if(l&&canList(l)){listModal=l.id;listDraft={name:l.name,desc:l.desc||'',rules:l.rules||'',discord:l.discord||'',icon:l.icon,iconImg:l.iconImg||null,color:l.color,banner:l.banner};render();} break; }
     case 'go-list': go({name:'listview',slug:b.dataset.slug}); break;
-    case 'del-list': { const L=lists(); const l=L.find(x=>x.id===b.dataset.id);
-      if(l&&canList(l)){ DB.set(K.lists,L.filter(x=>x.id!==l.id)); toast('list deleted'); go({name:'lists'}); } break; }
+    case 'del-list': (async()=>{ const l=S.lists.find(x=>x.id===b.dataset.id); if(!l)break;
+      await dbDel('lists',l.id); S.lists=S.lists.filter(x=>x.id!==l.id); toast('list deleted'); go({name:'lists'}); })(); break;
     case 'list-tab': listTab=b.dataset.t; render(); break;
     case 'li-icon': syncListDraft(); listDraft.icon=b.dataset.i; listDraft.iconImg=null; render(); break;
     case 'li-icon-del': syncListDraft(); listDraft.iconImg=null; render(); break;
@@ -1447,289 +1070,204 @@ document.addEventListener('click',e=>{
     case 'li-banner-del': syncListDraft(); listDraft.banner=null; render(); break;
     case 'copy-link': copyText(b.dataset.href); break;
     case 'watch': { const id=ytId(b.dataset.url);
-      if(id){ ytModal={title:b.dataset.title||'video',id}; render(); } else window.open(b.dataset.url,'_blank'); break; }
-    case 'lreact': { const L=lists(); const l=L.find(x=>x.slug===view.slug); if(!l)break;
+      if(id){ytModal={title:b.dataset.title||'video',id};render();} else window.open(b.dataset.url,'_blank'); break; }
+    case 'lreact': (async()=>{ const l=S.lists.find(x=>x.slug===view.slug); if(!l)break;
       l.reacts=l.reacts||{}; const e2=b.dataset.e; l.reacts[e2]=l.reacts[e2]||[];
       const i=l.reacts[e2].indexOf(me.username); i<0?l.reacts[e2].push(me.username):l.reacts[e2].splice(i,1);
-      DB.set(K.lists,L); render(); break; }
-    case 'del-lcomment': { const L=lists(); const l=L.find(x=>x.slug===view.slug); if(!l)break;
-      l.comments=l.comments||[]; const c=l.comments.find(x=>x.id===b.dataset.cid);
-      if(c&&(isAdmin()||c.author===me.username)){ l.comments=l.comments.filter(x=>x.id!==c.id); DB.set(K.lists,L); render(); } break; }
-    /* levels */
+      render(); await saveListRow(l); })(); break;
+    case 'del-lcomment': doDelLComment(b.dataset.cid); break;
     case 'lvl-toggle': { const s=b.dataset.slug; openLevel=openLevel===s?null:s; editingVictor=null; render(); break; }
-    case 'lvl-up': case 'lvl-down': { const L=lists(); const l=L.find(x=>x.slug===view.slug);
+    case 'lvl-up': case 'lvl-down': (async()=>{ const l=S.lists.find(x=>x.slug===view.slug);
       if(l&&canList(l)){ const i=l.items.findIndex(x=>x.slug===b.dataset.slug); const j=act==='lvl-up'?i-1:i+1;
-        if(i>-1&&j>-1&&j<l.items.length){ [l.items[i],l.items[j]]=[l.items[j],l.items[i]]; l.edited=Date.now(); DB.set(K.lists,L); render(); } } break; }
+        if(i>-1&&j>-1&&j<l.items.length){ [l.items[i],l.items[j]]=[l.items[j],l.items[i]]; l.edited=Date.now(); render(); await saveListRow(l); } } })(); break;
     case 'new-item': itemModal={list:b.dataset.list,id:null};
       itemDraft={title:'',desc:'',tags:'',points:'',vname:'',vvideo:'',thumb:null,photos:[]}; render(); break;
     case 'edit-item': { const l=lists().find(x=>x.slug===view.slug);
       const it=l&&l.items.find(x=>x.id===b.dataset.id);
-      if(l&&it&&canList(l)){ itemModal={list:l.id,id:it.id};
+      if(l&&it&&canList(l)){itemModal={list:l.id,id:it.id};
         itemDraft={title:it.title,desc:it.desc||'',tags:(it.tags||[]).join(', '),points:it.points||'',
-          vname:(it.verifier||{}).name||'',vvideo:(it.verifier||{}).video||'',thumb:it.thumb,photos:[...(it.photos||[])]};
-        render(); } break; }
-    case 'del-item': { const l0=lists().find(x=>x.slug===view.slug); if(!l0)break;
-      const L=lists(); const l=L.find(x=>x.id===l0.id);
-      if(l&&canList(l)){ l.items=l.items.filter(x=>x.id!==b.dataset.id); l.edited=Date.now(); openLevel=null; editingVictor=null; DB.set(K.lists,L); toast('level deleted'); render(); } break; }
+          vname:(it.verifier||{}).name||'',vvideo:(it.verifier||{}).video||'',thumb:it.thumb,photos:[...(it.photos||[])]};render();} break; }
+    case 'del-item': (async()=>{ const l=S.lists.find(x=>x.slug===view.slug); if(!l||!canList(l))break;
+      l.items=l.items.filter(x=>x.id!==b.dataset.id); l.edited=Date.now(); openLevel=null; editingVictor=null;
+      render(); await saveListRow(l); toast('level deleted'); })(); break;
     case 'iphoto-del': syncItemDraft(); itemDraft.photos.splice(+b.dataset.i,1); render(); break;
     case 'vic-edit': editingVictor={slug:openLevel,i:+b.dataset.i}; render(); break;
     case 'vic-cancel': editingVictor=null; render(); break;
-    case 'vic-save': { const ctx=levelCtx(); if(!ctx||!editingVictor)break;
+    case 'vic-save': (async()=>{ const ctx=levelCtx(); if(!ctx||!editingVictor)break;
       const name=$('#vic-name').value.trim(), video=normUrl($('#vic-video').value);
-      if(!name){ toast("victor name can't be empty",'error'); break; }
-      const L=lists(); const l=L.find(x=>x.id===ctx.list.id); const it=l.items.find(x=>x.id===ctx.item.id);
+      if(!name){toast("victor name can't be empty",'error');break}
+      const l=S.lists.find(x=>x.id===ctx.list.id); const it=l.items.find(x=>x.id===ctx.item.id);
       const v=(it.victors||[])[editingVictor.i];
-      if(v){ v.name=name; v.video=video; it.edited=l.edited=Date.now(); DB.set(K.lists,L); toast('victor updated'); }
-      editingVictor=null; render(); break; }
-    case 'del-victor': { const ctx=levelCtx(); if(!ctx)break; const L=lists(); const l=L.find(x=>x.id===ctx.list.id);
-      const it=l.items.find(x=>x.id===ctx.item.id);
-      if(it&&canList(l)){ it.victors=(it.victors||[]); it.victors.splice(+b.dataset.i,1); it.edited=l.edited=Date.now(); DB.set(K.lists,L); render(); } break; }
-    case 'rate': { const ctx=levelCtx(); if(!ctx)break; const L=lists(); const l=L.find(x=>x.id===ctx.list.id);
-      const it=l.items.find(x=>x.id===ctx.item.id); it.ratings=it.ratings||{};
-      const v=+b.dataset.val; if(it.ratings[me.username]===v) delete it.ratings[me.username]; else it.ratings[me.username]=v;
-      DB.set(K.lists,L); render(); break; }
+      if(v){v.name=name;v.video=video;it.edited=l.edited=Date.now();render();await saveListRow(l);toast('victor updated');}
+      editingVictor=null; })(); break;
+    case 'del-victor': (async()=>{ const ctx=levelCtx(); if(!ctx)break;
+      const l=S.lists.find(x=>x.id===ctx.list.id); const it=l.items.find(x=>x.id===ctx.item.id);
+      if(it&&canList(l)){it.victors=(it.victors||[]);it.victors.splice(+b.dataset.i,1);it.edited=l.edited=Date.now();render();await saveListRow(l);} })(); break;
+    case 'rate': (async()=>{ const ctx=levelCtx(); if(!ctx)break;
+      const l=S.lists.find(x=>x.id===ctx.list.id); const it=l.items.find(x=>x.id===ctx.item.id);
+      it.ratings=it.ratings||{}; const v=+b.dataset.val;
+      if(it.ratings[me.username]===v)delete it.ratings[me.username]; else it.ratings[me.username]=v;
+      render(); await saveListRow(l); })(); break;
     case 'open-site': window.open(b.dataset.url,'_blank'); break;
-    case 'del-site': if(isAdmin()){ DB.set(K.sites,sites().filter(s=>s.id!==b.dataset.id)); toast('website removed'); render(); } break;
-    case 'del-osite': if(isAdmin()){ DB.set(K.olists,olists().filter(s=>s.id!==b.dataset.id)); toast('list removed'); render(); } break;
-    case 'fav-reset': localStorage.removeItem(K.fav); applyFavicon(); toast('site icon reset'); render(); break;
-    case 'backup': { const data={};
-      ['users','posts','groups','dms','lists','sites','olists','reports'].forEach(k=>data[k]=DB.get(K[k],[]));
-      data.follows=DB.get(K.follows,{}); data.notifs=DB.get(K.notifs,{});
+    case 'del-site': (async()=>{ if(isAdmin()){ await dbDel('sites',b.dataset.id); S.sites=S.sites.filter(s=>s.id!==b.dataset.id); toast('website removed'); render(); } })(); break;
+    case 'del-osite': (async()=>{ if(isAdmin()){ await dbDel('olists',b.dataset.id); S.olists=S.olists.filter(s=>s.id!==b.dataset.id); toast('list removed'); render(); } })(); break;
+    case 'fav-reset': (async()=>{ S.favicon=null; applyFavicon(); await sb.from('meta').delete().eq('key','favicon'); toast('site icon reset'); render(); })(); break;
+    case 'backup': { const data={users:S.users,posts:S.posts,groups:S.groups,dms:S.dms,lists:S.lists,sites:S.sites,olists:S.olists};
       const blob=new Blob([JSON.stringify(data,null,1)],{type:'application/json'});
       const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='gd-community-backup.json'; a.click();
       URL.revokeObjectURL(a.href); toast('backup downloaded'); break; }
     case 'dm': dmWith=b.dataset.user; go({name:'dms'}); break;
-    case 'del-user': { if(isAdmin()) deleteUser(b.dataset.user); break; }
+    case 'del-user': toast('user removal: do this in the Supabase dashboard (Authentication → users)','error'); break;
   }
 });
 
-function deleteUser(name){
-  DB.set(K.users, users().filter(u=>u.username!==name));
-  DB.set(K.posts, posts().filter(p=>p.author!==name)
-    .map(p=>({...p, likes:p.likes.filter(l=>l!==name), comments:p.comments.filter(c=>c.author!==name)})));
-  DB.set(K.groups, groups().map(g=>({...g, members:g.members.filter(m=>m!==name)})));
-  DB.set(K.dms, dms().filter(t=>!t.members.includes(name)));
-  const L=lists().filter(l=>l.author!==name);
-  L.forEach(l=>{
-    l.comments=(l.comments||[]).filter(c=>c.author!==name);
-    Object.values(l.reacts||{}).forEach(arr=>{ let i; while((i=arr.indexOf(name))>-1) arr.splice(i,1); });
-    l.items.forEach(it=>{ delete (it.ratings||{})[name]; });
-  });
-  DB.set(K.lists,L);
-  const f=followsMap(); delete f[name];
-  Object.keys(f).forEach(k=>{ f[k]=f[k].filter(x=>x!==name); });
-  DB.set(K.follows,f);
-  if(dmWith===name) dmWith=null;
-  toast('@'+name+' removed'); render();
-}
-
-/* ---------- forms ---------- */
+/* ---------------- forms ---------------- */
 function bindForms(){
-  const on=(sel,fn)=>{ const el=$(sel); if(el) el.addEventListener('submit',e=>{ e.preventDefault(); fn(el); }); };
+  const on=(sel,fn)=>{const el=$(sel);if(el)el.addEventListener('submit',e=>{e.preventDefault();fn(el);});};
   on('#f-login',doLogin); on('#f-signup',doSignup); on('#f-post',doPost);
-  on('#f-group-create',doCreateGroup); on('#f-dm',doSendDM); on('#f-bio',doSaveBio); on('#f-pass',doChangePass);
+  on('#f-group-create',doCreateGroup); on('#f-dm',doSendDM); on('#f-bio',doSaveBio);
   on('#f-list',doSaveList); on('#f-item',doSaveItem); on('#f-victor',doAddVictor); on('#f-rules',doSaveRules);
-  on('#f-site',f=>doAddDir(f,K.sites,'website added',['🌐','🔗','⭐','🎮','📺','🗺️','🧰','📰']));
-  on('#f-osite',f=>doAddDir(f,K.olists,'list added',['📋','🏆','📊','⭐','😈','🗂️']));
+  on('#f-site',f=>doAddDir(f,'sites','website added',['🌐','🔗','⭐','🎮','📺','🗺️','🧰','📰']));
+  on('#f-osite',f=>doAddDir(f,'olists','list added',['📋','🏆','📊','⭐','😈','🗂️']));
   document.querySelectorAll('form[data-comment]').forEach(f=>
-    f.addEventListener('submit',e=>{ e.preventDefault(); doComment(f.dataset.comment,f); }));
+    f.addEventListener('submit',e=>{e.preventDefault();doComment(f.dataset.comment,f);}));
   const lc=document.querySelector('form[data-listcomment]');
-  if(lc) lc.addEventListener('submit',e=>{ e.preventDefault(); doListComment(lc); });
-  const af=$('#av-file'); if(af) af.addEventListener('change',onAvatarFile);
-  const ff=$('#fav-file'); if(ff) ff.addEventListener('change',async e=>{
+  if(lc)lc.addEventListener('submit',e=>{e.preventDefault();doListComment(lc);});
+  const af=$('#av-file'); if(af)af.addEventListener('change',onAvatarFile);
+  const ff=$('#fav-file'); if(ff)ff.addEventListener('change',async e=>{
     const file=e.target.files[0]; if(!file)return;
-    if(!file.type.startsWith('image/')){ toast('that is not an image','error'); return; }
-    try{ DB.set(K.fav,await cropImage(file,64,64)); applyFavicon(); toast('site icon updated'); render(); }
-    catch{ toast('could not read image','error'); } });
-  const rf=$('#restore-file'); if(rf) rf.addEventListener('change',async e=>{
-    const f=e.target.files[0]; if(!f)return;
-    try{
-      const data=JSON.parse(await f.text());
-      if(!Array.isArray(data.users)) throw 0;
-      ['users','posts','groups','dms','lists','sites','olists','reports'].forEach(k=>{ if(data[k]) localStorage.setItem(K[k],JSON.stringify(data[k)); });
-      if(data.follows) localStorage.setItem(K.follows,JSON.stringify(data.follows));
-      if(data.notifs) localStorage.setItem(K.notifs,JSON.stringify(data.notifs));
-      toast('backup restored — reloading'); setTimeout(()=>location.reload(),700);
-    }catch{ toast('invalid backup file','error'); }
-  });
+    try{ const data=await cropImage(file,64,64); S.favicon=data; applyFavicon();
+      await sb.from('meta').upsert({key:'favicon',value:data}); toast('site icon updated'); render(); }
+    catch{toast('could not read image','error')} });
   const fs=$('#feed-search');
-  if(fs){ fs.value=feedQ; fs.addEventListener('input',e=>{ feedQ=e.target.value;
-    const el=$('#feed-list'); if(el) el.innerHTML=feedPostsHTML(); }); }
-  const bf=$('#li-banner-file'); if(bf) bf.addEventListener('change',async e=>{
+  if(fs){fs.value=feedQ;fs.addEventListener('input',e=>{feedQ=e.target.value;
+    const el=$('#feed-list');if(el)el.innerHTML=feedPostsHTML();});}
+  const bf=$('#li-banner-file'); if(bf)bf.addEventListener('change',async e=>{
     const file=e.target.files[0]; if(!file)return;
-    try{ syncListDraft(); listDraft.banner=await cropImage(file,900,300); render(); }catch{ toast('could not read image','error'); } });
-  const lif=$('#li-icon-file'); if(lif) lif.addEventListener('change',async e=>{
+    try{syncListDraft();listDraft.banner=await cropImage(file,900,300);render();}catch{toast('could not read image','error')} });
+  const lif=$('#li-icon-file'); if(lif)lif.addEventListener('change',async e=>{
     const file=e.target.files[0]; if(!file)return;
-    try{ syncListDraft(); listDraft.iconImg=await cropImage(file,96,96); render(); }catch{ toast('could not read image','error'); } });
-  const tf=$('#it-thumb-file'); if(tf) tf.addEventListener('change',async e=>{
+    try{syncListDraft();listDraft.iconImg=await cropImage(file,96,96);render();}catch{toast('could not read image','error')} });
+  const tf=$('#it-thumb-file'); if(tf)tf.addEventListener('change',async e=>{
     const file=e.target.files[0]; if(!file)return;
-    try{ syncItemDraft(); itemDraft.thumb=await cropImage(file,200,200); render(); }catch{ toast('could not read image','error'); } });
-  const pf=$('#it-photos-file'); if(pf) pf.addEventListener('change',async e=>{
+    try{syncItemDraft();itemDraft.thumb=await cropImage(file,200,200);render();}catch{toast('could not read image','error')} });
+  const pf=$('#it-photos-file'); if(pf)pf.addEventListener('change',async e=>{
     const files=[...e.target.files]; if(!files.length)return; syncItemDraft();
-    try{ for(const file of files){ if(itemDraft.photos.length>=6){ toast('max 6 photos','error'); break; }
-      itemDraft.photos.push(await fitImage(file,800)); } render(); }catch{ toast('could not read image','error'); } });
+    try{for(const file of files){if(itemDraft.photos.length>=6){toast('max 6 photos','error');break}
+      itemDraft.photos.push(await fitImage(file,800));}render();}catch{toast('could not read image','error')} });
 }
-
-function doAddDir(f,key,msg,emojis){
-  if(!isAdmin()) return;
-  const name=f.elements.name.value.trim(), url=normUrl(f.elements.url.value), desc=f.elements.desc.value.trim();
-  if(!name||!url){ toast('needs a name and a link','error'); return; }
-  DB.set(key,[...DB.get(key,[]),{id:uid(),name,url,desc,emoji:emojis[Math.floor(Math.random()*emojis.length)],ts:Date.now()}]);
-  toast(msg); render();
-}
-function doLogin(f){
-  const u=f.elements.u.value.trim(), p=f.elements.p.value, err=$('#auth-err');
-  const usr=findUser(u);
-  if(!usr){ err.textContent='no account with that username'; return; }
-  if(usr.pass!==hashPw(usr.username,p)){ err.textContent='wrong password'; return; }
-  DB.set(K.session,usr.username); go({name:'feed'}); toast('welcome back, '+usr.username);
-}
-function doSignup(f){
-  const u=f.elements.u.value.trim(), p=f.elements.p.value, p2=f.elements.p2.value, err=$('#auth-err');
-  if(!/^[a-z0-9_]{3,16}$/i.test(u)){ err.textContent='username: 3–16 letters, numbers or _'; return; }
-  if(findUser(u)){ err.textContent='that username is taken'; return; }
-  if(p.length<6){ err.textContent='password needs at least 6 characters'; return; }
-  if(p!==p2){ err.textContent="passwords don't match"; return; }
-  const newUser={username:u,pass:hashPw(u,p),avatar:null,bio:'',joined:Date.now()};
-  if(u.toLowerCase()==='myszon') newUser.role='admin';
-  DB.set(K.users,[...users(),newUser]);
-  DB.set(K.session,u); go({name:'feed'});
-  toast(newUser.role?'welcome, admin':'welcome to the community');
-}
-function doPost(f){
-  const t=f.elements.t.value.trim();
-  const atts=(attach['post']||[]).slice();
-  if(!t && !atts.length) return;
-  DB.set(K.posts,[{id:uid(),author:me.username,text:t,tags:postTags.slice(),attachments:atts,ts:Date.now(),likes:[],comments:[],group:f.dataset.group||null},...posts()]);
-  attach['post']=[]; postTags=[]; feedQ='';
-  notifyMentions(t,'post');
-  render();
-}
-function doComment(id,f){
-  const t=f.elements.c.value.trim();
-  const key='cmt:'+id;
-  const atts=(attach[key]||[]).slice();
-  if(!t && !atts.length) return;
-  const l=posts(); const p=l.find(x=>x.id===id); if(!p) return;
+async function doLogin(f){ const u=f.elements.u.value.trim(),p=f.elements.p.value,err=$('#auth-err');
+  if(!u||!p){err.textContent='fill in both fields';return}
+  const {error}=await sb.auth.signInWithPassword({email:u2e(u),password:p});
+  if(error){err.textContent='wrong username or password';return}
+  await loadAll(); go({name:'feed'}); toast('welcome back, '+u); }
+async function doSignup(f){ const u=f.elements.u.value.trim(),p=f.elements.p.value,p2=f.elements.p2.value,err=$('#auth-err');
+  if(!/^[a-z0-9_]{3,16}$/i.test(u)){err.textContent='username: 3–16 letters, numbers or _';return}
+  if(findUser(u)){err.textContent='that username is taken';return}
+  if(p.length<6){err.textContent='password needs at least 6 characters';return}
+  if(p!==p2){err.textContent="passwords don't match";return}
+  const {data,error}=await sb.auth.signUp({email:u2e(u),password:p});
+  if(error){err.textContent=error.message;return}
+  if(!data.session){err.textContent='email confirmation is ON in Supabase — turn it off (Authentication → Providers → Email)';return}
+  let role='';
+  if(u.toLowerCase()==='myszon'&&!S.users.some(x=>x.role==='admin'))role='admin';
+  const prof={id:data.user.id,username:u,avatar:'',bio:'',role,joined:Date.now()};
+  const {error:e2}=await sb.from('profiles').insert({id:prof.id,username:prof.username,avatar:'',bio:'',role:prof.role,joined:new Date().toISOString()});
+  if(e2){err.textContent='could not create profile: '+e2.message;return}
+  S.users.push(prof); await loadAll();
+  go({name:'feed'}); toast(role?'welcome, admin':'welcome to the community'); }
+async function doPost(f){ const t=f.elements.t.value.trim(); const atts=(attach['post']||[]).slice();
+  if(!t&&!atts.length)return;
+  const p={id:uid(),author:me.username,text:t,tags:postTags.slice(),attachments:atts,ts:Date.now(),likes:[],comments:[],group:f.dataset.group||null};
+  if(!await dbInsert('posts',{id:p.id,owner:me.id,data:p}))return;
+  S.posts.unshift(p); attach['post']=[]; postTags=[]; feedQ='';
+  notifyMentions(t,'post'); render(); }
+async function doComment(id,f){ const t=f.elements.c.value.trim(); const key='cmt:'+id;
+  const atts=(attach[key]||[]).slice(); if(!t&&!atts.length)return;
+  const p=S.posts.find(x=>x.id===id); if(!p)return;
   p.comments.push({id:uid(),author:me.username,text:t,attachments:atts,ts:Date.now()});
-  DB.set(K.posts,l); attach[key]=[];
-  notifyMentions(t,'comment');
-  render();
-  const inp=document.querySelector('form[data-comment="'+id+'"] input'); if(inp) inp.focus();
-}
-function doListComment(f){
-  const t=f.elements.c.value.trim();
-  const atts=(attach['lcmt']||[]).slice();
-  if(!t && !atts.length) return;
-  const L=lists(); const l=L.find(x=>x.slug===view.slug); if(!l) return;
+  attach[key]=[]; notifyMentions(t,'comment'); render(); await savePostRow(p);
+  const inp=document.querySelector('form[data-comment="'+id+'"] input'); if(inp)inp.focus(); }
+async function doListComment(f){ const t=f.elements.c.value.trim(); const atts=(attach['lcmt']||[]).slice();
+  if(!t&&!atts.length)return;
+  const l=S.lists.find(x=>x.slug===view.slug); if(!l)return;
   l.comments=l.comments||[];
   l.comments.push({id:uid(),author:me.username,text:t,attachments:atts,ts:Date.now()});
-  DB.set(K.lists,L); attach['lcmt']=[];
-  notifyMentions(t,'list comment');
-  render();
-}
-function doCreateGroup(f){
-  const name=f.elements.name.value.trim(), desc=f.elements.desc.value.trim();
-  if(name.length<3){ toast('group name too short','error'); return; }
+  attach['lcmt']=[]; notifyMentions(t,'list comment'); render(); await saveListRow(l); }
+async function doCreateGroup(f){ const name=f.elements.name.value.trim(),desc=f.elements.desc.value.trim();
+  if(name.length<3){toast('group name too short','error');return}
   const emojis=['🟩','🟨','🔺','⭐','💠','🌀','👾','🎮','🕹️','🧊','😈','🚀'];
   const g={id:uid(),name,desc,emoji:emojis[Math.floor(Math.random()*emojis.length)],members:[me.username],owner:me.username,ts:Date.now()};
-  DB.set(K.groups,[...groups(),g]); go({name:'group',id:g.id}); toast('group created');
-}
-function doSendDM(f){
-  const t=f.elements.t.value.trim();
-  const atts=(attach['dm']||[]).slice();
-  if(!t && !atts.length) return;
-  if(!dmWith) return;
+  if(!await dbInsert('groups',{id:g.id,owner:me.id,data:g}))return;
+  S.groups.push(g); go({name:'group',id:g.id}); toast('group created'); }
+async function doSendDM(f){ const t=f.elements.t.value.trim(); const atts=(attach['dm']||[]).slice();
+  if(!t&&!atts.length)return; if(!dmWith)return;
   const tid=[me.username,dmWith].sort().join('|');
-  const l=dms(); let th=l.find(x=>x.id===tid);
-  if(!th){ th={id:tid,members:[me.username,dmWith],msgs:[]}; l.push(th); }
+  let th=S.dms.find(x=>x.id===tid); const isNew=!th;
+  if(isNew){th={id:tid,members:[me.username,dmWith],msgs:[]};S.dms.push(th);}
   th.msgs.push({from:me.username,text:t,attachments:atts,ts:Date.now()});
-  DB.set(K.dms,l); attach['dm']=[];
-  if(dmWith!==me.username) notify(dmWith,{type:'mention',from:me.username,where:'DM'});
-  notifyMentions(t,'DM');
-  focusDM=true; render();
-}
-function doSaveBio(f){ saveUser({bio:f.elements.bio.value.trim()}); toast('bio saved'); render(); }
-function doChangePass(f){
-  const err=$('#pass-err'); err.textContent='';
-  const cur=f.elements.cur.value, p1=f.elements.p1.value, p2=f.elements.p2.value;
-  if(me.pass!==hashPw(me.username,cur)){ err.textContent='current password is wrong'; return; }
-  if(p1.length<6){ err.textContent='new password needs at least 6 characters'; return; }
-  if(p1!==p2){ err.textContent="new passwords don't match"; return; }
-  saveUser({pass:hashPw(me.username,p1)});
-  toast('password changed'); render();
-}
-function doSaveRules(f){
-  const l0=lists().find(x=>x.slug===view.slug); if(!l0||!canList(l0)) return;
-  const L=lists(); const l=L.find(x=>x.id===l0.id);
-  l.rules=f.elements.rules.value; l.edited=Date.now();
-  DB.set(K.lists,L); toast('rules saved'); render();
-}
-function doAddVictor(f){
-  const ctx=levelCtx(); if(!ctx||!canList(ctx.list)) return;
+  attach['dm']=[];
+  if(isNew){const u2=findUser(dmWith); await sb.from('dms').insert({id:tid,members:[me.id,u2.id],data:th});}
+  else await dbUpd('dms',tid,{data:th});
+  notify(dmWith,{type:'mention',from:me.username,where:'DM'});
+  focusDM=true; render(); }
+async function doSaveBio(f){ await saveUser({bio:f.elements.bio.value.trim()}); toast('bio saved'); }
+async function doSaveRules(f){ const l=S.lists.find(x=>x.slug===view.slug); if(!l||!canList(l))return;
+  l.rules=f.elements.rules.value; l.edited=Date.now(); render(); await saveListRow(l); toast('rules saved'); }
+async function doAddVictor(f){ const ctx=levelCtx(); if(!ctx||!canList(ctx.list))return;
   const name=f.elements.name.value.trim();
-  if(!name){ toast('write who beat it','error'); return; }
-  const L=lists(); const l=L.find(x=>x.id===ctx.list.id); const it=l.items.find(x=>x.id===ctx.item.id);
+  if(!name){toast('write who beat it','error');return}
+  const l=S.lists.find(x=>x.id===ctx.list.id); const it=l.items.find(x=>x.id===ctx.item.id);
   it.victors=it.victors||[];
   it.victors.push({name,video:normUrl(f.elements.video.value),ts:Date.now()});
   it.edited=l.edited=Date.now();
-  DB.set(K.lists,L);
-  const u=findUser(name); if(u) notify(u.username,{type:'mention',from:me.username,where:'new record'});
-  toast(name+' added as victor'); render();
-}
-function doSaveList(f){
-  syncListDraft();
+  const u=findUser(name); if(u)notify(u.username,{type:'mention',from:me.username,where:'new record'});
+  render(); await saveListRow(l); toast(name+' added as victor'); }
+async function doAddDir(f,table,msg,emojis){ if(!isAdmin())return;
+  const name=f.elements.name.value.trim(),url=normUrl(f.elements.url.value),desc=f.elements.desc.value.trim();
+  if(!name||!url){toast('needs a name and a link','error');return}
+  const obj={id:uid(),name,url,desc,emoji:emojis[Math.floor(Math.random()*emojis.length)],ts:Date.now()};
+  if(!await dbInsert(table,{id:obj.id,data:obj}))return;
+  (table==='sites'?S.sites:S.olists).push(obj); toast(msg); render(); }
+async function doSaveList(f){ syncListDraft();
   const name=(listDraft.name||'').trim();
-  if(name.length<2){ toast('the list needs a name','error'); return; }
-  const desc=(listDraft.desc||'').trim(), rules=listDraft.rules||'', discord=normUrl(listDraft.discord);
-  const L=lists();
+  if(name.length<2){toast('the list needs a name','error');return}
+  const desc=(listDraft.desc||'').trim(),rules=listDraft.rules||'',discord=normUrl(listDraft.discord);
   if(listModal==='new'){
-    L.push({id:uid(),slug:uniqueListSlug(name),name,desc,rules,discord,icon:listDraft.icon,iconImg:listDraft.iconImg,color:listDraft.color,banner:listDraft.banner,
-      author:me.username,created:Date.now(),edited:Date.now(),reacts:{},comments:[],items:[]});
-    DB.set(K.lists,L); listModal=null; toast('list created');
-    go({name:'listview',slug:L[L.length-1].slug}); return;
-  }
-  const l=L.find(x=>x.id===listModal);
-  if(l&&canList(l)){ Object.assign(l,{name,desc,rules,discord,icon:listDraft.icon,iconImg:listDraft.iconImg,color:listDraft.color,banner:listDraft.banner,edited:Date.now()});
-    DB.set(K.lists,L); toast('list updated'); }
-  listModal=null; render();
-}
-function doSaveItem(f){
-  syncItemDraft();
-  const d=itemDraft; if(!d||!itemModal) return;
+    const l={id:uid(),slug:uniqueListSlug(name),name,desc,rules,discord,icon:listDraft.icon,iconImg:listDraft.iconImg,color:listDraft.color,banner:listDraft.banner,
+      author:me.username,created:Date.now(),edited:Date.now(),reacts:{},comments:[],items:[]};
+    if(!await dbInsert('lists',{id:l.id,owner:me.id,slug:l.slug,data:l}))return;
+    S.lists.push(l); listModal=null; toast('list created');
+    go({name:'listview',slug:l.slug}); return; }
+  const l=S.lists.find(x=>x.id===listModal);
+  if(l&&canList(l)){Object.assign(l,{name,desc,rules,discord,icon:listDraft.icon,iconImg:listDraft.iconImg,color:listDraft.color,banner:listDraft.banner,edited:Date.now()});
+    await saveListRow(l); toast('list updated');}
+  listModal=null; render(); }
+async function doSaveItem(f){ syncItemDraft();
+  const d=itemDraft; if(!d||!itemModal)return;
   const title=(d.title||'').trim();
-  if(title.length<2){ toast('the level needs a name','error'); return; }
+  if(title.length<2){toast('the level needs a name','error');return}
   const tags=(d.tags||'').split(',').map(s=>s.trim()).filter(Boolean).slice(0,8);
   const points=Math.max(0,Math.min(99999,parseInt(d.points,10)||0));
   const verifier={name:(d.vname||'').trim(),video:normUrl(d.vvideo)};
-  const L=lists(); const l=L.find(x=>x.id===itemModal.list); if(!l||!canList(l)) return;
-  if(itemModal.id){
-    const it=l.items.find(x=>x.id===itemModal.id);
-    if(it){ Object.assign(it,{title,desc:d.desc.trim(),tags,points,verifier,thumb:d.thumb,photos:d.photos,edited:Date.now()});
-      l.edited=Date.now(); toast('level updated'); }
-  } else {
-    const slug=uniqueItemSlug(l,title);
+  const l=S.lists.find(x=>x.id===itemModal.list); if(!l||!canList(l))return;
+  if(itemModal.id){ const it=l.items.find(x=>x.id===itemModal.id);
+    if(it){Object.assign(it,{title,desc:d.desc.trim(),tags,points,verifier,thumb:d.thumb,photos:d.photos,edited:Date.now()});
+      l.edited=Date.now(); toast('level updated');} }
+  else { const slug=uniqueItemSlug(l,title);
     l.items.push({id:uid(),slug,title,desc:d.desc.trim(),tags,points,verifier,
-      victors:[],thumb:d.thumb,photos:d.photos,ratings:{},
-      author:me.username,created:Date.now(),edited:Date.now()});
-    l.edited=Date.now(); openLevel=slug; toast('level added (at the bottom — use ↑↓ to move it)');
-  }
-  DB.set(K.lists,L); itemModal=null; render();
-}
-async function onAvatarFile(e){
-  const file=e.target.files[0]; if(!file) return;
-  if(!file.type.startsWith('image/')){ toast('that is not an image','error'); return; }
-  if(file.size>8*1024*1024){ toast('image too big (max 8MB)','error'); return; }
-  try{ saveUser({avatar:await cropImage(file,144,144)}); toast('avatar updated'); render(); }
-  catch{ toast('could not read that image','error'); }
-}
+      victors:[],thumb:d.thumb,photos:d.photos,ratings:{},author:me.username,created:Date.now(),edited:Date.now()});
+    l.edited=Date.now(); openLevel=slug; toast('level added (at the bottom — use ↑↓ to move it)'); }
+  render(); await saveListRow(l); itemModal=null; }
+async function onAvatarFile(e){ const file=e.target.files[0]; if(!file)return;
+  if(!file.type.startsWith('image/')){toast('that is not an image','error');return}
+  if(file.size>8*1024*1024){toast('image too big (max 8MB)','error');return}
+  try{ await saveUser({avatar:await cropImage(file,144,144)}); toast('avatar updated'); }
+  catch{toast('could not read that image','error')} }
 
-window.addEventListener('storage',()=>render());
-
-seed();
-applyFavicon();
-view=parseHash();
-render();
+/* boot */
+if(!CONFIGURED){ renderSetup(); }
+else { applyFavicon(); init(); }
 </script>
 </body>
 </html>
