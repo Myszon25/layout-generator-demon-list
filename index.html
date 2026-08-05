@@ -82,13 +82,16 @@
 
   /* FEED */
   .cols{display:grid;grid-template-columns:270px 1fr;gap:18px;align-items:start}
-  .side-card{position:sticky;top:78px;padding:20px;text-align:center}
+  .side-wrap{display:flex;flex-direction:column;gap:18px;position:sticky;top:78px}
+  .side-card{padding:20px;text-align:center}
   .side-card h3{margin-top:10px;font-size:1.05rem}
   .side-card .bio{margin-top:8px;font-size:.88rem;color:var(--mut);min-height:1em;word-break:break-word}
   .stats{display:flex;gap:8px;margin:16px 0}
   .stats div{flex:1;background:var(--panel2);border-radius:10px;padding:9px 4px}
   .stats b{display:block;color:var(--yellow);font-size:1.02rem}
   .stats span{font-size:.6rem;letter-spacing:.14em;color:var(--mut);text-transform:uppercase}
+  .rec-row{display:flex;gap:8px;align-items:center;padding:7px 8px;border-radius:8px;cursor:pointer;font-size:.85rem;flex-wrap:wrap;transition:.15s}
+  .rec-row:hover{background:rgba(255,255,255,.07)}
   .composer{display:grid;grid-template-columns:44px 1fr;gap:12px;padding:16px}
   .composer .stack{display:flex;flex-direction:column;gap:10px}
   .composer .row{display:flex;justify-content:flex-end;align-items:center;gap:10px}
@@ -265,7 +268,7 @@
 
   @media(max-width:820px){
     .cols{grid-template-columns:1fr}
-    .side-card{position:static}
+    .side-wrap{position:static}
     .dms{grid-template-columns:1fr;height:auto}
     .dm-list{flex-direction:row;overflow-x:auto;overflow-y:hidden}
     .dm-user{flex:none}
@@ -346,7 +349,7 @@ function fileToData(file){ return new Promise((res,rej)=>{ const r=new FileReade
 /* ---------- seed ---------- */
 function sampleLists(){ return [{
   id:uid(), slug:'my-gd-goals', name:'My GD Goals', desc:'Everything I want to beat this year. Rate my pain.',
-  icon:'🎯', color:3, banner:null, author:'NovaDash', created:Date.now()-86400000*12, edited:Date.now()-86400000*2,
+  icon:'🎯', color:3, banner:null, discord:'', author:'NovaDash', created:Date.now()-86400000*12, edited:Date.now()-86400000*2,
   rules:'1. Only legit completions — no hacks.\n2. Every victor MUST add a youtube video as proof.\n3. Points are set by the list owner.\n4. Be nice. have fun!',
   reacts:{'🔥':['CubeLord'],'⭐':['WaveMaster']},
   comments:[{id:uid(),author:'CubeLord',text:'this list is brutal lol',ts:Date.now()-86400000}],
@@ -354,7 +357,7 @@ function sampleLists(){ return [{
     {id:uid(),slug:'silent-clubstep',title:'Silent Clubstep',desc:'The legendary "impossible" level. beat this = glory forever.',thumb:null,photos:[],
      tags:['demon','impossible'],points:500,
      verifier:{name:'CubeLord',video:'https://www.youtube.com/watch?v=dQw4w9WgXcQ'},
-     victors:[{name:'Victor',video:'https://www.youtube.com/watch?v=dQw4w9WgXcQ'}],
+     victors:[{name:'Victor',video:'https://www.youtube.com/watch?v=dQw4w9WgXcQ',ts:Date.now()-3600000*5}],
      ratings:{CubeLord:5,WaveMaster:4},
      author:'NovaDash',created:Date.now()-86400000*10,edited:Date.now()-86400000*2},
     {id:uid(),slug:'bloodbath',title:'Bloodbath',desc:'The classic extreme demon. 1000 attempts max.',thumb:null,photos:[],
@@ -397,7 +400,7 @@ function seed(){
 }
 
 /* ---------- state + router ---------- */
-let me=null, view={name:'feed'}, authTab='login', settingsOpen=false, dmWith=null, listTab='levels', openLevel=null, ytModal=null, imgModal=null, feedQ='';
+let me=null, view={name:'feed'}, authTab='login', settingsOpen=false, dmWith=null, listTab='levels', openLevel=null, editingVictor=null, ytModal=null, imgModal=null, feedQ='';
 let listModal=null, listDraft=null;
 let itemModal=null, itemDraft=null;
 let postTags=[];
@@ -424,8 +427,8 @@ function parseHash(){
   if(parts[0]==='group'&&parts[1]) return {name:'group',id:parts[1]};
   return {name:'feed'};
 }
-function go(v){ view=v; listTab='levels'; openLevel=null; const h=toHash(v); if(location.hash!==h) location.hash=h; else render(); }
-window.addEventListener('hashchange',()=>{ view=parseHash(); listTab='levels'; openLevel=null; render(); });
+function go(v){ view=v; listTab='levels'; openLevel=null; editingVictor=null; const h=toHash(v); if(location.hash!==h) location.hash=h; else render(); }
+window.addEventListener('hashchange',()=>{ view=parseHash(); listTab='levels'; openLevel=null; editingVictor=null; render(); });
 
 function toast(msg,type){ const t=document.createElement('div'); t.className='toast '+(type||''); t.textContent=msg;
   $('#toasts').appendChild(t); setTimeout(()=>{ t.classList.add('out'); setTimeout(()=>t.remove(),320); },2600); }
@@ -495,6 +498,40 @@ function lbRowsHTML(lb){
       </div>
       <div class="lb-pts">💠 ${r.pts}</div>
     </div>`; }).join('');
+}
+
+/* ---------- feed extras ---------- */
+function statsHTML(){
+  const totalLevels=lists().reduce((n,l)=>n+l.items.length,0);
+  const totalRecords=lists().reduce((n,l)=>n+l.items.reduce((m,it)=>m+(it.victors||[]).length,0),0);
+  return `<div class="panel" style="padding:16px;text-align:center">
+    <span class="mut small" style="letter-spacing:.2em">COMMUNITY STATS</span>
+    <div class="stats" style="margin:12px 0 0">
+      <div><b>${users().length}</b><span>members</span></div>
+      <div><b>${posts().length}</b><span>posts</span></div>
+      <div><b>${lists().length}</b><span>lists</span></div>
+    </div>
+    <div class="stats" style="margin:8px 0 0">
+      <div><b>${totalLevels}</b><span>levels</span></div>
+      <div><b>${totalRecords}</b><span>records</span></div>
+    </div>
+  </div>`;
+}
+function recordsHTML(){
+  const recs=[];
+  lists().forEach(l=>l.items.forEach(it=>{ (it.victors||[]).forEach(v=>{ if(v.ts) recs.push({v,it,l}); }); }));
+  if(!recs.length) return '';
+  recs.sort((a,b)=>b.v.ts-a.v.ts);
+  return `<div class="panel" style="padding:12px 14px;margin-bottom:14px">
+    <span class="mut small" style="letter-spacing:.2em">🏆 LATEST RECORDS</span>
+    <div style="margin-top:6px">
+    ${recs.slice(0,5).map(r=>`<div class="rec-row" data-act="go-record" data-slug="${esc(r.l.slug)}" data-lv="${esc(r.it.slug)}">
+      ${avatarByName(r.v.name,'s28')}<b>${esc(r.v.name)}</b><span class="mut small">beat</span><b>${esc(r.it.title)}</b>
+      <span class="mut small">· ${esc(r.l.name)}</span>
+      <span class="mut small" style="margin-left:auto">${ago(r.v.ts)} ago</span>
+    </div>`).join('')}
+    </div>
+  </div>`;
 }
 
 /* ---------- render ---------- */
@@ -636,21 +673,25 @@ function feedHTML(){
   const myPosts=posts().filter(p=>p.author===me.username).length;
   const myLists=lists().filter(l=>l.author===me.username).length;
   return `<div class="cols">
-    <aside class="panel side-card">
-      ${avatarHTML(me,'s72')}
-      <h3>${esc(me.username)}${isAdmin()?'<span class="admintag">ADMIN</span>':''}</h3>
-      <p class="mut small">joined ${fmtDate(me.joined)}</p>
-      <p class="bio">${esc(me.bio||'no bio yet — open settings!')}</p>
-      <div class="stats">
-        <div><b>${myPosts}</b><span>posts</span></div>
-        <div><b>${stars}</b><span>stars</span></div>
-        <div><b>${myLists}</b><span>lists</span></div>
-      </div>
-      <button class="gd-btn blue small" data-act="settings">⚙ SETTINGS</button>
-    </aside>
+    <div class="side-wrap">
+      <aside class="panel side-card">
+        ${avatarHTML(me,'s72')}
+        <h3>${esc(me.username)}${isAdmin()?'<span class="admintag">ADMIN</span>':''}</h3>
+        <p class="mut small">joined ${fmtDate(me.joined)}</p>
+        <p class="bio">${esc(me.bio||'no bio yet — open settings!')}</p>
+        <div class="stats">
+          <div><b>${myPosts}</b><span>posts</span></div>
+          <div><b>${stars}</b><span>stars</span></div>
+          <div><b>${myLists}</b><span>lists</span></div>
+        </div>
+        <button class="gd-btn blue small" data-act="settings">⚙ SETTINGS</button>
+      </aside>
+      ${statsHTML()}
+    </div>
     <div>
       ${composerHTML('')}
       <div class="panel searchbar">🔍<input id="feed-search" placeholder="search posts, tags, authors…" autocomplete="off"></div>
+      ${recordsHTML()}
       <div class="feed-list" id="feed-list">${feedPostsHTML()}</div>
     </div>
   </div>`;
@@ -703,7 +744,7 @@ function listsBrowserHTML(){
       <div class="lc-body">
         <h4>${esc(l.name)}</h4>
         <p>${esc(l.desc||'no description')}</p>
-        <div class="lc-meta">by @${esc(l.author)} · ${l.items.length} level${l.items.length===1?'':'s'}<br>created ${fmtDate(l.created)} · edited ${ago(l.edited)} ago</div>
+        <div class="lc-meta">by @${esc(l.author)} · ${l.items.length} level${l.items.length===1?'':'s'}${l.discord?' · 💬 discord':''}<br>created ${fmtDate(l.created)} · edited ${ago(l.edited)} ago</div>
       </div>
     </div>`).join('') || '<div class="panel empty">no lists yet — make the first one!</div>'}
   </div>`;
@@ -766,6 +807,7 @@ function listViewHTML(){
         <span>by <b style="color:#fff">@${esc(l.author)}</b>${(findUser(l.author)||{}).role==='admin'?' 👑':''}</span>
         <span>created ${fmtDate(l.created)}</span>
         <span>edited ${ago(l.edited)} ago</span>
+        ${l.discord?`<button class="gd-btn blue small" data-act="open-site" data-url="${esc(l.discord)}">💬 DISCORD</button>`:''}
         <button class="gd-btn ghost small" data-act="copy-link" data-href="${esc(link)}">🔗 COPY LINK</button>
         ${can?`<button class="gd-btn blue small" data-act="edit-list" data-id="${l.id}">✎ EDIT LIST</button>
         <button class="gd-btn ghost small" data-act="del-list" data-id="${l.id}">🗑 DELETE</button>`:''}
@@ -823,11 +865,20 @@ function drowHTML(l,it,i,can){
       </div>
       <div style="margin-top:14px">
         <span class="mut small">🏆 VICTORS / RECORDS (${victors.length})</span>
-        ${victors.map((v,vi)=>`<div class="vrow">
-          ${avatarByName(v.name,'s30')}<b>${esc(v.name)}</b><span class="mut small">+${pts} pts</span>
-          ${v.video?`<button class="gd-btn blue small" data-act="watch" data-url="${esc(v.video)}" data-title="${esc(v.name)} beats ${esc(it.title)}">▶ VIDEO</button>`:''}
-          ${can?`<button class="del" style="margin-left:auto" data-act="del-victor" data-i="${vi}">✕</button>`:''}
-        </div>`).join('') || '<div class="mut small" style="margin-top:6px">no records yet — nobody beat this level</div>'}
+        ${victors.map((v,vi)=> (editingVictor && editingVictor.slug===it.slug && editingVictor.i===vi) ? `
+          <div class="vrow">
+            <input class="inp" id="vic-name" value="${esc(v.name)}" maxlength="20" placeholder="username" style="flex:1;min-width:110px">
+            <input class="inp" id="vic-video" value="${esc(v.video||'')}" placeholder="youtube link (proof)" style="flex:2;min-width:140px">
+            <button class="gd-btn small" data-act="vic-save">SAVE</button>
+            <button class="gd-btn ghost small" data-act="vic-cancel">✕</button>
+          </div>` : `
+          <div class="vrow">
+            ${avatarByName(v.name,'s30')}<b>${esc(v.name)}</b><span class="mut small">+${pts} pts${v.ts?' · '+ago(v.ts)+' ago':''}</span>
+            ${v.video?`<button class="gd-btn blue small" data-act="watch" data-url="${esc(v.video)}" data-title="${esc(v.name)} beats ${esc(it.title)}">▶ VIDEO</button>`:''}
+            ${can?`<span style="margin-left:auto;display:flex;gap:2px">
+              <button class="del" data-act="vic-edit" data-i="${vi}">✎ edit</button>
+              <button class="del" data-act="del-victor" data-i="${vi}">✕</button></span>`:''}
+          </div>`).join('') || '<div class="mut small" style="margin-top:6px">no records yet — nobody beat this level</div>'}
         ${can?`<form class="cmt-form" id="f-victor" style="margin-top:10px">
           <input class="inp" name="name" list="members" maxlength="20" placeholder="who beat it? (username)">
           <input class="inp" name="video" placeholder="youtube link (proof)">
@@ -910,6 +961,8 @@ function listModalHTML(){
       <textarea class="inp" name="desc" rows="2" maxlength="200" placeholder="what is this list about?">${esc(d.desc)}</textarea>
       <label class="m-label">RULES</label>
       <textarea class="inp" name="rules" rows="3" maxlength="2000" placeholder="1. only legit completions…">${esc(d.rules)}</textarea>
+      <label class="m-label">DISCORD LINK (optional)</label>
+      <input class="inp" name="discord" value="${esc(d.discord)}" placeholder="https://discord.gg/...">
       <label class="m-label">ICON</label>
       <div class="pick-row">${LIST_ICONS.map(ic=>`<button type="button" class="icon-pick ${d.icon===ic?'sel':''}" data-act="li-icon" data-i="${ic}">${ic}</button>`).join('')}</div>
       <label class="m-label">COLOR</label>
@@ -1016,7 +1069,7 @@ function closeModal(){
   else settingsOpen=false;
   render();
 }
-function syncListDraft(){ const f=$('#f-list'); if(f&&listDraft){ listDraft.name=f.elements.name.value; listDraft.desc=f.elements.desc.value; listDraft.rules=f.elements.rules.value; } }
+function syncListDraft(){ const f=$('#f-list'); if(f&&listDraft){ listDraft.name=f.elements.name.value; listDraft.desc=f.elements.desc.value; listDraft.rules=f.elements.rules.value; listDraft.discord=f.elements.discord.value; } }
 function syncItemDraft(){ const f=$('#f-item'); if(f&&itemDraft){ itemDraft.title=f.elements.title.value; itemDraft.desc=f.elements.desc.value;
   itemDraft.tags=f.elements.tags.value; itemDraft.points=f.elements.points.value;
   itemDraft.vname=f.elements.vname.value; itemDraft.vvideo=f.elements.vvideo.value; } }
@@ -1029,7 +1082,7 @@ document.addEventListener('click',e=>{
     case 'auth-tab': authTab=b.dataset.tab; render(); break;
     case 'nav': go({name:b.dataset.view}); break;
     case 'nav-go': go({name:b.dataset.to}); break;
-    case 'logout': DB.set(K.session,null); settingsOpen=false; listModal=null; itemModal=null; ytModal=null; imgModal=null; dmWith=null; openComments.clear(); location.hash='#/feed'; render(); break;
+    case 'logout': DB.set(K.session,null); settingsOpen=false; listModal=null; itemModal=null; ytModal=null; imgModal=null; dmWith=null; editingVictor=null; openComments.clear(); location.hash='#/feed'; render(); break;
     case 'settings': settingsOpen=true; render(); break;
     case 'm-close': case 'm-close-btn': closeModal(); break;
     case 'remove-photo': saveUser({avatar:null}); toast('photo removed'); render(); break;
@@ -1039,6 +1092,7 @@ document.addEventListener('click',e=>{
     case 'ftag': { feedQ=b.dataset.t;
       if(view.name!=='feed'){ go({name:'feed'}); }
       else { const fs=$('#feed-search'); if(fs)fs.value=feedQ; const el=$('#feed-list'); if(el) el.innerHTML=feedPostsHTML(); } break; }
+    case 'go-record': location.hash='#/lista/'+b.dataset.slug+'/'+b.dataset.lv; break;
     case 'like': { const l=posts(); const p=l.find(x=>x.id===b.dataset.id);
       if(p){ const i=p.likes.indexOf(me.username); i<0?p.likes.push(me.username):p.likes.splice(i,1); DB.set(K.posts,l); render(); } break; }
     case 'comments': { const id=b.dataset.id; openComments.has(id)?openComments.delete(id):openComments.add(id); render(); break; }
@@ -1050,9 +1104,9 @@ document.addEventListener('click',e=>{
     case 'open-group': go({name:'group',id:b.dataset.id}); break;
     case 'join': { const l=groups(); const g=l.find(x=>x.id===b.dataset.id);
       if(g){ const i=g.members.indexOf(me.username); i<0?g.members.push(me.username):g.members.splice(i,1); DB.set(K.groups,l); render(); } break; }
-    case 'new-list': listModal='new'; listDraft={name:'',desc:'',rules:'',icon:'⭐',color:0,banner:null}; render(); break;
+    case 'new-list': listModal='new'; listDraft={name:'',desc:'',rules:'',discord:'',icon:'⭐',color:0,banner:null}; render(); break;
     case 'edit-list': { const l=lists().find(x=>x.id===b.dataset.id);
-      if(l&&canList(l)){ listModal=l.id; listDraft={name:l.name,desc:l.desc||'',rules:l.rules||'',icon:l.icon,color:l.color,banner:l.banner}; render(); } break; }
+      if(l&&canList(l)){ listModal=l.id; listDraft={name:l.name,desc:l.desc||'',rules:l.rules||'',discord:l.discord||'',icon:l.icon,color:l.color,banner:l.banner}; render(); } break; }
     case 'go-list': go({name:'listview',slug:b.dataset.slug}); break;
     case 'del-list': { const L=lists(); const l=L.find(x=>x.id===b.dataset.id);
       if(l&&canList(l)){ DB.set(K.lists,L.filter(x=>x.id!==l.id)); toast('list deleted'); go({name:'lists'}); } break; }
@@ -1070,8 +1124,8 @@ document.addEventListener('click',e=>{
     case 'del-lcomment': { const L=lists(); const l=L.find(x=>x.slug===view.slug); if(!l)break;
       l.comments=l.comments||[]; const c=l.comments.find(x=>x.id===b.dataset.cid);
       if(c&&(isAdmin()||c.author===me.username)){ l.comments=l.comments.filter(x=>x.id!==c.id); DB.set(K.lists,L); render(); } break; }
-    /* levels (demonlist rows) */
-    case 'lvl-toggle': { const s=b.dataset.slug; openLevel=openLevel===s?null:s; render(); break; }
+    /* levels */
+    case 'lvl-toggle': { const s=b.dataset.slug; openLevel=openLevel===s?null:s; editingVictor=null; render(); break; }
     case 'lvl-up': case 'lvl-down': { const L=lists(); const l=L.find(x=>x.slug===view.slug);
       if(l&&canList(l)){ const i=l.items.findIndex(x=>x.slug===b.dataset.slug); const j=act==='lvl-up'?i-1:i+1;
         if(i>-1&&j>-1&&j<l.items.length){ [l.items[i],l.items[j]]=[l.items[j],l.items[i]]; l.edited=Date.now(); DB.set(K.lists,L); render(); } } break; }
@@ -1085,8 +1139,17 @@ document.addEventListener('click',e=>{
         render(); } break; }
     case 'del-item': { const l0=lists().find(x=>x.slug===view.slug); if(!l0)break;
       const L=lists(); const l=L.find(x=>x.id===l0.id);
-      if(l&&canList(l)){ l.items=l.items.filter(x=>x.id!==b.dataset.id); l.edited=Date.now(); openLevel=null; DB.set(K.lists,L); toast('level deleted'); render(); } break; }
+      if(l&&canList(l)){ l.items=l.items.filter(x=>x.id!==b.dataset.id); l.edited=Date.now(); openLevel=null; editingVictor=null; DB.set(K.lists,L); toast('level deleted'); render(); } break; }
     case 'iphoto-del': syncItemDraft(); itemDraft.photos.splice(+b.dataset.i,1); render(); break;
+    case 'vic-edit': editingVictor={slug:openLevel,i:+b.dataset.i}; render(); break;
+    case 'vic-cancel': editingVictor=null; render(); break;
+    case 'vic-save': { const ctx=levelCtx(); if(!ctx||!editingVictor)break;
+      const name=$('#vic-name').value.trim(), video=normUrl($('#vic-video').value);
+      if(!name){ toast("victor name can't be empty",'error'); break; }
+      const L=lists(); const l=L.find(x=>x.id===ctx.list.id); const it=l.items.find(x=>x.id===ctx.item.id);
+      const v=(it.victors||[])[editingVictor.i];
+      if(v){ v.name=name; v.video=video; it.edited=l.edited=Date.now(); DB.set(K.lists,L); toast('victor updated ✓'); }
+      editingVictor=null; render(); break; }
     case 'del-victor': { const ctx=levelCtx(); if(!ctx)break; const L=lists(); const l=L.find(x=>x.id===ctx.list.id);
       const it=l.items.find(x=>x.id===ctx.item.id);
       if(it&&canList(l)){ it.victors=(it.victors||[]); it.victors.splice(+b.dataset.i,1); it.edited=l.edited=Date.now(); DB.set(K.lists,L); render(); } break; }
@@ -1240,7 +1303,7 @@ function doAddVictor(f){
   if(!name){ toast('write who beat it','error'); return; }
   const L=lists(); const l=L.find(x=>x.id===ctx.list.id); const it=l.items.find(x=>x.id===ctx.item.id);
   it.victors=it.victors||[];
-  it.victors.push({name,video:normUrl(f.elements.video.value)});
+  it.victors.push({name,video:normUrl(f.elements.video.value),ts:Date.now()});
   it.edited=l.edited=Date.now();
   DB.set(K.lists,L); toast(name+' added as victor 🏆'); render();
 }
@@ -1248,16 +1311,16 @@ function doSaveList(f){
   syncListDraft();
   const name=(listDraft.name||'').trim();
   if(name.length<2){ toast('the list needs a name','error'); return; }
-  const desc=(listDraft.desc||'').trim(), rules=listDraft.rules||'';
+  const desc=(listDraft.desc||'').trim(), rules=listDraft.rules||'', discord=normUrl(listDraft.discord);
   const L=lists();
   if(listModal==='new'){
-    L.push({id:uid(),slug:uniqueListSlug(name),name,desc,rules,icon:listDraft.icon,color:listDraft.color,banner:listDraft.banner,
+    L.push({id:uid(),slug:uniqueListSlug(name),name,desc,rules,discord,icon:listDraft.icon,color:listDraft.color,banner:listDraft.banner,
       author:me.username,created:Date.now(),edited:Date.now(),reacts:{},comments:[],items:[]});
     DB.set(K.lists,L); listModal=null; toast('list created ✓');
     go({name:'listview',slug:L[L.length-1].slug}); return;
   }
   const l=L.find(x=>x.id===listModal);
-  if(l&&canList(l)){ Object.assign(l,{name,desc,rules,icon:listDraft.icon,color:listDraft.color,banner:listDraft.banner,edited:Date.now()});
+  if(l&&canList(l)){ Object.assign(l,{name,desc,rules,discord,icon:listDraft.icon,color:listDraft.color,banner:listDraft.banner,edited:Date.now()});
     DB.set(K.lists,L); toast('list updated ✓'); }
   listModal=null; render();
 }
