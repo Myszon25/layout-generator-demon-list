@@ -117,7 +117,7 @@
   .feed-list{display:flex;flex-direction:column;gap:14px}
   .post{padding:16px}
   .post-head{display:flex;gap:11px;align-items:center}
-  .post-head .who span{font-size:.78rem;color:var(--mut);display:block}
+  .post-head .who span{font-size:.78px;color:var(--mut);display:block;font-size:.78rem}
   .gtag{margin-left:auto;font-size:.72rem;background:#1c4f92;border:1px solid #0d3568;color:#cfe3fa;border-radius:99px;padding:4px 11px;white-space:nowrap}
   .post-text{margin-top:11px;line-height:1.55;white-space:pre-wrap;word-break:break-word;font-size:.96rem}
   .post-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
@@ -280,13 +280,21 @@
 <script>
 'use strict';
 /* ================= SUPABASE CONFIG — PASTE YOURS HERE ================= */
-const SUPABASE_URL = 'https://bqiteymzkajvszdaowqg.supabase.co';        // Project Settings → API → Project URL
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJxaXRleW16a2FqdnN6ZGFvd3FnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU5MDk5NDAsImV4cCI6MjEwMTQ4NTk0MH0.7g8D4VlbkcENKts9u4b0iCHY-qYXWUG_Kjhaa33aXKA'; // Project Settings → API → anon public
+const SUPABASE_URL = 'PASTE_YOUR_PROJECT_URL';          // Project Settings → API → Project URL
+const SUPABASE_ANON_KEY = 'PASTE_YOUR_ANON_PUBLIC_KEY'; // Project Settings → API → anon public
 /* ====================================================================== */
 
 const CONFIGURED = !SUPABASE_URL.includes('PASTE') && !SUPABASE_ANON_KEY.includes('PASTE');
 let sb=null, authUser=null, bootState='loading', bootError='';
-if(CONFIGURED) sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+if(CONFIGURED){
+  if(window.supabase){
+    try{ sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); }
+    catch(e){ bootState='error'; bootError='connection failed: '+e.message; }
+  } else {
+    bootState='error';
+    bootError='the supabase library did not load — check your internet (or disable adblock) and refresh';
+  }
+}
 const u2e = u => u.toLowerCase()+'@users.gdcommunity.app';
 
 const $ = s => document.querySelector(s);
@@ -323,7 +331,8 @@ const saveListRow = l => dbUpd('lists',l.id,{data:l,slug:l.slug});
 async function loadAll(){
   const names=['profiles','posts','groups','dms','lists','sites','olists','follows','notifs','reports','meta'];
   const res=await Promise.all(names.map(t=>sb.from(t).select('*')));
-  const bad=res.find(r=>r.error); if(bad) throw new Error(bad.error.message);
+  const bad=res.find(r=>r.error);
+  if(bad) throw new Error(bad.error.message+' — did you run the SQL setup script?');
   S.users=res[0].data.map(r=>({id:r.id,username:r.username,avatar:r.avatar||'',bio:r.bio||'',role:r.role||'',joined:Date.parse(r.joined)||Date.now()}));
   S.posts=res[1].data.map(r=>r.data); S.groups=res[2].data.map(r=>r.data);
   S.dms=res[3].data.map(r=>r.data);   S.lists=res[4].data.map(r=>r.data);
@@ -440,11 +449,11 @@ function achPanelHTML(){ const ach=getAchievements(me); const got=ach.filter(a=>
 
 /* ---------------- misc helpers ---------------- */
 const CUBES=[['#8ee85d','#4db32a'],['#ffd93b','#e0a013'],['#ff9f2e','#d3711a'],['#6ad7ff','#2e9ad0'],['#ff6b81','#d33d55'],['#c98bff','#8a3fd0']];
+function hashNum(s){ return [...String(s)].reduce((a,c)=>a+c.charCodeAt(0),0); }
 function avatarHTML(u,cls){ cls=cls||'s44';
   if(u&&u.avatar) return '<img class="av '+cls+'" src="'+u.avatar+'" alt="">';
   const p=CUBES[hashNum((u&&u.username)||'?')%CUBES.length];
   return '<span class="cube '+cls+'" style="--c1:'+p[0]+';--c2:'+p[1]+'"><i></i><i></i><em></em></span>'; }
-function hashNum(s){ return [...String(s)].reduce((a,c)=>a+c.charCodeAt(0),0); }
 const avatarByName=(n,cls)=>avatarHTML(findUser(n)||{username:n},cls);
 const LIST_ICONS=['⭐','🔥','🎮','👾','🌀','💠','🟩','🏆','🎯','🚀','😈','🧊','🎨','🎵','💎','🕹️'];
 const LIST_COLORS=['linear-gradient(135deg,#0e4ea8,#2fb6ff)','linear-gradient(135deg,#7a2fb0,#ff6bd6)','linear-gradient(135deg,#0c8a4e,#8ee85d)',
@@ -1267,7 +1276,7 @@ async function onAvatarFile(e){ const file=e.target.files[0]; if(!file)return;
 
 /* boot */
 if(!CONFIGURED){ renderSetup(); }
-else { applyFavicon(); init(); }
+else { applyFavicon(); if(sb){ init().catch(e=>{ bootState='error'; bootError=e.message; render(); }); } else render(); }
 </script>
 </body>
 </html>
