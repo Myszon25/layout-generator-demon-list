@@ -117,7 +117,7 @@
   .feed-list{display:flex;flex-direction:column;gap:14px}
   .post{padding:16px}
   .post-head{display:flex;gap:11px;align-items:center}
-  .post-head .who span{font-size:.78px;color:var(--mut);display:block;font-size:.78rem}
+  .post-head .who span{font-size:.78rem;color:var(--mut);display:block}
   .gtag{margin-left:auto;font-size:.72rem;background:#1c4f92;border:1px solid #0d3568;color:#cfe3fa;border-radius:99px;padding:4px 11px;white-space:nowrap}
   .post-text{margin-top:11px;line-height:1.55;white-space:pre-wrap;word-break:break-word;font-size:.96rem}
   .post-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
@@ -1052,7 +1052,7 @@ document.addEventListener('click',e=>{
     case 'report-lcomment': { const l=lists().find(x=>x.slug===view.slug); const c=l&&(l.comments||[]).find(x=>x.id===b.dataset.cid);
       if(c)makeReport('list comment',c.id,null,c.author,c.text); break; }
     case 'rep-dismiss': (async()=>{ await resolveReport(b.dataset.id); render(); })(); break;
-    case 'rep-delete': (async()=>{ const r=S.reports.find(x=>x.id===b.dataset.id); if(!r)break;
+    case 'rep-delete': (async()=>{ const r=S.reports.find(x=>x.id===b.dataset.id); if(!r)return;
       const d=r.data;
       if(d.type==='post'){ await dbDel('posts',d.targetId); S.posts=S.posts.filter(p=>p.id!==d.targetId); }
       else if(d.type==='comment'){ const p=S.posts.find(x=>x.id===d.postId);
@@ -1070,7 +1070,7 @@ document.addEventListener('click',e=>{
     case 'edit-list': { const l=lists().find(x=>x.id===b.dataset.id);
       if(l&&canList(l)){listModal=l.id;listDraft={name:l.name,desc:l.desc||'',rules:l.rules||'',discord:l.discord||'',icon:l.icon,iconImg:l.iconImg||null,color:l.color,banner:l.banner};render();} break; }
     case 'go-list': go({name:'listview',slug:b.dataset.slug}); break;
-    case 'del-list': (async()=>{ const l=S.lists.find(x=>x.id===b.dataset.id); if(!l)break;
+    case 'del-list': (async()=>{ const l=S.lists.find(x=>x.id===b.dataset.id); if(!l)return;
       await dbDel('lists',l.id); S.lists=S.lists.filter(x=>x.id!==l.id); toast('list deleted'); go({name:'lists'}); })(); break;
     case 'list-tab': listTab=b.dataset.t; render(); break;
     case 'li-icon': syncListDraft(); listDraft.icon=b.dataset.i; listDraft.iconImg=null; render(); break;
@@ -1080,7 +1080,7 @@ document.addEventListener('click',e=>{
     case 'copy-link': copyText(b.dataset.href); break;
     case 'watch': { const id=ytId(b.dataset.url);
       if(id){ytModal={title:b.dataset.title||'video',id};render();} else window.open(b.dataset.url,'_blank'); break; }
-    case 'lreact': (async()=>{ const l=S.lists.find(x=>x.slug===view.slug); if(!l)break;
+    case 'lreact': (async()=>{ const l=S.lists.find(x=>x.slug===view.slug); if(!l)return;
       l.reacts=l.reacts||{}; const e2=b.dataset.e; l.reacts[e2]=l.reacts[e2]||[];
       const i=l.reacts[e2].indexOf(me.username); i<0?l.reacts[e2].push(me.username):l.reacts[e2].splice(i,1);
       render(); await saveListRow(l); })(); break;
@@ -1096,23 +1096,23 @@ document.addEventListener('click',e=>{
       if(l&&it&&canList(l)){itemModal={list:l.id,id:it.id};
         itemDraft={title:it.title,desc:it.desc||'',tags:(it.tags||[]).join(', '),points:it.points||'',
           vname:(it.verifier||{}).name||'',vvideo:(it.verifier||{}).video||'',thumb:it.thumb,photos:[...(it.photos||[])]};render();} break; }
-    case 'del-item': (async()=>{ const l=S.lists.find(x=>x.slug===view.slug); if(!l||!canList(l))break;
+    case 'del-item': (async()=>{ const l=S.lists.find(x=>x.slug===view.slug); if(!l||!canList(l))return;
       l.items=l.items.filter(x=>x.id!==b.dataset.id); l.edited=Date.now(); openLevel=null; editingVictor=null;
       render(); await saveListRow(l); toast('level deleted'); })(); break;
     case 'iphoto-del': syncItemDraft(); itemDraft.photos.splice(+b.dataset.i,1); render(); break;
     case 'vic-edit': editingVictor={slug:openLevel,i:+b.dataset.i}; render(); break;
     case 'vic-cancel': editingVictor=null; render(); break;
-    case 'vic-save': (async()=>{ const ctx=levelCtx(); if(!ctx||!editingVictor)break;
+    case 'vic-save': (async()=>{ const ctx=levelCtx(); if(!ctx||!editingVictor)return;
       const name=$('#vic-name').value.trim(), video=normUrl($('#vic-video').value);
-      if(!name){toast("victor name can't be empty",'error');break}
+      if(!name){toast("victor name can't be empty",'error');return}
       const l=S.lists.find(x=>x.id===ctx.list.id); const it=l.items.find(x=>x.id===ctx.item.id);
       const v=(it.victors||[])[editingVictor.i];
       if(v){v.name=name;v.video=video;it.edited=l.edited=Date.now();render();await saveListRow(l);toast('victor updated');}
       editingVictor=null; })(); break;
-    case 'del-victor': (async()=>{ const ctx=levelCtx(); if(!ctx)break;
+    case 'del-victor': (async()=>{ const ctx=levelCtx(); if(!ctx)return;
       const l=S.lists.find(x=>x.id===ctx.list.id); const it=l.items.find(x=>x.id===ctx.item.id);
       if(it&&canList(l)){it.victors=(it.victors||[]);it.victors.splice(+b.dataset.i,1);it.edited=l.edited=Date.now();render();await saveListRow(l);} })(); break;
-    case 'rate': (async()=>{ const ctx=levelCtx(); if(!ctx)break;
+    case 'rate': (async()=>{ const ctx=levelCtx(); if(!ctx)return;
       const l=S.lists.find(x=>x.id===ctx.list.id); const it=l.items.find(x=>x.id===ctx.item.id);
       it.ratings=it.ratings||{}; const v=+b.dataset.val;
       if(it.ratings[me.username]===v)delete it.ratings[me.username]; else it.ratings[me.username]=v;
