@@ -55,17 +55,14 @@
   .uname{background:none;border:none;padding:0;font:inherit;font-weight:700;color:#fff;cursor:pointer}
   .uname:hover{text-decoration:underline}
 
-  .icon-btn{position:relative;background:var(--panel);border:1px solid var(--edge);border-radius:10px;padding:8px 11px;font-size:.95rem;line-height:1;transition:.15s}
-  .icon-btn:hover{background:#164a80}
+  .top-btn{position:relative;background:var(--panel);border:1px solid var(--edge);border-radius:10px;padding:9px 12px;font-size:.66rem;letter-spacing:.1em;font-weight:700;color:var(--mut);transition:.15s}
+  .top-btn:hover{background:#164a80;color:#fff}
   .dot-n{position:absolute;top:-6px;right:-6px;background:#ffd93b;color:#3d2c00;font-size:.6rem;font-weight:700;border-radius:99px;padding:2px 5px}
   .dot-n.red{background:#ff7a6b;color:#3a0d0d}
   .userwrap{position:relative}
   .umenu{position:absolute;right:0;top:calc(100% + 8px);background:#0e2f57;border:1px solid rgba(255,255,255,.14);border-radius:12px;box-shadow:0 14px 34px rgba(0,0,0,.45);padding:6px;min-width:200px;z-index:30;animation:pop .15s ease-out}
   .umenu button{display:block;width:100%;text-align:left;background:none;border:none;color:var(--text);padding:10px 12px;border-radius:8px;font-size:.9rem}
   .umenu button:hover{background:rgba(255,255,255,.08)}
-
-  .badge-n{background:#ffd93b;color:#3d2c00;border-radius:99px;font-size:.6rem;font-weight:700;padding:2px 6px;margin-left:6px}
-  .badge-n.red{background:#ff7a6b;color:#3a0d0d}
 
   .ach-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
   .ach{padding:10px 6px;border-radius:10px;background:var(--panel2);border:1px solid rgba(255,255,255,.08);text-align:center;font-size:.66rem;color:var(--mut);line-height:1.3}
@@ -103,8 +100,7 @@
   .page-head{display:flex;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap}
   .page-head h2{font-family:'Titan One';font-size:1.35rem;text-shadow:0 2px 0 rgba(0,0,0,.3)}
 
-  /* FEED 3-COLUMN */
-  .feed-grid{display:grid;grid-template-columns:250px minmax(0,1fr) 272px;gap:18px;align-items:start}
+  .feed-grid{display:grid;grid-template-columns:250px minmax(0,1fr) 280px;gap:18px;align-items:start}
   .rail-left,.rail-right{position:sticky;top:74px;display:flex;flex-direction:column;gap:14px}
   @media(max-width:1150px){
     .feed-grid{grid-template-columns:236px minmax(0,1fr)}
@@ -140,7 +136,7 @@
   .searchbar{display:flex;align-items:center;gap:10px;padding:6px 14px;margin-bottom:14px}
   .searchbar input{flex:1;background:transparent;border:none;color:#fff;font:inherit;font-size:.95rem;outline:none}
   .searchbar input::placeholder{color:#5f7ea6}
-  .ftabs{display:flex;gap:8px;margin-bottom:14px}
+  .ftabs{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
   .ftab{font-family:'Titan One';font-size:.68rem;padding:8px 14px;border-radius:10px;border:1px solid var(--edge);background:var(--panel);color:var(--mut);transition:.15s}
   .ftab:hover{color:#fff}
   .ftab.active{background:#1c4f92;color:#fff;border-color:rgba(255,255,255,.14)}
@@ -185,6 +181,28 @@
   .att-file span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .bub .atts{margin-top:8px}
   .bub .att-img{width:140px;height:140px}
+
+  /* PROFILE PAGE (twitter style) */
+  .prof-wrap{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+  .pp-banner{height:110px;border-radius:16px 16px 0 0}
+  .pp-head{padding:0 22px 20px}
+  .pp-av{margin-top:-40px;border:4px solid var(--panel);border-radius:20%;display:inline-block}
+  .pp-top{display:flex;align-items:flex-start;gap:14px}
+  .pp-top .btns{margin-left:auto;display:flex;gap:8px;padding-top:12px;flex-wrap:wrap}
+  .pp-name{font-family:'Titan One';font-size:1.3rem;margin-top:12px}
+  .pp-handle{color:var(--mut);font-size:.85rem}
+  .pp-bio{margin-top:10px;line-height:1.5;word-break:break-word}
+  .pp-meta{margin-top:10px;color:var(--mut);font-size:.83rem;display:flex;gap:14px;flex-wrap:wrap}
+  .pp-counts{margin-top:10px;font-size:.88rem;display:flex;gap:16px}
+  .pp-counts b{color:#fff}
+  .pp-counts button{background:none;border:none;color:var(--mut);font:inherit;padding:0}
+  .pp-counts button:hover{text-decoration:underline}
+  .pp-counts button b{color:#fff}
+  .urow{display:flex;gap:10px;align-items:center;padding:10px 6px;border-top:1px solid rgba(255,255,255,.07)}
+  .urow .info{min-width:0}
+  .urow .info span{display:block;font-size:.78rem;color:var(--mut)}
+  .rec-line{display:flex;gap:8px;align-items:center;padding:10px 6px;border-top:1px solid rgba(255,255,255,.07);font-size:.88rem;flex-wrap:wrap;cursor:pointer}
+  .rec-line:hover{background:rgba(255,255,255,.05)}
 
   .g-create{display:flex;gap:10px;padding:14px;flex-wrap:wrap;margin-bottom:16px}
   .g-create .inp{flex:1;min-width:140px}
@@ -286,10 +304,9 @@
 
   .ntf{padding:11px 6px;border-top:1px solid rgba(255,255,255,.07);font-size:.88rem}
   .ntf.click{cursor:pointer}
+  .ntf.click:hover{background:rgba(255,255,255,.05)}
   .rep{padding:12px 6px;border-top:1px solid rgba(255,255,255,.07);font-size:.88rem}
   .rep .quote{color:var(--mut);margin:6px 0 8px;font-style:italic}
-  .prof-head{display:flex;gap:14px;align-items:center;margin-bottom:10px}
-  .prof-recs{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
 
   .overlay{position:fixed;inset:0;background:rgba(3,12,26,.62);display:grid;place-items:center;z-index:40;animation:fadeIn .2s ease;padding:16px}
   .modal{width:min(430px,94vw);padding:24px;animation:pop .2s ease-out;max-height:92vh;overflow-y:auto}
@@ -320,10 +337,10 @@
 
 <script>
 'use strict';
-/* ================= SUPABASE CONFIG — PASTE YOURS HERE ================= */
+/* ================= SUPABASE CONFIG ================= */
 const SUPABASE_URL = 'https://bqiteymzkajvszdaowqg.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJxaXRleW16a2FqdnN6ZGFvd3FnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU5MDk5NDAsImV4cCI6MjEwMTQ4NTk0MH0.7g8D4VlbkcENKts9u4b0iCHY-qYXWUG_Kjhaa33aXKA';
-/* ====================================================================== */
+/* ==================================================== */
 
 const CONFIGURED = !SUPABASE_URL.includes('PASTE') && !SUPABASE_ANON_KEY.includes('PASTE');
 let sb=null, authUser=null, bootState='loading', bootError='';
@@ -337,11 +354,11 @@ if(CONFIGURED){
   }
 }
 const u2e = u => u.toLowerCase()+'@users.gdcommunity.app';
-
 const $ = s => document.querySelector(s);
 const uid = () => Math.random().toString(36).slice(2,9)+Date.now().toString(36);
 const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function ago(t){ const s=Math.floor((Date.now()-t)/1000); if(s<60)return'now'; if(s<3600)return Math.floor(s/60)+'m'; if(s<86400)return Math.floor(s/3600)+'h'; return Math.floor(s/86400)+'d'; }
+function fullDate(t){ return new Date(t).toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}); }
 function fmtDate(t){ return new Date(t).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}); }
 function normUrl(v){ v=(v||'').trim(); if(!v) return ''; if(!/^https?:\/\//i.test(v)) v='https://'+v; return /^https?:\/\//i.test(v)?v:''; }
 function shortUrl(u){ return String(u||'').replace(/^https?:\/\//,'').replace(/^www\./,'').slice(0,30); }
@@ -401,6 +418,7 @@ function followsMap(){ const id2={}; S.users.forEach(u=>id2[u.id]=u.username); c
 const isFollowing = t => (followsMap()[me.username]||[]).includes(t);
 const followerCount = t => Object.values(followsMap()).filter(a=>a.includes(t)).length;
 const followingCount = t => (followsMap()[t]||[]).length;
+const followersOf = t => Object.entries(followsMap()).filter(([k,arr])=>arr.includes(t)).map(([k])=>k);
 function myNotifRows(){ return me?S.notifs.filter(r=>r.user_id===me.id):[]; }
 function unreadCount(){ return myNotifRows().filter(r=>!r.data.read).length; }
 function openReports(){ return S.reports.filter(r=>r.data.status==='open').map(r=>({id:r.id,...r.data})); }
@@ -479,7 +497,6 @@ function getAchievements(user){
     {ic:'🎨',name:'Fresh',desc:'Set an avatar and a bio',got:!!user.avatar&&!!user.bio}
   ];
 }
-
 const CUBES=[['#8ee85d','#4db32a'],['#ffd93b','#e0a013'],['#ff9f2e','#d3711a'],['#6ad7ff','#2e9ad0'],['#ff6b81','#d33d55'],['#c98bff','#8a3fd0']];
 function hashNum(s){ return [...String(s)].reduce((a,c)=>a+c.charCodeAt(0),0); }
 function avatarHTML(u,cls){ cls=cls||'s44';
@@ -505,7 +522,6 @@ function defaultFavicon(){ const c=document.createElement('canvas'); c.width=c.h
 function applyFavicon(){ let l=document.querySelector('link[rel="icon"]');
   if(!l){ l=document.createElement('link'); l.rel='icon'; document.head.appendChild(l); }
   l.href=S.favicon||defaultFavicon(); }
-
 function loadImage(file){ return new Promise((res,rej)=>{ const img=new Image(),u=URL.createObjectURL(file);
   img.onload=()=>{URL.revokeObjectURL(u);res(img)}; img.onerror=rej; img.src=u; }); }
 async function cropImage(file,W,H){ const img=await loadImage(file); const c=document.createElement('canvas'); c.width=W;c.height=H;
@@ -517,14 +533,15 @@ async function fitImage(file,max){ const img=await loadImage(file); const r=Math
 function fileToData(file){ return new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=rej; r.readAsDataURL(file); }); }
 
 let view={name:'feed'}, authTab='login', settingsOpen=false, dmWith=null, listTab='levels', openLevel=null, editingVictor=null, ytModal=null, imgModal=null, feedQ='', feedFilter='all';
-let profileView=null, notifsOpen=false, reportsOpen=false, userMenu=false;
+let notifsOpen=false, reportsOpen=false, userMenu=false;
 let listModal=null, listDraft=null, itemModal=null, itemDraft=null, postTags=[];
 const attach={}; const openComments=new Set(); let focusDM=false;
 function toHash(v){ switch(v.name){ case 'groups':return '#/groups'; case 'group':return '#/group/'+v.id;
   case 'lists':return '#/lists'; case 'listview':return '#/lista/'+v.slug; case 'sites':return '#/websites';
-  case 'olists':return '#/other-lists'; case 'dms':return '#/dms'; default:return '#/feed'; } }
+  case 'olists':return '#/other-lists'; case 'dms':return '#/dms'; case 'profile':return '#/u/'+v.user; default:return '#/feed'; } }
 function parseHash(){ const parts=location.hash.replace(/^#\/?/,'').split('/').filter(Boolean);
   if(parts[0]==='lista'&&parts[1]) return {name:'listview',slug:parts[1],expand:parts[2]||null};
+  if(parts[0]==='u'&&parts[1]) return {name:'profile',user:parts[1],ptab:parts[2]||'posts'};
   if(['feed','groups','lists','dms','websites'].includes(parts[0])) return {name:parts[0]==='websites'?'sites':parts[0]};
   if(parts[0]==='other-lists') return {name:'olists'};
   if(parts[0]==='group'&&parts[1]) return {name:'group',id:parts[1]};
@@ -571,6 +588,7 @@ function lbRowsHTML(lb){ return lb.map((r,i)=>{ const u=findUser(r.name);
       <div class="lb-clears">${r.clears.map(c=>`<span class="tagchip">${c.role==='verifier'?'verified':'beat'} ${esc(c.level)} <b style="color:var(--yellow)">+${c.pts}</b></span>`).join('')}</div></div>
     <div class="lb-pts">${r.pts} pts</div></div>`; }).join(''); }
 
+/* rails */
 function statsPanelHTML(){ const tl=lists().reduce((n,l)=>n+l.items.length,0);
   const tr=lists().reduce((n,l)=>n+l.items.reduce((m,it)=>m+(it.victors||[]).length,0),0);
   return `<div class="panel" style="padding:16px">
@@ -588,6 +606,25 @@ function recordsPanelHTML(){ const recs=[];
       ${avatarByName(r.v.name,'s28')}<button class="uname" data-act="profile-view" data-user="${esc(r.v.name)}" style="font-weight:600">${esc(r.v.name)}</button><span class="mut small">beat</span><b>${esc(r.it.title)}</b>
       <span class="mut small" style="margin-left:auto">${ago(r.v.ts)}</span></div>`).join(''):'<div class="mut small">no records yet</div>'}
     </div></div>`; }
+function whoToFollowHTML(){ const fm=followsMap()[me.username]||[];
+  const cand=S.users.filter(u=>u.username!==me.username&&!fm.includes(u.username)).slice(0,3);
+  if(!cand.length) return '';
+  return `<div class="panel" style="padding:14px">
+    <span class="rail-title">WHO TO FOLLOW</span>
+    <div style="margin-top:8px">
+    ${cand.map(u=>`<div class="rec-row">${avatarHTML(u,'s28')}
+      <button class="uname" data-act="profile-view" data-user="${esc(u.username)}">${esc(u.username)}</button>
+      <button class="gd-btn blue small" style="margin-left:auto" data-act="follow" data-user="${esc(u.username)}">FOLLOW</button></div>`).join('')}
+    </div></div>`; }
+function trendingHTML(){ const cnt={};
+  posts().forEach(p=>(p.tags||[]).forEach(t=>{cnt[t]=(cnt[t]||0)+1;}));
+  const top=Object.entries(cnt).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  if(!top.length) return '';
+  return `<div class="panel" style="padding:14px">
+    <span class="rail-title">TRENDING TAGS</span>
+    <div style="margin-top:8px">
+    ${top.map(([t,n])=>`<div class="rec-row" data-act="trend" data-t="${esc(t)}"><b>#${esc(t)}</b><span class="mut small" style="margin-left:auto">${n} post${n===1?'':'s'}</span></div>`).join('')}
+    </div></div>`; }
 
 function screenMsg(t,body){ return `<div class="auth-wrap"><div class="logo-big">
   <span class="cube s72" style="--c1:#8ee85d;--c2:#4db32a"><i></i><i></i><em></em></span>
@@ -597,9 +634,9 @@ function screenMsg(t,body){ return `<div class="auth-wrap"><div class="logo-big"
 function renderSetup(){ $('#root').innerHTML=`<div class="setup panel">
   <h2 style="font-family:'Titan One';margin-bottom:12px">SETUP — connect Supabase</h2>
   <ol class="mut">
-    <li>Open this file in a text editor and paste your <code>Project URL</code> and <code>anon public key</code> into <b>SUPABASE_URL</b> and <b>SUPABASE_ANON_KEY</b> at the top of the script (Project Settings → API).</li>
-    <li>In Supabase go to <b>SQL Editor</b> and run the schema SQL you got with this build.</li>
-    <li>Authentication → Sign In / Providers → Email → turn <b>OFF "Confirm email"</b>.</li>
+    <li>Paste your Project URL and anon key at the top of the script.</li>
+    <li>Run the schema SQL in the SQL Editor.</li>
+    <li>Authentication → Providers → Email → turn OFF "Confirm email".</li>
     <li>Refresh this page.</li>
   </ol></div>`; }
 function render(){
@@ -640,7 +677,6 @@ function renderAuth(){ $('#root').innerHTML=`
 function renderApp(){
   let html=topbarHTML()+'<div class="wrap">'+viewHTML()+'</div>';
   if(settingsOpen)html+=settingsModalHTML();
-  if(profileView!==null)html+=profileModalHTML();
   if(notifsOpen)html+=notifsModalHTML();
   if(reportsOpen)html+=reportsModalHTML();
   if(listModal!==null)html+=listModalHTML();
@@ -658,14 +694,14 @@ function topbarHTML(){ const at=view.name==='group'?'groups':(view.name==='listv
   return `<header class="topbar"><div class="logo">GD <span>COMMUNITY</span></div>
     <nav class="nav">${tab('feed','FEED')}${tab('groups','GROUPS')}${tab('lists','LISTS')}${tab('sites','WEBSITES')}${tab('olists','OTHER LISTS')}${tab('dms','DMS')}</nav>
     <div class="top-right">
-      ${isAdmin()&&rep>0?`<button class="icon-btn" data-act="open-reports" title="report queue">⚑<span class="dot-n red">${rep}</span></button>`:''}
-      <button class="icon-btn" data-act="notifs" title="notifications">🔔${un?`<span class="dot-n">${un}</span>`:''}</button>
+      ${isAdmin()&&rep>0?`<button class="top-btn" data-act="open-reports">REPORTS<span class="dot-n red">${rep}</span></button>`:''}
+      <button class="top-btn" data-act="notifs">NOTIFICATIONS${un?`<span class="dot-n">${un}</span>`:''}</button>
       <div class="userwrap">
         <button class="chip" data-act="user-menu">${avatarHTML(me,'s30')}<span>${esc(me.username)}${isAdmin()?' 👑':''}</span></button>
         ${userMenu?`<div class="umenu">
-          <button data-act="settings">⚙ Settings & achievements</button>
-          <button data-act="profile-view" data-user="${esc(me.username)}">👤 My profile</button>
-          <button data-act="logout">↩ Log out</button>
+          <button data-act="nav-profile">My profile</button>
+          <button data-act="settings">Settings & achievements</button>
+          <button data-act="logout">Log out</button>
         </div>`:''}
       </div>
     </div></header>`; }
@@ -673,7 +709,7 @@ function viewHTML(){ switch(view.name){
   case 'groups':return groupsHTML(); case 'group':return groupPageHTML(view.id);
   case 'lists':return listsBrowserHTML(); case 'listview':return listViewHTML();
   case 'sites':return sitesHTML(); case 'olists':return olistsHTML();
-  case 'dms':return dmsHTML(); default:return feedHTML(); } }
+  case 'dms':return dmsHTML(); case 'profile':return profileHTML(); default:return feedHTML(); } }
 
 function composerHTML(groupId){ return `<form id="f-post" class="panel composer" data-group="${groupId||''}">
   ${avatarHTML(me,'s44')}<div class="stack">
@@ -689,21 +725,21 @@ function postHTML(p){ const a=findUser(p.author)||{username:p.author,avatar:null
   const canDel=isAdmin()||p.author===me.username;
   return `<article class="panel post">
     <div class="post-head">${avatarHTML(a,'s44')}
-      <div class="who"><button class="uname" data-act="profile-view" data-user="${esc(a.username)}">${nameTags(a)}${esc(a.username)}</button><span>${ago(p.ts)}</span></div>
+      <div class="who"><button class="uname" data-act="profile-view" data-user="${esc(a.username)}">${nameTags(a)}${esc(a.username)}</button><span title="added ${fullDate(p.ts)}">${ago(p.ts)} ago</span></div>
       ${g?`<button class="gtag" data-act="open-group" data-id="${g.id}">${g.emoji} ${esc(g.name)}</button>`:''}</div>
     <p class="post-text">${richText(p.text)}</p>
     ${(p.tags&&p.tags.length)?`<div class="post-tags">${p.tags.map(t=>`<button class="tagchip clicktag" data-act="ftag" data-t="${esc(t)}">#${esc(t)}</button>`).join('')}</div>`:''}
     ${attsHTML(p.attachments)}
     <div class="post-actions">
       <button class="act ${liked?'liked':''}" data-act="like" data-id="${p.id}">★ ${p.likes.length}</button>
-      <button class="act" data-act="comments" data-id="${p.id}">💬 ${p.comments.length}</button>
-      ${p.author!==me.username?`<button class="act act-extra" data-act="dm" data-user="${esc(p.author)}">✉ dm</button>`:''}
-      ${p.author!==me.username?`<button class="act act-extra" style="color:#7d94b5" data-act="report-post" data-id="${p.id}">report</button>`:''}
-      ${canDel?`<button class="del act-extra" style="margin-left:auto" data-act="del-post" data-id="${p.id}">delete</button>`:''}</div>
+      <button class="act" data-act="comments" data-id="${p.id}">${p.comments.length} comment${p.comments.length===1?'':'s'}</button>
+      ${p.author!==me.username?`<button class="act act-extra" data-act="dm" data-user="${esc(p.author)}">DM</button>`:''}
+      ${p.author!==me.username?`<button class="act act-extra" style="color:#7d94b5" data-act="report-post" data-id="${p.id}">Report</button>`:''}
+      ${canDel?`<button class="del act-extra" style="margin-left:auto" data-act="del-post" data-id="${p.id}">Delete</button>`:''}</div>
     ${open?`<div class="comments">
       ${p.comments.map(c=>{const ca=findUser(c.author)||{username:c.author,avatar:null};
         const canDelC=isAdmin()||c.author===me.username;
-        return `<div class="cmt">${avatarHTML(ca,'s28')}<div class="cmt-body"><button class="uname" data-act="profile-view" data-user="${esc(ca.username)}">${nameTags(ca)}${esc(ca.username)}</button> <span class="mut">${ago(c.ts)}</span><br>${richText(c.text)}${attsHTML(c.attachments)}</div>
+        return `<div class="cmt">${avatarHTML(ca,'s28')}<div class="cmt-body"><button class="uname" data-act="profile-view" data-user="${esc(ca.username)}">${nameTags(ca)}${esc(ca.username)}</button> <span class="mut" title="${fullDate(c.ts)}">${ago(c.ts)} ago</span><br>${richText(c.text)}${attsHTML(c.attachments)}</div>
         ${c.author!==me.username?`<button class="del" data-act="report-comment" data-post="${p.id}" data-cid="${c.id}">report</button>`:''}
         ${canDelC?`<button class="del" data-act="del-comment" data-post="${p.id}" data-cid="${c.id}">✕</button>`:''}</div>`;}).join('')}
       <div class="attach-strip" data-key="cmt:${p.id}"></div>
@@ -728,11 +764,13 @@ function feedPostsHTML(){ const q=feedQ.trim();
 function profileCardHTML(){ const myPosts=posts().filter(p=>p.author===me.username).length;
   const stars=posts().reduce((n,p)=>n+(p.author===me.username?p.likes.length:0),0);
   const ach=getAchievements(me).filter(a=>a.got);
-  return `<aside class="panel pcard">${avatarHTML(me,'s64')}
+  return `<aside class="panel pcard">
+    <button style="background:none;border:none" data-act="nav-profile">${avatarHTML(me,'s64')}</button>
     <h3>${nameTags(me)}${esc(me.username)}</h3>
     <p class="bio">${esc(me.bio||'no bio yet — open settings')}</p>
     <div class="stats"><div><b>${myPosts}</b><span>posts</span></div><div><b>${stars}</b><span>stars</span></div></div>
     <p class="fline"><b>${followerCount(me.username)}</b> followers · <b>${followingCount(me.username)}</b> following</p>
+    <p class="fline">joined ${fmtDate(me.joined)}</p>
     ${ach.length?`<div class="ach-mini" style="justify-content:center">${ach.map(a=>`<span title="${esc(a.name)}">${a.ic}</span>`).join('')}</div>`:''}
   </aside>`; }
 function feedHTML(){ return `<div class="feed-grid">
@@ -745,8 +783,68 @@ function feedHTML(){ return `<div class="feed-grid">
         <button class="ftab ${feedFilter==='following'?'active':''}" data-act="feed-filter" data-f="following">FOLLOWING</button></div>
       <div class="feed-list" id="feed-list">${feedPostsHTML()}</div>
     </div>
-    <div class="rail-right">${statsPanelHTML()}${recordsPanelHTML()}</div>
+    <div class="rail-right">${statsPanelHTML()}${recordsPanelHTML()}${whoToFollowHTML()}${trendingHTML()}</div>
   </div>`; }
+
+/* PROFILE PAGE */
+function userRecs(name){ const nl=name.toLowerCase(); const recs=[];
+  lists().forEach(l=>l.items.forEach(it=>{
+    if(it.verifier&&String(it.verifier.name).toLowerCase()===nl)recs.push({role:'verified',level:it.title,pts:+it.points||0,lslug:l.slug,islug:it.slug,ts:it.edited});
+    (it.victors||[]).forEach(v=>{if(String(v.name).toLowerCase()===nl)recs.push({role:'beat',level:it.title,pts:+it.points||0,lslug:l.slug,islug:it.slug,ts:v.ts||it.edited});}); }));
+  return recs.sort((a,b)=>(b.ts||0)-(a.ts||0)); }
+function listCardHTML(l){ return `<div class="panel l-card" data-act="go-list" data-slug="${esc(l.slug)}">
+    <div class="lc-banner" style="background:${l.banner?`url('${l.banner}') center/cover`:LIST_COLORS[l.color]||LIST_COLORS[0]}">${l.banner?'':(l.iconImg?'':l.icon)}
+      <div class="lc-icon">${l.iconImg?`<img src="${l.iconImg}">`:l.icon}</div></div>
+    <div class="lc-body"><h4>${esc(l.name)}</h4><p>${esc(l.desc||'no description')}</p>
+      <div class="lc-meta">by @${esc(l.author)} · ${l.items.length} level${l.items.length===1?'':'s'}<br>created ${fmtDate(l.created)} · edited ${ago(l.edited)} ago</div></div></div>`; }
+function userRowHTML(x){ const u=findUser(x)||{username:x};
+  return `<div class="urow">${avatarHTML(u,'s44')}
+    <div class="info"><button class="uname" data-act="profile-view" data-user="${esc(u.username)}">${nameTags(u)}${esc(u.username)}</button><span>@${esc(u.username)}</span></div>
+    ${me.username!==u.username?`<button class="gd-btn small ${isFollowing(u.username)?'ghost':'blue'}" style="margin-left:auto" data-act="follow" data-user="${esc(u.username)}">${isFollowing(u.username)?'FOLLOWING':'FOLLOW'}</button>`:''}
+  </div>`; }
+function profileHTML(){ const name=view.user; const u=findUser(name);
+  if(!u) return '<div class="panel empty">user not found</div>';
+  const nl=name.toLowerCase(); const ptab=view.ptab||'posts';
+  const theirPosts=posts().filter(p=>p.author.toLowerCase()===nl&&!p.group).sort((a,b)=>b.ts-a.ts);
+  const theirLists=lists().filter(l=>l.author.toLowerCase()===nl);
+  const recs=userRecs(name);
+  const ach=getAchievements(u);
+  const isSelf=me.username===u.username;
+  const tabs=[['posts','POSTS'],['lists','LISTS'],['records','RECORDS'],['achievements','ACHIEVEMENTS'],['followers','FOLLOWERS'],['following','FOLLOWING']];
+  let content='';
+  if(ptab==='posts') content=theirPosts.length?`<div class="feed-list">${theirPosts.map(postHTML).join('')}</div>`:'<div class="panel empty">no posts yet</div>';
+  else if(ptab==='lists') content=theirLists.length?`<div class="l-grid">${theirLists.map(listCardHTML).join('')}</div>`:'<div class="panel empty">no lists yet</div>';
+  else if(ptab==='records') content=recs.length?`<div class="panel" style="padding:10px 14px">${recs.map(r=>`<div class="rec-line" data-act="go-record" data-slug="${esc(r.lslug)}" data-lv="${esc(r.islug)}">
+      <span class="tagchip">${r.role==='verified'?'verified':'beat'}</span><b>${esc(r.level)}</b><span class="mut small">+${r.pts} pts</span><span class="mut small" style="margin-left:auto">${r.ts?ago(r.ts)+' ago':''}</span></div>`).join('')}</div>`:'<div class="panel empty">no records yet</div>';
+  else if(ptab==='achievements') content=`<div class="panel" style="padding:16px"><div class="ach-grid">${ach.map(a=>`<div class="ach ${a.got?'got':''}" title="${esc(a.desc)}"><span class="ic">${a.ic}</span>${esc(a.name)}</div>`).join('')}</div></div>`;
+  else if(ptab==='followers'){ const fl=followersOf(u.username); content=fl.length?`<div class="panel" style="padding:10px 14px">${fl.map(userRowHTML).join('')}</div>`:'<div class="panel empty">no followers yet</div>'; }
+  else { const fg=followsMap()[u.username]||[]; content=fg.length?`<div class="panel" style="padding:10px 14px">${fg.map(userRowHTML).join('')}</div>`:'<div class="panel empty">not following anyone yet</div>'; }
+  return `<div class="prof-wrap">
+    <div class="panel" style="overflow:hidden;padding:0">
+      <div class="pp-banner" style="background:${LIST_COLORS[hashNum(u.username)%LIST_COLORS.length]}"></div>
+      <div class="pp-head">
+        <div class="pp-top">
+          <span class="pp-av">${avatarHTML(u,'s96')}</span>
+          <div class="btns">
+            ${isSelf?`<button class="gd-btn ghost small" data-act="settings">SETTINGS</button>`
+              :`<button class="gd-btn small ${isFollowing(u.username)?'ghost':''}" data-act="follow" data-user="${esc(u.username)}">${isFollowing(u.username)?'FOLLOWING':'FOLLOW'}</button>
+                 <button class="gd-btn blue small" data-act="prof-dm" data-user="${esc(u.username)}">MESSAGE</button>`}
+          </div>
+        </div>
+        <div class="pp-name">${nameTags(u)}${esc(u.username)}</div>
+        <div class="pp-handle">@${esc(u.username)}${u.role==='admin'?' · admin':''}</div>
+        ${u.bio?`<p class="pp-bio">${esc(u.bio)}</p>`:''}
+        <div class="pp-meta"><span>Joined ${fmtDate(u.joined)}</span><span>${theirPosts.length} post${theirPosts.length===1?'':'s'}</span></div>
+        <div class="pp-counts">
+          <button data-act="prof-tab" data-t="following"><b>${followingCount(u.username)}</b> Following</button>
+          <button data-act="prof-tab" data-t="followers"><b>${followerCount(u.username)}</b> Followers</button>
+        </div>
+      </div>
+    </div>
+    <div class="ltabs" style="margin:0">${tabs.map(([t,lb])=>`<button class="ltab ${ptab===t?'active':''}" data-act="prof-tab" data-t="${t}">${lb}</button>`).join('')}</div>
+    ${content}
+  </div>`; }
+
 function groupsHTML(){ const gs=groups();
   return `<div class="page-head"><h2>GROUPS</h2><span class="mut small">${gs.length} group${gs.length===1?'':'s'}</span></div>
   <form id="f-group-create" class="panel g-create"><input class="inp" name="name" maxlength="24" placeholder="new group name">
@@ -771,12 +869,7 @@ function groupPageHTML(id){ const g=groups().find(x=>x.id===id);
 function listsBrowserHTML(){ const ls=lists().slice().sort((a,b)=>b.edited-a.edited);
   return `<div class="page-head"><h2>LISTS</h2><span class="mut small">${ls.length} list${ls.length===1?'':'s'} · everyone can make their own</span>
     <button class="gd-btn small" style="margin-left:auto" data-act="new-list">NEW LIST</button></div>
-  <div class="l-grid">${ls.map(l=>`
-    <div class="panel l-card" data-act="go-list" data-slug="${esc(l.slug)}">
-      <div class="lc-banner" style="background:${l.banner?`url('${l.banner}') center/cover`:LIST_COLORS[l.color]||LIST_COLORS[0]}">${l.banner?'':(l.iconImg?'':l.icon)}
-        <div class="lc-icon">${l.iconImg?`<img src="${l.iconImg}">`:l.icon}</div></div>
-      <div class="lc-body"><h4>${esc(l.name)}</h4><p>${esc(l.desc||'no description')}</p>
-        <div class="lc-meta">by @${esc(l.author)} · ${l.items.length} level${l.items.length===1?'':'s'}${l.discord?' · discord':''}<br>created ${fmtDate(l.created)} · edited ${ago(l.edited)} ago</div></div></div>`).join('')||'<div class="panel empty">no lists yet</div>'}</div>`; }
+  <div class="l-grid">${ls.map(listCardHTML).join('')||'<div class="panel empty">no lists yet</div>'}</div>`; }
 function listViewHTML(){ const l=lists().find(x=>x.slug===view.slug);
   if(!l)return '<div class="panel empty">list not found</div>';
   if(view.expand){openLevel=view.expand;view.expand=null;}
@@ -801,7 +894,7 @@ function listViewHTML(){ const l=lists().find(x=>x.slug===view.slug);
     <div style="margin-top:16px"><span class="rail-title">COMMENTS (${lc.length})</span>
       ${lc.map(c=>{const ca=findUser(c.author)||{username:c.author,avatar:null};
         const canDelC=isAdmin()||c.author===me.username;
-        return `<div class="cmt">${avatarHTML(ca,'s28')}<div class="cmt-body"><button class="uname" data-act="profile-view" data-user="${esc(ca.username)}">${nameTags(ca)}${esc(ca.username)}</button> <span class="mut">${ago(c.ts)}</span><br>${richText(c.text)}${attsHTML(c.attachments)}</div>
+        return `<div class="cmt">${avatarHTML(ca,'s28')}<div class="cmt-body"><button class="uname" data-act="profile-view" data-user="${esc(ca.username)}">${nameTags(ca)}${esc(ca.username)}</button> <span class="mut" title="${fullDate(c.ts)}">${ago(c.ts)} ago</span><br>${richText(c.text)}${attsHTML(c.attachments)}</div>
         ${c.author!==me.username?`<button class="del" data-act="report-lcomment" data-cid="${c.id}">report</button>`:''}
         ${canDelC?`<button class="del" data-act="del-lcomment" data-cid="${c.id}">✕</button>`:''}</div>`;}).join('')}
       <div class="attach-strip" data-key="lcmt"></div>
@@ -858,7 +951,7 @@ function drowHTML(l,it,i,can){ const pts=+it.points||0;
             <input class="inp" id="vic-video" value="${esc(v.video||'')}" placeholder="youtube link (proof)" style="flex:2;min-width:140px">
             <button class="gd-btn small" data-act="vic-save">SAVE</button>
             <button class="gd-btn ghost small" data-act="vic-cancel">✕</button></div>`:`
-          <div class="vrow">${avatarByName(v.name,'s30')}<button class="uname" data-act="profile-view" data-user="${esc(v.name)}">${esc(v.name)}</button><span class="mut small">+${pts} pts${v.ts?' · '+ago(v.ts)+' ago':''}</span>
+          <div class="vrow">${avatarByName(v.name,'s30')}<button class="uname" data-act="profile-view" data-user="${esc(v.name)}">${esc(v.name)}</button><span class="mut small">+${pts} pts${v.ts?' · added '+ago(v.ts)+' ago':''}</span>
             ${v.video?`<button class="gd-btn blue small" data-act="watch" data-url="${esc(v.video)}" data-title="${esc(v.name)} beats ${esc(it.title)}">▶ VIDEO</button>`:''}
             ${can?`<span style="margin-left:auto;display:flex;gap:2px">
               <button class="del" data-act="vic-edit" data-i="${vi}">edit</button>
@@ -916,34 +1009,17 @@ function settingsModalHTML(){ const ach=getAchievements(me); const got=ach.filte
     <div class="m-row" style="justify-content:flex-start">
       <button class="gd-btn blue small" data-act="backup" type="button">DOWNLOAD BACKUP</button></div>`:''}
   </div></div>`; }
-function profileModalHTML(){ const name=profileView; const u=findUser(name); const nl=name.toLowerCase();
-  const theirPosts=posts().filter(p=>p.author.toLowerCase()===nl).length;
-  const stars=posts().reduce((n,p)=>n+(p.author.toLowerCase()===nl?p.likes.length:0),0);
-  const theirLists=lists().filter(l=>l.author.toLowerCase()===nl);
-  const recs=[]; lists().forEach(l=>l.items.forEach(it=>{
-    if(it.verifier&&String(it.verifier.name).toLowerCase()===nl)recs.push({role:'verified',level:it.title,pts:+it.points||0});
-    (it.victors||[]).forEach(v=>{if(String(v.name).toLowerCase()===nl)recs.push({role:'beat',level:it.title,pts:+it.points||0});}); }));
-  const isSelf=me.username===name;
-  const ach=u?getAchievements(u).filter(a=>a.got):[];
-  return `<div class="overlay" data-act="m-close"><div class="modal panel">
-    <div class="prof-head">${avatarHTML(u||{username:name},'s72')}
-      <div><h3 style="font-size:1.1rem">${nameTags(u)}${esc(name)}</h3>
-      <p class="mut small">${u?'@'+esc(u.username)+' · joined '+fmtDate(u.joined):'not a registered member'}</p></div></div>
-    ${u&&u.bio?`<p style="font-size:.9rem;color:var(--mut);margin-bottom:10px">${esc(u.bio)}</p>`:''}
-    <div class="stats" style="margin:6px 0"><div><b>${theirPosts}</b><span>posts</span></div><div><b>${stars}</b><span>stars</span></div><div><b>${theirLists.length}</b><span>lists</span></div></div>
-    <div class="stats" style="margin:0 0 10px"><div><b>${followerCount(name)}</b><span>followers</span></div><div><b>${followingCount(name)}</b><span>following</span></div></div>
-    ${ach.length?`<label class="m-label">ACHIEVEMENTS</label><div class="ach-mini" style="justify-content:flex-start;margin:0 0 10px">${ach.map(a=>`<span title="${esc(a.name)}">${a.ic}</span>`).join('')}</div>`:''}
-    ${theirLists.length?`<label class="m-label">THEIR LISTS</label><div class="prof-recs" style="margin:0 0 10px">${theirLists.map(l=>`<button class="tagchip clicktag" data-act="plist-open" data-slug="${esc(l.slug)}">${l.iconImg?'':l.icon+' '}${esc(l.name)} · ${l.items.length} lvl</button>`).join('')}</div>`:''}
-    ${recs.length?`<label class="m-label">RECORDS</label><div class="prof-recs">${recs.slice(0,6).map(r=>`<span class="tagchip">${r.role} ${esc(r.level)} +${r.pts}</span>`).join('')}</div>`:''}
-    ${u&&!isSelf?`<div class="lf-row" style="margin-top:16px">
-      <button class="gd-btn small ${isFollowing(name)?'ghost':''}" data-act="follow" data-user="${esc(name)}">${isFollowing(name)?'FOLLOWING':'FOLLOW'}</button>
-      <button class="gd-btn blue small" data-act="prof-dm">MESSAGE</button></div>`:''}
-  </div></div>`; }
 function notifsModalHTML(){ const list=myNotifRows().slice().reverse();
+  const ntext=n=>{ switch(n.data.type){
+    case 'like': return 'liked your post';
+    case 'comment': return 'commented on your post';
+    case 'follow': return 'started following you';
+    case 'mention': return 'mentioned you in a '+(n.data.where||'post');
+    default: return n.data.type; } };
   return `<div class="overlay" data-act="m-close"><div class="modal panel">
     <h3 class="m-title">NOTIFICATIONS</h3>
     ${list.length?list.map(n=>`<div class="ntf ${n.data.type==='follow'?'click':''}" ${n.data.type==='follow'?`data-act="profile-view" data-user="${esc(n.data.from)}"`:''}>
-      <b>${esc(n.data.from)}</b> ${n.data.type==='mention'?'mentioned you in a '+(n.data.where||'post'):'started following you'} <span class="mut small">· ${ago(n.data.ts)} ago</span></div>`).join(''):'<div class="empty">no notifications yet</div>'}
+      <b>${esc(n.data.from)}</b> ${ntext(n)} <span class="mut small" title="${fullDate(n.data.ts)}">· ${ago(n.data.ts)} ago</span></div>`).join(''):'<div class="empty">no notifications yet</div>'}
   </div></div>`; }
 function reportsModalHTML(){ const reps=openReports().slice().reverse();
   return `<div class="overlay" data-act="m-close"><div class="modal panel">
@@ -1029,7 +1105,6 @@ function closeModal(){ if(ytModal){ytModal=null;render();return}
   if(imgModal){imgModal=null;render();return}
   if(notifsOpen){notifsOpen=false;render();return}
   if(reportsOpen){reportsOpen=false;render();return}
-  if(profileView!==null){profileView=null;render();return}
   if(listModal!==null)listModal=null; else if(itemModal)itemModal=null; else settingsOpen=false;
   render(); }
 function syncListDraft(){ const f=$('#f-list'); if(f&&listDraft){listDraft.name=f.elements.name.value;listDraft.desc=f.elements.desc.value;listDraft.rules=f.elements.rules.value;listDraft.discord=f.elements.discord.value;} }
@@ -1038,7 +1113,9 @@ function syncItemDraft(){ const f=$('#f-item'); if(f&&itemDraft){itemDraft.title
   itemDraft.vname=f.elements.vname.value;itemDraft.vvideo=f.elements.vvideo.value;} }
 
 async function doLike(id){ const p=S.posts.find(x=>x.id===id); if(!p)return;
-  const i=p.likes.indexOf(me.username); i<0?p.likes.push(me.username):p.likes.splice(i,1);
+  const i=p.likes.indexOf(me.username);
+  if(i<0){ p.likes.push(me.username); notify(p.author,{type:'like',from:me.username}); }
+  else p.likes.splice(i,1);
   render(); await savePostRow(p); }
 async function doDelPost(id){ await dbDel('posts',id); S.posts=S.posts.filter(p=>p.id!==id); toast('post deleted'); render(); }
 async function doDelComment(postId,cid){ const p=S.posts.find(x=>x.id===postId); if(!p)return;
@@ -1062,7 +1139,8 @@ document.addEventListener('click',e=>{
     case 'nav': go({name:b.dataset.view}); break;
     case 'nav-go': go({name:b.dataset.to}); break;
     case 'user-menu': userMenu=!userMenu; render(); break;
-    case 'logout': userMenu=false; settingsOpen=false;profileView=null;notifsOpen=false;reportsOpen=false;listModal=null;itemModal=null;ytModal=null;imgModal=null;dmWith=null;editingVictor=null;openComments.clear();
+    case 'nav-profile': go({name:'profile',user:me.username}); break;
+    case 'logout': userMenu=false; settingsOpen=false; notifsOpen=false; reportsOpen=false; listModal=null; itemModal=null; ytModal=null; imgModal=null; dmWith=null; editingVictor=null; openComments.clear();
       sb.auth.signOut(); location.hash='#/feed'; render(); break;
     case 'settings': userMenu=false; settingsOpen=true; render(); break;
     case 'm-close': case 'm-close-btn': closeModal(); break;
@@ -1070,14 +1148,14 @@ document.addEventListener('click',e=>{
     case 'view-img': imgModal={src:b.dataset.src}; render(); break;
     case 'attach-del': { const k=b.dataset.key; if(attach[k]){attach[k].splice(+b.dataset.i,1);updateStrip(k);} break; }
     case 'ptag': { const t=b.dataset.t; const i=postTags.indexOf(t); i<0?postTags.push(t):postTags.splice(i,1); b.classList.toggle('sel'); break; }
-    case 'ftag': { feedQ=b.dataset.t;
+    case 'ftag': case 'trend': { feedQ=b.dataset.t;
       if(view.name!=='feed'){go({name:'feed'});}
       else{const fs=$('#feed-search');if(fs)fs.value=feedQ;const el=$('#feed-list');if(el)el.innerHTML=feedPostsHTML();} break; }
     case 'feed-filter': feedFilter=b.dataset.f; render(); break;
     case 'go-record': location.hash='#/lista/'+b.dataset.slug+'/'+b.dataset.lv; break;
-    case 'profile-view': userMenu=false; notifsOpen=false; profileView=b.dataset.user; render(); break;
-    case 'plist-open': profileView=null; go({name:'listview',slug:b.dataset.slug}); break;
-    case 'prof-dm': dmWith=profileView; profileView=null; go({name:'dms'}); break;
+    case 'profile-view': userMenu=false; notifsOpen=false; go({name:'profile',user:b.dataset.user}); break;
+    case 'prof-tab': { const u=view.user; location.hash='#/u/'+encodeURIComponent(u)+'/'+b.dataset.t; break; }
+    case 'prof-dm': dmWith=b.dataset.user; go({name:'dms'}); break;
     case 'follow': toggleFollow(b.dataset.user); break;
     case 'notifs': { userMenu=false; (async()=>{ const rows=myNotifRows().filter(r=>!r.data.read);
         rows.forEach(r=>r.data.read=true);
@@ -1233,14 +1311,16 @@ async function doComment(id,f){ const t=f.elements.c.value.trim(); const key='cm
   const atts=(attach[key]||[]).slice(); if(!t&&!atts.length)return;
   const p=S.posts.find(x=>x.id===id); if(!p)return;
   p.comments.push({id:uid(),author:me.username,text:t,attachments:atts,ts:Date.now()});
-  attach[key]=[]; notifyMentions(t,'comment'); render(); await savePostRow(p);
+  attach[key]=[]; notify(p.author,{type:'comment',from:me.username}); notifyMentions(t,'comment');
+  render(); await savePostRow(p);
   const inp=document.querySelector('form[data-comment="'+id+'"] input'); if(inp)inp.focus(); }
 async function doListComment(f){ const t=f.elements.c.value.trim(); const atts=(attach['lcmt']||[]).slice();
   if(!t&&!atts.length)return;
   const l=S.lists.find(x=>x.slug===view.slug); if(!l)return;
   l.comments=l.comments||[];
   l.comments.push({id:uid(),author:me.username,text:t,attachments:atts,ts:Date.now()});
-  attach['lcmt']=[]; notifyMentions(t,'list comment'); render(); await saveListRow(l); }
+  attach['lcmt']=[]; notify(l.author,{type:'comment',from:me.username,where:'your list'}); notifyMentions(t,'list comment');
+  render(); await saveListRow(l); }
 async function doCreateGroup(f){ const name=f.elements.name.value.trim(),desc=f.elements.desc.value.trim();
   if(name.length<3){toast('group name too short','error');return}
   const emojis=['🟩','🟨','🔺','⭐','💠','🌀','👾','🎮','🕹️','🧊','😈','🚀'];
