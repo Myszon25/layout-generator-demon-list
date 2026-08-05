@@ -51,6 +51,17 @@
   .s64{width:64px;height:64px} .s72{width:72px;height:72px} .s96{width:96px;height:96px}
   .admintag{display:inline-block;background:linear-gradient(180deg,#ffe45e,#e0a013);color:#3d2c00;
     font-size:.58rem;font-weight:700;letter-spacing:.14em;padding:3px 8px;border-radius:6px;margin-left:7px;vertical-align:middle}
+  .ogtag{display:inline-block;background:linear-gradient(180deg,#7fd8ff,#2e9ad0);color:#062a3a;
+    font-size:.58rem;font-weight:700;letter-spacing:.14em;padding:3px 8px;border-radius:6px;margin-left:7px;vertical-align:middle}
+
+  /* ACHIEVEMENTS */
+  .ach-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
+  .ach{padding:10px 6px;border-radius:10px;background:var(--panel2);border:2px solid var(--edge);text-align:center;font-size:.66rem;color:var(--mut);line-height:1.3}
+  .ach .ic{font-size:1.35rem;display:block;margin-bottom:6px}
+  .ach.got{border-color:var(--yellow);color:#fff;background:rgba(255,217,59,.08)}
+  .ach:not(.got){opacity:.4}
+  .ach-mini{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin-top:10px;font-size:1rem}
+  .ach-mini span{cursor:default}
 
   /* AUTH */
   .auth-wrap{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;padding:30px 18px}
@@ -195,7 +206,7 @@
   .ltab:hover{color:#fff}
   .ltab.active{background:#1c4f92;color:#fff;border-color:#0d3568}
 
-  /* DEMONLIST-STYLE LEVEL ROWS */
+  /* LEVEL ROWS */
   .dlist{display:flex;flex-direction:column;gap:12px}
   .drow{display:flex;align-items:center;gap:14px;padding:12px 16px;cursor:pointer;transition:transform .15s}
   .drow:hover{transform:translateX(4px)}
@@ -228,7 +239,7 @@
   .lf-row{display:flex;gap:10px;justify-content:flex-end}
   .sep{border:none;border-top:2px dashed var(--edge);margin:18px 0}
 
-  /* LEADERBOARD (per list) */
+  /* LEADERBOARD */
   .lb-row{display:flex;gap:12px;align-items:center;padding:14px 16px;margin-bottom:12px;flex-wrap:wrap}
   .rank{font-family:'Titan One';width:46px;height:46px;border-radius:12px;display:grid;place-items:center;font-size:1.1rem;background:#1c4f92;border:2px solid #0d3568;flex:none;text-shadow:0 2px 0 rgba(0,0,0,.3)}
   .rank.r1{background:linear-gradient(180deg,#ffe45e,#e0a013);border-color:#8a6206;color:#3d2c00;text-shadow:none}
@@ -325,7 +336,7 @@ function avatarHTML(u,cls){
 }
 const avatarByName = (n,cls) => avatarHTML(findUser(n)||{username:n}, cls);
 
-const LIST_ICONS=['⭐','🔥','🎮','👾','🌀','💠','🟩','🏆','🎯','🚀','😈','🧊','🎨','🎵','💎','🕹️'];
+const LIST_ICONS=['⭐','🔥','','👾','🌀','💠','','🏆','','🚀','','🧊','','🎵','💎','🕹️'];
 const LIST_COLORS=['linear-gradient(135deg,#0e4ea8,#2fb6ff)','linear-gradient(135deg,#7a2fb0,#ff6bd6)','linear-gradient(135deg,#0c8a4e,#8ee85d)',
  'linear-gradient(135deg,#c9641a,#ffd93b)','linear-gradient(135deg,#b02438,#ff8a6b)','linear-gradient(135deg,#153e58,#58d5e8)',
  'linear-gradient(135deg,#5c1a8a,#8a5cff)','linear-gradient(135deg,#3a3f4a,#9aa7b8)'];
@@ -360,6 +371,84 @@ function setFavicon(url){ let l=document.querySelector('link[rel="icon"]');
   if(!l){ l=document.createElement('link'); l.rel='icon'; document.head.appendChild(l); } l.href=url; }
 function applyFavicon(){ setFavicon(DB.get(K.fav,null)||defaultFavicon()); }
 
+/* ---- SMART SEARCH (typo-tolerant, ranked) ---- */
+const STOP=new Set(['i','a','an','the','some','my','me','to','of','in','on','for','and','or','is','it','at','u','ur','plz','please','with','that','this','have','has','do','does','can','you','your']);
+function tokenize(s){ return String(s).toLowerCase().split(/[^a-z0-9ąćęłńóśźż]+/).filter(w=>w.length>1); }
+function editDist(a,b){
+  if(Math.abs(a.length-b.length)>2) return 99;
+  const m=a.length,n=b.length;
+  let prev=Array.from({length:n+1},(_,j)=>j);
+  for(let i=1;i<=m;i++){
+    const cur=[i];
+    for(let j=1;j<=n;j++){
+      cur[j]=Math.min(prev[j]+1,cur[j-1]+1,prev[j-1]+(a[i-1]===b[j-1]?0:1));
+    }
+    prev=cur;
+  }
+  return prev[n];
+}
+function wordScore(w,t){
+  if(w===t) return 3;
+  if(t.length>=3&&w.startsWith(t)) return 2;
+  if(t.length>=3&&w.includes(t)) return 2;
+  if(t.length>=4){
+    const allow=t.length>=8?2:1;
+    const d=Math.min(editDist(w,t),editDist(w.slice(0,t.length+1),t));
+    if(d<=allow) return 1;
+  }
+  return 0;
+}
+function docScore(words,tokens){
+  let s=0;
+  for(const t of tokens){
+    if(STOP.has(t)) continue;
+    let best=0;
+    for(const w of words){ const sc=wordScore(w,t); if(sc>best){ best=sc; if(best===3)break; } }
+    s+=best;
+  }
+  return s;
+}
+
+/* ---- ACHIEVEMENTS ---- */
+let ogSet=new Set();
+function refreshOG(){ ogSet=new Set(users().slice().sort((a,b)=>a.joined-b.joined).slice(0,5).map(u=>u.username)); }
+function nameTags(u){ return (u&&u.role==='admin'?'👑 ':'')+(u&&ogSet.has(u.username)?'<span class="ogtag">OG</span>':''); }
+function getAchievements(user){
+  const name=user.username.toLowerCase();
+  const myPosts=posts().filter(p=>p.author.toLowerCase()===name);
+  const likesGot=posts().reduce((n,p)=>n+(p.author.toLowerCase()===name?p.likes.length:0),0);
+  const myLists=lists().filter(l=>l.author.toLowerCase()===name);
+  const levelsInMyLists=myLists.reduce((n,l)=>n+l.items.length,0);
+  let victor=false,verifier=false;
+  lists().forEach(l=>l.items.forEach(it=>{
+    if((it.victors||[]).some(v=>String(v.name).toLowerCase()===name)) victor=true;
+    if(it.verifier&&String(it.verifier.name).toLowerCase()===name) verifier=true;
+  }));
+  let comments=0;
+  posts().forEach(p=>p.comments.forEach(c=>{ if(c.author.toLowerCase()===name) comments++; }));
+  lists().forEach(l=>(l.comments||[]).forEach(c=>{ if(c.author.toLowerCase()===name) comments++; }));
+  let dmCount=0;
+  dms().forEach(t=>t.msgs.forEach(m=>{ if(m.from.toLowerCase()===name) dmCount++; }));
+  return [
+    {ic:'⭐',name:'OG',desc:'One of the first 5 members of the site',got:ogSet.has(user.username)},
+    {ic:'✏️',name:'First Post',desc:'Wrote your first post',got:myPosts.length>0},
+    {ic:'💬',name:'Social',desc:'Wrote 5 posts',got:myPosts.length>=5},
+    {ic:'❤️',name:'Appreciated',desc:'Received 5 stars on your posts',got:likesGot>=5},
+    {ic:'📋',name:'List Maker',desc:'Created a list',got:myLists.length>0},
+    {ic:'🗂️',name:'Curator',desc:'Your list has 3+ levels',got:levelsInMyLists>=3},
+    {ic:'🏆',name:'Demon Slayer',desc:'Beat a level on any list',got:victor},
+    {ic:'🛠️',name:'Verifier',desc:'Verified a level on any list',got:verifier},
+    {ic:'✍️',name:'Critic',desc:'Wrote 5 comments',got:comments>=5},
+    {ic:'📨',name:'Chatty',desc:'Sent 10 DMs',got:dmCount>=10},
+    {ic:'🎨',name:'Fresh',desc:'Set an avatar and a bio',got:!!user.avatar&&!!user.bio}
+  ];
+}
+function achMiniHTML(user){
+  const got=getAchievements(user).filter(a=>a.got);
+  if(!got.length) return '';
+  return `<div class="ach-mini">${got.map(a=>`<span title="${esc(a.name)} — ${esc(a.desc)}">${a.ic}</span>`).join('')}</div>`;
+}
+
 /* ---------- seed ---------- */
 function sampleLists(){ return [{
   id:uid(), slug:'my-gd-goals', name:'My GD Goals', desc:'Everything I want to beat this year.',
@@ -392,8 +481,8 @@ function seed(){
       {id:uid(),author:'WaveMaster',text:'just beat deadlocked... my hands are gone',tags:['showcase'],ts:Date.now()-3600000*2,likes:['CubeLord','NovaDash'],group:null,
         comments:[{id:uid(),author:'CubeLord',text:'insane. the ship part got me 200 times',ts:Date.now()-3600000}]},
       {id:uid(),author:'NovaDash',text:'looking for 3 people for a mega collab — demon difficulty. comment or dm me',tags:['collab','recruit'],ts:Date.now()-3600000*7,likes:['WaveMaster'],group:null,comments:[]},
-      {id:uid(),author:'CubeLord',text:'stereo madness but every jump is frame perfect. no big deal.',tags:['meme'],ts:Date.now()-86400000,likes:[],group:null,
-        comments:[{id:uid(),author:'NovaDash',text:'post the video!!',ts:Date.now()-82000000}]}
+      {id:uid(),author:'CubeLord',text:'i ned some help with the wave part of stereo madness, any tips?',tags:['need help'],ts:Date.now()-86400000,likes:[],group:null,
+        comments:[{id:uid(),author:'NovaDash',text:'hold frame perfects, you got this',ts:Date.now()-82000000}]}
     ]);
     DB.set(K.groups,[{id:uid(),name:'Demon Players',desc:'only the brave. share your demon clears and fails.',emoji:'😈',members:['CubeLord','WaveMaster'],owner:'CubeLord',ts:Date.now()-86400000*30}]);
     DB.set(K.dms,[]);
@@ -507,7 +596,7 @@ function lbRowsHTML(lb){
     return `<div class="panel lb-row">
       <div class="rank ${rc}">${i+1}</div>
       ${avatarHTML(u||{username:r.name},'s44')}
-      <div class="lb-name"><b>${u&&u.role==='admin'?'👑 ':''}${esc(r.name)}</b>
+      <div class="lb-name"><b>${nameTags(u)}${esc(r.name)}</b>
         <div class="lb-clears">${r.clears.map(c=>`<span class="tagchip">${c.role==='verifier'?'verified':'beat'} ${esc(c.level)} <b style="color:var(--yellow)">+${c.pts}</b></span>`).join('')}</div>
       </div>
       <div class="lb-pts">${r.pts} pts</div>
@@ -551,6 +640,7 @@ function recordsHTML(){
 /* ---------- render ---------- */
 function render(){
   me=findUser(DB.get(K.session,''));
+  refreshOG();
   me ? renderApp() : renderAuth();
 }
 
@@ -649,7 +739,7 @@ function postHTML(p){
   return `<article class="panel post">
     <div class="post-head">
       ${avatarHTML(a,'s44')}
-      <div class="who"><b>${a.role==='admin'?'👑 ':''}${esc(a.username)}</b><span>@${esc(a.username)} · ${ago(p.ts)}</span></div>
+      <div class="who"><b>${nameTags(a)}${esc(a.username)}</b><span>@${esc(a.username)} · ${ago(p.ts)}</span></div>
       ${g?`<button class="gtag" data-act="open-group" data-id="${g.id}">${g.emoji} ${esc(g.name)}</button>`:''}
     </div>
     <p class="post-text">${esc(p.text)}</p>
@@ -664,7 +754,7 @@ function postHTML(p){
     ${open?`<div class="comments">
       ${p.comments.map(c=>{ const ca=findUser(c.author)||{username:c.author,avatar:null};
         const canDelC=isAdmin()||c.author===me.username;
-        return `<div class="cmt">${avatarHTML(ca,'s28')}<div class="cmt-body"><b>${ca.role==='admin'?'👑 ':''}${esc(ca.username)}</b> <span class="mut">${ago(c.ts)}</span><br>${esc(c.text)}${attsHTML(c.attachments)}</div>
+        return `<div class="cmt">${avatarHTML(ca,'s28')}<div class="cmt-body"><b>${nameTags(ca)}${esc(ca.username)}</b> <span class="mut">${ago(c.ts)}</span><br>${esc(c.text)}${attsHTML(c.attachments)}</div>
         ${canDelC?`<button class="del" data-act="del-comment" data-post="${p.id}" data-cid="${c.id}">✕</button>`:''}</div>`; }).join('')}
       <div class="attach-strip" data-key="cmt:${p.id}"></div>
       <form class="cmt-form" data-comment="${p.id}">
@@ -676,10 +766,23 @@ function postHTML(p){
   </article>`;
 }
 function feedPostsHTML(){
-  const q=feedQ.trim().toLowerCase();
+  const q=feedQ.trim();
   let list=posts().filter(p=>!p.group).sort((a,b)=>b.ts-a.ts);
-  if(q) list=list.filter(p=>p.text.toLowerCase().includes(q)||p.author.toLowerCase().includes(q)||(p.tags||[]).some(t=>t.toLowerCase().includes(q)));
-  if(!list.length) return `<div class="panel empty">${q?'no results for “'+esc(feedQ)+'”':'no posts yet'}</div>`;
+  if(q){
+    const ql=q.toLowerCase();
+    const tokens=tokenize(ql);
+    const exact=list.some(p=>(p.text+' '+p.author+' '+(p.tags||[]).join(' ')).toLowerCase().includes(ql));
+    const scored=list.map(p=>{
+      const words=[...tokenize(p.text),...tokenize(p.author),...(p.tags||[]).map(t=>String(t).toLowerCase())];
+      return {p,s:docScore(words,tokens)};
+    }).filter(x=>x.s>0).sort((a,b)=> b.s-a.s || b.p.ts-a.p.ts);
+    list=scored.map(x=>x.p);
+    let note='';
+    if(!list.length) return `<div class="panel empty">no results for “${esc(q)}”</div>`;
+    if(!exact) note=`<div class="mut small" style="padding:0 4px 10px">no exact match — showing similar results</div>`;
+    return note+list.map(postHTML).join('');
+  }
+  if(!list.length) return `<div class="panel empty">no posts yet</div>`;
   return list.map(postHTML).join('');
 }
 function feedHTML(){
@@ -690,9 +793,10 @@ function feedHTML(){
     <div class="side-wrap">
       <aside class="panel side-card">
         ${avatarHTML(me,'s72')}
-        <h3>${esc(me.username)}${isAdmin()?'<span class="admintag">ADMIN</span>':''}</h3>
+        <h3>${nameTags(me)}${esc(me.username)}</h3>
         <p class="mut small">joined ${fmtDate(me.joined)}</p>
         <p class="bio">${esc(me.bio||'no bio yet — open settings')}</p>
+        ${achMiniHTML(me)}
         <div class="stats">
           <div><b>${myPosts}</b><span>posts</span></div>
           <div><b>${stars}</b><span>stars</span></div>
@@ -703,7 +807,7 @@ function feedHTML(){
       ${statsHTML()}
     </div>
     <div>
-      <div class="panel searchbar"><input id="feed-search" placeholder="search posts, tags, authors…" autocomplete="off"></div>
+      <div class="panel searchbar"><input id="feed-search" placeholder="search… (typos are fine)" autocomplete="off"></div>
       ${composerHTML('')}
       ${recordsHTML()}
       <div class="feed-list" id="feed-list">${feedPostsHTML()}</div>
@@ -769,6 +873,7 @@ function listViewHTML(){
   if(view.expand){ openLevel=view.expand; view.expand=null; }
   const can=canList(l);
   const link=location.href.split('#')[0]+'#/lista/'+l.slug;
+  const la=findUser(l.author)||{username:l.author};
   let body='';
   if(listTab==='levels'){
     body=`${can?'<datalist id="members">'+membersOptions()+'</datalist>':''}
@@ -798,7 +903,7 @@ function listViewHTML(){
       <span class="mut small">COMMENTS (${lComments.length})</span>
       ${lComments.map(c=>{ const ca=findUser(c.author)||{username:c.author,avatar:null};
         const canDelC=isAdmin()||c.author===me.username;
-        return `<div class="cmt">${avatarHTML(ca,'s28')}<div class="cmt-body"><b>${ca.role==='admin'?'👑 ':''}${esc(ca.username)}</b> <span class="mut">${ago(c.ts)}</span><br>${esc(c.text)}${attsHTML(c.attachments)}</div>
+        return `<div class="cmt">${avatarHTML(ca,'s28')}<div class="cmt-body"><b>${nameTags(ca)}${esc(ca.username)}</b> <span class="mut">${ago(c.ts)}</span><br>${esc(c.text)}${attsHTML(c.attachments)}</div>
         ${canDelC?`<button class="del" data-act="del-lcomment" data-cid="${c.id}">✕</button>`:''}</div>`; }).join('')}
       <div class="attach-strip" data-key="lcmt"></div>
       <form class="cmt-form" data-listcomment="1">
@@ -818,7 +923,7 @@ function listViewHTML(){
       <h2>${esc(l.name)}</h2>
       <p class="desc">${esc(l.desc||'')}</p>
       <div class="lv-meta">
-        <span>by <b style="color:#fff">@${esc(l.author)}</b>${(findUser(l.author)||{}).role==='admin'?' 👑':''}</span>
+        <span>by <b style="color:#fff">${nameTags(la)}${esc(l.author)}</b></span>
         <span>created ${fmtDate(l.created)}</span>
         <span>edited ${ago(l.edited)} ago</span>
         ${l.discord?`<button class="gd-btn blue small" data-act="open-site" data-url="${esc(l.discord)}">DISCORD</button>`:''}
@@ -938,6 +1043,8 @@ const olistsHTML = () => dirHTML('OTHER LISTS',['you add & remove lists here','o
 
 /* ----- modals ----- */
 function settingsModalHTML(){
+  const ach=getAchievements(me);
+  const got=ach.filter(a=>a.got).length;
   return `<div class="overlay" data-act="m-close">
     <div class="modal panel">
       <h3 class="m-title">ACCOUNT SETTINGS</h3>
@@ -946,12 +1053,15 @@ function settingsModalHTML(){
         <label class="gd-btn blue small">UPLOAD PHOTO<input type="file" id="av-file" accept="image/*" hidden></label>
         ${me.avatar?'<button class="gd-btn ghost small" data-act="remove-photo">REMOVE</button>':''}
       </div>
-      <p class="mut small" style="text-align:center;margin-bottom:12px">@${esc(me.username)}${isAdmin()?'<span class="admintag">ADMIN</span>':''} · joined ${fmtDate(me.joined)}</p>
+      <p class="mut small" style="text-align:center;margin-bottom:12px">@${esc(me.username)}${nameTags(me)} · joined ${fmtDate(me.joined)}</p>
       <form id="f-bio">
         <label class="m-label">BIO</label>
         <textarea class="inp" name="bio" rows="3" maxlength="120" placeholder="your bio…">${esc(me.bio||'')}</textarea>
         <div class="lf-row" style="margin-top:10px"><button class="gd-btn small" type="submit">SAVE BIO</button></div>
       </form>
+      <hr class="sep">
+      <label class="m-label">ACHIEVEMENTS (${got}/${ach.length})</label>
+      <div class="ach-grid">${ach.map(a=>`<div class="ach ${a.got?'got':''}" title="${esc(a.desc)}"><span class="ic">${a.ic}</span>${esc(a.name)}</div>`).join('')}</div>
       ${isAdmin()?`
       <hr class="sep">
       <label class="m-label">SITE ICON (shows in the browser tab)</label>
@@ -1069,7 +1179,7 @@ function dmsHTML(){
     const u=findUser(dmWith);
     const tid=[me.username,dmWith].sort().join('|');
     const t=dms().find(x=>x.id===tid);
-    thread=`<div class="dm-head">${avatarHTML(u,'s30')} DM with @${esc(dmWith)}</div>
+    thread=`<div class="dm-head">${avatarHTML(u,'s30')} ${nameTags(u)}@${esc(dmWith)}</div>
     <div id="dm-msgs">${(t?t.msgs:[]).map(m=>`<div class="bub ${m.from===me.username?'mine':'theirs'}">${esc(m.text)}${attsHTML(m.attachments)}</div>`).join('') || '<div class="dm-empty">say hi</div>'}</div>
     <div class="attach-strip" data-key="dm" style="padding:8px 12px 0"></div>
     <form id="f-dm" class="dm-form">
@@ -1081,7 +1191,7 @@ function dmsHTML(){
   return `<div class="page-head"><h2>DIRECT MESSAGES</h2></div>
   <div class="dms">
     <div class="panel dm-list">${others.map(u=>`<div class="dm-user ${dmWith===u.username?'sel':''}" data-act="dm" data-user="${esc(u.username)}">
-        ${avatarHTML(u,'s30')}<span>${u.role==='admin'?'👑 ':''}${esc(u.username)}</span>
+        ${avatarHTML(u,'s30')}<span>${nameTags(u)}${esc(u.username)}</span>
         ${isAdmin()?`<button class="del" style="margin-left:auto" data-act="del-user" data-user="${esc(u.username)}" title="remove member">✕</button>`:''}
       </div>`).join('') || '<div class="empty small">no other members yet</div>'}</div>
     <div class="panel dm-thread">${thread}</div>
@@ -1218,8 +1328,8 @@ function bindForms(){
   on('#f-login',doLogin); on('#f-signup',doSignup); on('#f-post',doPost);
   on('#f-group-create',doCreateGroup); on('#f-dm',doSendDM); on('#f-bio',doSaveBio); on('#f-pass',doChangePass);
   on('#f-list',doSaveList); on('#f-item',doSaveItem); on('#f-victor',doAddVictor); on('#f-rules',doSaveRules);
-  on('#f-site',f=>doAddDir(f,K.sites,'website added',['🌐','🔗','⭐','🎮','📺','🗺️','🧰','📰']));
-  on('#f-osite',f=>doAddDir(f,K.olists,'list added',['📋','🏆','📊','⭐','😈','🗂️']));
+  on('#f-site',f=>doAddDir(f,K.sites,'website added',['🌐','','⭐','','📺','️','🧰','']));
+  on('#f-osite',f=>doAddDir(f,K.olists,'list added',['📋','','📊','⭐','😈','️']));
   document.querySelectorAll('form[data-comment]').forEach(f=>
     f.addEventListener('submit',e=>{ e.preventDefault(); doComment(f.dataset.comment,f); }));
   const lc=document.querySelector('form[data-listcomment]');
@@ -1304,7 +1414,7 @@ function doListComment(f){
 function doCreateGroup(f){
   const name=f.elements.name.value.trim(), desc=f.elements.desc.value.trim();
   if(name.length<3){ toast('group name too short','error'); return; }
-  const emojis=['🟩','🟨','🔺','⭐','💠','🌀','👾','🎮','🕹️','🧊','😈','🚀'];
+  const emojis=['🟩','','🔺','⭐','💠','🌀','👾','','🕹️','🧊','😈','🚀'];
   const g={id:uid(),name,desc,emoji:emojis[Math.floor(Math.random()*emojis.length)],members:[me.username],owner:me.username,ts:Date.now()};
   DB.set(K.groups,[...groups(),g]); go({name:'group',id:g.id}); toast('group created');
 }
