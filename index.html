@@ -55,6 +55,8 @@
   /* AUTH */
   .auth-wrap{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;padding:30px 18px}
   .logo-big{text-align:center}
+  .logo-big>.cube{animation:floaty 3.2s ease-in-out infinite}
+  @keyframes floaty{50%{transform:translateY(-9px) rotate(-3deg)}}
   .logo-big h1{font-family:'Titan One';font-size:clamp(2rem,6vw,3.1rem);text-shadow:0 4px 0 rgba(0,0,0,.3);margin-top:14px}
   .logo-big h1 span{color:var(--yellow)}
   .logo-big p{margin-top:6px}
@@ -66,8 +68,11 @@
   /* TOPBAR */
   .topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
     padding:10px clamp(14px,3vw,28px);background:#0a2c55;border-bottom:3px solid var(--deep);box-shadow:0 4px 0 rgba(0,0,0,.22)}
-  .logo{font-family:'Titan One';font-size:1.1rem;text-shadow:0 2px 0 rgba(0,0,0,.35);white-space:nowrap}
+  .logo{font-family:'Titan One';font-size:1.1rem;white-space:nowrap;animation:logoGlow 2.6s ease-in-out infinite alternate}
   .logo span{color:var(--green)}
+  @keyframes logoGlow{
+    from{text-shadow:0 2px 0 rgba(0,0,0,.35)}
+    to{text-shadow:0 2px 0 rgba(0,0,0,.35),0 0 16px rgba(142,232,93,.6)}}
   .nav{display:flex;gap:8px;flex-wrap:wrap}
   .nav button{font-family:'Titan One';font-size:.74rem;padding:9px 14px;border-radius:10px;border:2px solid transparent;background:transparent;color:#bcd6f2;transition:.15s}
   .nav button:hover{background:rgba(255,255,255,.08)}
@@ -167,7 +172,8 @@
   .l-card{cursor:pointer;overflow:hidden;transition:transform .15s}
   .l-card:hover{transform:translateY(-3px)}
   .lc-banner{height:92px;background-size:cover;background-position:center;position:relative;display:grid;place-items:center;font-size:2.2rem}
-  .lc-icon{position:absolute;left:14px;bottom:-17px;width:46px;height:46px;border-radius:12px;background:var(--panel2);border:2px solid var(--edge);display:grid;place-items:center;font-size:1.4rem}
+  .lc-icon{position:absolute;left:14px;bottom:-17px;width:46px;height:46px;border-radius:12px;background:var(--panel2);border:2px solid var(--edge);display:grid;place-items:center;font-size:1.4rem;overflow:hidden}
+  .lc-icon img{width:100%;height:100%;object-fit:cover}
   .lc-body{padding:24px 16px 16px}
   .lc-body h4{font-family:'Titan One';font-size:1rem}
   .lc-body p{font-size:.85rem;color:var(--mut);margin:6px 0 10px;min-height:2.4em;word-break:break-word}
@@ -183,7 +189,8 @@
   .m-label{font-size:.64rem;letter-spacing:.2em;color:var(--mut);font-weight:700;margin:14px 0 6px;display:block}
   .tagchip{background:#1c4f92;border-radius:99px;padding:3px 10px;font-size:.72rem;color:#cfe3fa;white-space:nowrap}
   .lv-banner{height:150px;border-radius:12px 12px 0 0;background-size:cover;background-position:center;position:relative;display:grid;place-items:center;font-size:3rem}
-  .lv-icon{position:absolute;left:20px;bottom:-22px;width:60px;height:60px;border-radius:14px;background:var(--panel2);border:2px solid var(--edge);display:grid;place-items:center;font-size:1.9rem}
+  .lv-icon{position:absolute;left:20px;bottom:-22px;width:60px;height:60px;border-radius:14px;background:var(--panel2);border:2px solid var(--edge);display:grid;place-items:center;font-size:1.9rem;overflow:hidden}
+  .lv-icon img{width:100%;height:100%;object-fit:cover}
   .lv-head{padding:34px 20px 18px}
   .lv-head h2{font-family:'Titan One';font-size:1.5rem}
   .lv-head .desc{color:var(--mut);margin-top:6px;word-break:break-word}
@@ -291,7 +298,7 @@ const DB = {
   get(k,d){ try{ const v=localStorage.getItem(k); return v?JSON.parse(v):d; }catch{ return d; } },
   set(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); return true; }catch{ toast('storage full — use smaller images','error'); return false; } }
 };
-const K = { users:'gd.users', posts:'gd.posts', groups:'gd.groups', dms:'gd.dms', lists:'gd.lists', sites:'gd.sites', olists:'gd.olists', session:'gd.session' };
+const K = { users:'gd.users', posts:'gd.posts', groups:'gd.groups', dms:'gd.dms', lists:'gd.lists', sites:'gd.sites', olists:'gd.olists', fav:'gd.favicon', session:'gd.session' };
 
 const users  = () => DB.get(K.users,[]);
 const posts  = () => DB.get(K.posts,[]);
@@ -340,16 +347,50 @@ function loadImage(file){ return new Promise((res,rej)=>{ const img=new Image(),
   img.onload=()=>{URL.revokeObjectURL(u);res(img)}; img.onerror=rej; img.src=u; }); }
 async function cropImage(file,W,H){ const img=await loadImage(file); const c=document.createElement('canvas'); c.width=W;c.height=H;
   const r=Math.max(W/img.width,H/img.height); c.getContext('2d').drawImage(img,(W-img.width*r)/2,(H-img.height*r)/2,img.width*r,img.height*r);
-  return c.toDataURL('image/jpeg',.8); }
+  return c.toDataURL('image/jpeg',.85); }
 async function fitImage(file,max){ const img=await loadImage(file); const r=Math.min(1,max/Math.max(img.width,img.height));
   const c=document.createElement('canvas'); c.width=Math.round(img.width*r); c.height=Math.round(img.height*r);
   c.getContext('2d').drawImage(img,0,0,c.width,c.height); return c.toDataURL('image/jpeg',.75); }
 function fileToData(file){ return new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=rej; r.readAsDataURL(file); }); }
 
+/* ---- favicon (site icon) ---- */
+function defaultFavicon(){
+  const c=document.createElement('canvas'); c.width=c.height=64; const x=c.getContext('2d');
+  x.fillStyle='#4db32a'; x.fillRect(0,0,64,64);
+  x.fillStyle='#8ee85d'; x.fillRect(5,5,54,54);
+  x.fillStyle='#102540'; x.fillRect(15,18,10,16); x.fillRect(39,18,10,16); x.fillRect(20,44,24,7);
+  return c.toDataURL();
+}
+function setFavicon(url){ let l=document.querySelector('link[rel="icon"]');
+  if(!l){ l=document.createElement('link'); l.rel='icon'; document.head.appendChild(l); } l.href=url; }
+function applyFavicon(){ setFavicon(DB.get(K.fav,null)||defaultFavicon()); }
+
+/* ---- GD-style star burst (the cool part) ---- */
+let lastClick={x:innerWidth/2,y:140};
+document.addEventListener('pointerdown',e=>{ lastClick={x:e.clientX,y:e.clientY}; },true);
+function burst(x,y){
+  if(x===undefined){ x=lastClick.x; y=lastClick.y; }
+  const colors=['#ffd93b','#8ee85d','#5db9ff','#ff9f2e','#ffffff'];
+  const shapes=['★','✦','■','▲'];
+  for(let i=0;i<16;i++){
+    const s=document.createElement('span');
+    s.textContent=shapes[Math.floor(Math.random()*shapes.length)];
+    const col=colors[i%colors.length];
+    s.style.cssText='position:fixed;left:'+x+'px;top:'+y+'px;color:'+col+';font-size:'+(10+Math.random()*13)+'px;pointer-events:none;z-index:99;text-shadow:0 0 8px '+col;
+    document.body.appendChild(s);
+    const ang=Math.random()*Math.PI*2, dist=55+Math.random()*95;
+    const dx=Math.cos(ang)*dist, dy=Math.sin(ang)*dist-35, rot=(Math.random()*360-180)|0;
+    s.animate([
+      {transform:'translate(-50%,-50%) rotate(0deg)',opacity:1},
+      {transform:'translate(calc(-50% + '+dx+'px),calc(-50% + '+dy+'px)) rotate('+rot+'deg)',opacity:0}
+    ],{duration:650+Math.random()*450,easing:'cubic-bezier(.2,.8,.3,1)'}).onfinish=()=>s.remove();
+  }
+}
+
 /* ---------- seed ---------- */
 function sampleLists(){ return [{
   id:uid(), slug:'my-gd-goals', name:'My GD Goals', desc:'Everything I want to beat this year. Rate my pain.',
-  icon:'🎯', color:3, banner:null, discord:'', author:'NovaDash', created:Date.now()-86400000*12, edited:Date.now()-86400000*2,
+  icon:'🎯', iconImg:null, color:3, banner:null, discord:'', author:'NovaDash', created:Date.now()-86400000*12, edited:Date.now()-86400000*2,
   rules:'1. Only legit completions — no hacks.\n2. Every victor MUST add a youtube video as proof.\n3. Points are set by the list owner.\n4. Be nice. have fun!',
   reacts:{'🔥':['CubeLord'],'⭐':['WaveMaster']},
   comments:[{id:uid(),author:'CubeLord',text:'this list is brutal lol',ts:Date.now()-86400000}],
@@ -738,8 +779,8 @@ function listsBrowserHTML(){
     <button class="gd-btn small" style="margin-left:auto" data-act="new-list">➕ NEW LIST</button></div>
   <div class="l-grid">${ls.map(l=>`
     <div class="panel l-card" data-act="go-list" data-slug="${esc(l.slug)}">
-      <div class="lc-banner" style="background:${l.banner?`url('${l.banner}') center/cover`:LIST_COLORS[l.color]||LIST_COLORS[0]}">${l.banner?'':l.icon}
-        <div class="lc-icon">${l.icon}</div>
+      <div class="lc-banner" style="background:${l.banner?`url('${l.banner}') center/cover`:LIST_COLORS[l.color]||LIST_COLORS[0]}">${l.banner?'':(l.iconImg?'':l.icon)}
+        <div class="lc-icon">${l.iconImg?`<img src="${l.iconImg}">`:l.icon}</div>
       </div>
       <div class="lc-body">
         <h4>${esc(l.name)}</h4>
@@ -797,8 +838,8 @@ function listViewHTML(){
   return `
   <div class="page-head"><button class="gd-btn ghost small" data-act="nav-go" data-to="lists">← ALL LISTS</button></div>
   <div class="panel" style="overflow:hidden">
-    <div class="lv-banner" style="background:${l.banner?`url('${l.banner}') center/cover`:LIST_COLORS[l.color]||LIST_COLORS[0]}">${l.banner?'':l.icon}
-      <div class="lv-icon">${l.icon}</div>
+    <div class="lv-banner" style="background:${l.banner?`url('${l.banner}') center/cover`:LIST_COLORS[l.color]||LIST_COLORS[0]}">${l.banner?'':(l.iconImg?'':l.icon)}
+      <div class="lv-icon">${l.iconImg?`<img src="${l.iconImg}">`:l.icon}</div>
     </div>
     <div class="lv-head">
       <h2>${esc(l.name)}</h2>
@@ -938,6 +979,14 @@ function settingsModalHTML(){
         <textarea class="inp" name="bio" rows="3" maxlength="120" placeholder="your bio…">${esc(me.bio||'')}</textarea>
         <div class="lf-row" style="margin-top:10px"><button class="gd-btn small" type="submit">SAVE BIO</button></div>
       </form>
+      ${isAdmin()?`
+      <hr class="sep">
+      <label class="m-label">🖼 SITE ICON (shows in the browser tab — for the whole site)</label>
+      <div class="m-row" style="justify-content:flex-start">
+        <img src="${DB.get(K.fav,null)||defaultFavicon()}" style="width:44px;height:44px;border-radius:10px;border:2px solid var(--edge)">
+        <label class="gd-btn blue small">📷 UPLOAD ICON<input type="file" id="fav-file" accept="image/*" hidden></label>
+        <button class="gd-btn ghost small" data-act="fav-reset">RESET</button>
+      </div>`:''}
       <hr class="sep">
       <form id="f-pass">
         <label class="m-label">CHANGE PASSWORD</label>
@@ -963,8 +1012,14 @@ function listModalHTML(){
       <textarea class="inp" name="rules" rows="3" maxlength="2000" placeholder="1. only legit completions…">${esc(d.rules)}</textarea>
       <label class="m-label">DISCORD LINK (optional)</label>
       <input class="inp" name="discord" value="${esc(d.discord)}" placeholder="https://discord.gg/...">
-      <label class="m-label">ICON</label>
-      <div class="pick-row">${LIST_ICONS.map(ic=>`<button type="button" class="icon-pick ${d.icon===ic?'sel':''}" data-act="li-icon" data-i="${ic}">${ic}</button>`).join('')}</div>
+      <label class="m-label">ICON (pick an emoji…)</label>
+      <div class="pick-row">${LIST_ICONS.map(ic=>`<button type="button" class="icon-pick ${!d.iconImg&&d.icon===ic?'sel':''}" data-act="li-icon" data-i="${ic}">${ic}</button>`).join('')}</div>
+      <label class="m-label">…OR UPLOAD YOUR OWN ICON FROM PC</label>
+      <div class="pick-row">
+        <label class="gd-btn blue small">📷 UPLOAD ICON<input type="file" id="li-icon-file" accept="image/*" hidden></label>
+        ${d.iconImg?`<img src="${d.iconImg}" style="width:40px;height:40px;object-fit:cover;border-radius:10px;border:2px solid var(--edge)">
+        <button type="button" class="gd-btn ghost small" data-act="li-icon-del">REMOVE</button>`:''}
+      </div>
       <label class="m-label">COLOR</label>
       <div class="pick-row">${LIST_COLORS.map((c,i)=>`<button type="button" class="color-pick ${d.color===i?'sel':''}" style="background:${c}" data-act="li-color" data-i="${i}"></button>`).join('')}</div>
       <label class="m-label">BANNER (optional photo from your PC)</label>
@@ -1104,14 +1159,15 @@ document.addEventListener('click',e=>{
     case 'open-group': go({name:'group',id:b.dataset.id}); break;
     case 'join': { const l=groups(); const g=l.find(x=>x.id===b.dataset.id);
       if(g){ const i=g.members.indexOf(me.username); i<0?g.members.push(me.username):g.members.splice(i,1); DB.set(K.groups,l); render(); } break; }
-    case 'new-list': listModal='new'; listDraft={name:'',desc:'',rules:'',discord:'',icon:'⭐',color:0,banner:null}; render(); break;
+    case 'new-list': listModal='new'; listDraft={name:'',desc:'',rules:'',discord:'',icon:'⭐',iconImg:null,color:0,banner:null}; render(); break;
     case 'edit-list': { const l=lists().find(x=>x.id===b.dataset.id);
-      if(l&&canList(l)){ listModal=l.id; listDraft={name:l.name,desc:l.desc||'',rules:l.rules||'',discord:l.discord||'',icon:l.icon,color:l.color,banner:l.banner}; render(); } break; }
+      if(l&&canList(l)){ listModal=l.id; listDraft={name:l.name,desc:l.desc||'',rules:l.rules||'',discord:l.discord||'',icon:l.icon,iconImg:l.iconImg||null,color:l.color,banner:l.banner}; render(); } break; }
     case 'go-list': go({name:'listview',slug:b.dataset.slug}); break;
     case 'del-list': { const L=lists(); const l=L.find(x=>x.id===b.dataset.id);
       if(l&&canList(l)){ DB.set(K.lists,L.filter(x=>x.id!==l.id)); toast('list deleted'); go({name:'lists'}); } break; }
     case 'list-tab': listTab=b.dataset.t; render(); break;
-    case 'li-icon': syncListDraft(); listDraft.icon=b.dataset.i; render(); break;
+    case 'li-icon': syncListDraft(); listDraft.icon=b.dataset.i; listDraft.iconImg=null; render(); break;
+    case 'li-icon-del': syncListDraft(); listDraft.iconImg=null; render(); break;
     case 'li-color': syncListDraft(); listDraft.color=+b.dataset.i; render(); break;
     case 'li-banner-del': syncListDraft(); listDraft.banner=null; render(); break;
     case 'copy-link': copyText(b.dataset.href); break;
@@ -1160,6 +1216,7 @@ document.addEventListener('click',e=>{
     case 'open-site': window.open(b.dataset.url,'_blank'); break;
     case 'del-site': if(isAdmin()){ DB.set(K.sites,sites().filter(s=>s.id!==b.dataset.id)); toast('website removed'); render(); } break;
     case 'del-osite': if(isAdmin()){ DB.set(K.olists,olists().filter(s=>s.id!==b.dataset.id)); toast('list removed'); render(); } break;
+    case 'fav-reset': localStorage.removeItem(K.fav); applyFavicon(); toast('site icon reset to default'); render(); break;
     case 'dm': dmWith=b.dataset.user; go({name:'dms'}); break;
     case 'del-user': { if(isAdmin()) deleteUser(b.dataset.user); break; }
   }
@@ -1195,12 +1252,20 @@ function bindForms(){
   const lc=document.querySelector('form[data-listcomment]');
   if(lc) lc.addEventListener('submit',e=>{ e.preventDefault(); doListComment(lc); });
   const af=$('#av-file'); if(af) af.addEventListener('change',onAvatarFile);
+  const ff=$('#fav-file'); if(ff) ff.addEventListener('change',async e=>{
+    const file=e.target.files[0]; if(!file)return;
+    if(!file.type.startsWith('image/')){ toast('that is not an image','error'); return; }
+    try{ DB.set(K.fav,await cropImage(file,64,64)); applyFavicon(); toast('site icon updated 🖼'); render(); }
+    catch{ toast('could not read image','error'); } });
   const fs=$('#feed-search');
   if(fs){ fs.value=feedQ; fs.addEventListener('input',e=>{ feedQ=e.target.value;
     const el=$('#feed-list'); if(el) el.innerHTML=feedPostsHTML(); }); }
   const bf=$('#li-banner-file'); if(bf) bf.addEventListener('change',async e=>{
     const file=e.target.files[0]; if(!file)return;
     try{ syncListDraft(); listDraft.banner=await cropImage(file,900,300); render(); }catch{ toast('could not read image','error'); } });
+  const lif=$('#li-icon-file'); if(lif) lif.addEventListener('change',async e=>{
+    const file=e.target.files[0]; if(!file)return;
+    try{ syncListDraft(); listDraft.iconImg=await cropImage(file,96,96); render(); }catch{ toast('could not read image','error'); } });
   const tf=$('#it-thumb-file'); if(tf) tf.addEventListener('change',async e=>{
     const file=e.target.files[0]; if(!file)return;
     try{ syncItemDraft(); itemDraft.thumb=await cropImage(file,200,200); render(); }catch{ toast('could not read image','error'); } });
@@ -1242,6 +1307,7 @@ function doPost(f){
   if(!t && !atts.length) return;
   DB.set(K.posts,[{id:uid(),author:me.username,text:t,tags:postTags.slice(),attachments:atts,ts:Date.now(),likes:[],comments:[],group:f.dataset.group||null},...posts()]);
   attach['post']=[]; postTags=[]; feedQ='';
+  burst();
   render();
 }
 function doComment(id,f){
@@ -1305,7 +1371,7 @@ function doAddVictor(f){
   it.victors=it.victors||[];
   it.victors.push({name,video:normUrl(f.elements.video.value),ts:Date.now()});
   it.edited=l.edited=Date.now();
-  DB.set(K.lists,L); toast(name+' added as victor 🏆'); render();
+  DB.set(K.lists,L); burst(); toast(name+' added as victor 🏆'); render();
 }
 function doSaveList(f){
   syncListDraft();
@@ -1314,13 +1380,13 @@ function doSaveList(f){
   const desc=(listDraft.desc||'').trim(), rules=listDraft.rules||'', discord=normUrl(listDraft.discord);
   const L=lists();
   if(listModal==='new'){
-    L.push({id:uid(),slug:uniqueListSlug(name),name,desc,rules,discord,icon:listDraft.icon,color:listDraft.color,banner:listDraft.banner,
+    L.push({id:uid(),slug:uniqueListSlug(name),name,desc,rules,discord,icon:listDraft.icon,iconImg:listDraft.iconImg,color:listDraft.color,banner:listDraft.banner,
       author:me.username,created:Date.now(),edited:Date.now(),reacts:{},comments:[],items:[]});
-    DB.set(K.lists,L); listModal=null; toast('list created ✓');
+    DB.set(K.lists,L); listModal=null; burst(); toast('list created ✓');
     go({name:'listview',slug:L[L.length-1].slug}); return;
   }
   const l=L.find(x=>x.id===listModal);
-  if(l&&canList(l)){ Object.assign(l,{name,desc,rules,discord,icon:listDraft.icon,color:listDraft.color,banner:listDraft.banner,edited:Date.now()});
+  if(l&&canList(l)){ Object.assign(l,{name,desc,rules,discord,icon:listDraft.icon,iconImg:listDraft.iconImg,color:listDraft.color,banner:listDraft.banner,edited:Date.now()});
     DB.set(K.lists,L); toast('list updated ✓'); }
   listModal=null; render();
 }
@@ -1342,7 +1408,7 @@ function doSaveItem(f){
     l.items.push({id:uid(),slug,title,desc:d.desc.trim(),tags,points,verifier,
       victors:[],thumb:d.thumb,photos:d.photos,ratings:{},
       author:me.username,created:Date.now(),edited:Date.now()});
-    l.edited=Date.now(); openLevel=slug; toast('level added ✓ (at the bottom — use ↑↓ to move it)');
+    l.edited=Date.now(); openLevel=slug; burst(); toast('level added ✓ (at the bottom — use ↑↓ to move it)');
   }
   DB.set(K.lists,L); itemModal=null; render();
 }
@@ -1357,6 +1423,7 @@ async function onAvatarFile(e){
 window.addEventListener('storage',()=>render());
 
 seed();
+applyFavicon();
 view=parseHash();
 render();
 </script>
